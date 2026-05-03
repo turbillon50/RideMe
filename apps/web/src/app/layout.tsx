@@ -48,7 +48,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="RideMe" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+        <link rel="mask-icon" href="/favicon.svg" color="#2563EB" />
         <title>RideMe — Tu ride, tu destino</title>
         <meta
           name="description"
