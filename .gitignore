@@ -33,6 +33,9 @@ Thumbs.db
 *.njsproj
 *.sln
 
+# Vercel
+.vercel
+
 # Turbo
 .turbo
 
