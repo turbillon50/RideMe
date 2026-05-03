@@ -61,18 +61,18 @@ export function IncomingOfferModal({ ride, onAccept, onCounter, onReject }: Inco
             animate={{ y: 0, scale: 1 }}
             exit={{ y: '100%', scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="w-full max-w-md bg-[#111118] border border-[rgba(255,255,255,0.1)] rounded-3xl overflow-hidden"
+            className="w-full max-w-md bg-[#FFFFFF] border border-[rgba(13,27,61,0.10)] rounded-3xl overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[rgba(108,99,255,0.2)] to-[rgba(0,212,170,0.1)] px-5 pt-5 pb-4">
+            <div className="bg-gradient-to-r from-[rgba(37,99,235,0.2)] to-[rgba(0,180,255,0.1)] px-5 pt-5 pb-4">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-semibold text-[#6C63FF] uppercase tracking-wider">Nueva solicitud</span>
+                <span className="text-xs font-semibold text-[#2563EB] uppercase tracking-wider">Nueva solicitud</span>
                 <div className="relative w-12 h-12">
                   <svg className="w-12 h-12 -rotate-90" viewBox="0 0 80 80">
-                    <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(108,99,255,0.2)" strokeWidth="6" />
+                    <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(37,99,235,0.2)" strokeWidth="6" />
                     <motion.circle
                       cx="40" cy="40" r="36" fill="none"
-                      stroke={timeLeft < 10 ? '#FF4757' : '#6C63FF'}
+                      stroke={timeLeft < 10 ? '#FF4757' : '#2563EB'}
                       strokeWidth="6"
                       strokeLinecap="round"
                       strokeDasharray={circumference}
@@ -85,7 +85,7 @@ export function IncomingOfferModal({ ride, onAccept, onCounter, onReject }: Inco
                   </span>
                 </div>
               </div>
-              <div className="text-2xl font-black font-mono bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] bg-clip-text text-transparent">
+              <div className="text-2xl font-black font-mono bg-gradient-to-r from-[#2563EB] to-[#00B4FF] bg-clip-text text-transparent">
                 ${ride.proposedPrice.toFixed(2)} {ride.currency}
               </div>
             </div>
@@ -94,28 +94,28 @@ export function IncomingOfferModal({ ride, onAccept, onCounter, onReject }: Inco
               {/* Route */}
               <div className="space-y-2">
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 w-5 h-5 rounded-full bg-[rgba(108,99,255,0.2)] flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-[#6C63FF]" />
+                  <div className="mt-0.5 w-5 h-5 rounded-full bg-[rgba(37,99,235,0.2)] flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-[#2563EB]" />
                   </div>
                   <div>
-                    <div className="text-xs text-[#8B8B9E] font-medium">Recogida</div>
+                    <div className="text-xs text-[#4A5876] font-medium">Recogida</div>
                     <div className="text-sm font-medium leading-tight">{ride.originAddress}</div>
                   </div>
                 </div>
-                <div className="ml-2.5 w-0.5 h-4 bg-[rgba(255,255,255,0.1)]" />
+                <div className="ml-2.5 w-0.5 h-4 bg-[rgba(13,27,61,0.10)]" />
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 w-5 h-5 rounded-full bg-[rgba(0,212,170,0.2)] flex items-center justify-center flex-shrink-0">
-                    <MapPin size={11} className="text-[#00D4AA]" />
+                  <div className="mt-0.5 w-5 h-5 rounded-full bg-[rgba(0,180,255,0.2)] flex items-center justify-center flex-shrink-0">
+                    <MapPin size={11} className="text-[#00B4FF]" />
                   </div>
                   <div>
-                    <div className="text-xs text-[#8B8B9E] font-medium">Destino</div>
+                    <div className="text-xs text-[#4A5876] font-medium">Destino</div>
                     <div className="text-sm font-medium leading-tight">{ride.destinationAddress}</div>
                   </div>
                 </div>
               </div>
 
               {distanceKm && (
-                <div className="flex items-center gap-2 text-xs text-[#8B8B9E] px-3 py-2 bg-[#1A1A24] rounded-xl">
+                <div className="flex items-center gap-2 text-xs text-[#4A5876] px-3 py-2 bg-[#F8FAFD] rounded-xl">
                   <Clock size={13} /> Distancia aproximada: {distanceKm} km
                 </div>
               )}
@@ -128,11 +128,11 @@ export function IncomingOfferModal({ ride, onAccept, onCounter, onReject }: Inco
                     exit={{ height: 0, opacity: 0 }} className="overflow-hidden"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-[#8B8B9E] font-mono text-lg">$</span>
+                      <span className="text-[#4A5876] font-mono text-lg">$</span>
                       <input
                         type="number" value={counterPrice}
                         onChange={e => setCounterPrice(e.target.value)}
-                        className="flex-1 bg-[#1A1A24] border border-[rgba(108,99,255,0.3)] rounded-xl px-4 py-2.5 text-white font-mono text-lg font-bold focus:outline-none focus:border-[#6C63FF]"
+                        className="flex-1 bg-[#F8FAFD] border border-[rgba(37,99,235,0.3)] rounded-xl px-4 py-2.5 text-white font-mono text-lg font-bold focus:outline-none focus:border-[#2563EB]"
                         placeholder="Tu precio"
                         step="0.50"
                       />
@@ -158,7 +158,7 @@ export function IncomingOfferModal({ ride, onAccept, onCounter, onReject }: Inco
                     if (showCounter) onCounter(ride.rideId, price);
                     else onAccept(ride.rideId, price);
                   }}
-                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-bold text-sm flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
+                  className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#00B4FF] font-bold text-sm flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity"
                 >
                   <Check size={16} />
                   {showCounter ? `Ofrecer $${counterPrice}` : 'Aceptar'}

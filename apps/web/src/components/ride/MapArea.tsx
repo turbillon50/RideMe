@@ -20,7 +20,7 @@ export function MapArea() {
               <path
                 d="M 40 0 L 0 0 0 40"
                 fill="none"
-                stroke="#1A1A24"
+                stroke="#F8FAFD"
                 strokeWidth="1"
               />
             </pattern>
@@ -86,7 +86,7 @@ export function MapArea() {
             }}
           />
           {/* Center dot */}
-          <div className="relative h-4 w-4 rounded-full bg-primary shadow-[0_0_20px_rgba(108,99,255,0.6)]">
+          <div className="relative h-4 w-4 rounded-full bg-primary shadow-[0_0_20px_rgba(37,99,235,0.6)]">
             <div className="absolute inset-1 rounded-full bg-white" />
           </div>
         </div>

@@ -40,9 +40,9 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#F2F6FB] flex items-center justify-center px-4 py-12">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[#6C63FF] opacity-[0.05] blur-[100px]" />
+        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[#2563EB] opacity-[0.05] blur-[100px]" />
       </div>
 
       <motion.div
@@ -50,14 +50,14 @@ function RegisterForm() {
         className="w-full max-w-md relative"
       >
         <Link href="/" className="flex items-center gap-2 justify-center mb-10">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#00B4FF] flex items-center justify-center">
             <MapPin size={16} className="text-white" />
           </div>
           <span className="font-black text-2xl text-white">RideMe</span>
         </Link>
 
-        <div className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-3xl p-6 mb-6">
-          <p className="text-sm text-[#8B8B9E] mb-4 text-center">Quiero registrarme como:</p>
+        <div className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.06)] rounded-3xl p-6 mb-6">
+          <p className="text-sm text-[#4A5876] mb-4 text-center">Quiero registrarme como:</p>
           <div className="grid grid-cols-2 gap-3">
             {([['passenger', User, 'Pasajero'], ['driver', Car, 'Chofer']] as const).map(([r, Icon, label]) => (
               <button
@@ -66,18 +66,18 @@ function RegisterForm() {
                 onClick={() => setRole(r)}
                 className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                   role === r
-                    ? 'border-[#6C63FF] bg-[rgba(108,99,255,0.1)]'
-                    : 'border-[rgba(255,255,255,0.06)] hover:border-[rgba(108,99,255,0.3)]'
+                    ? 'border-[#2563EB] bg-[rgba(37,99,235,0.1)]'
+                    : 'border-[rgba(13,27,61,0.06)] hover:border-[rgba(37,99,235,0.3)]'
                 }`}
               >
-                <Icon size={24} className={role === r ? 'text-[#6C63FF]' : 'text-[#8B8B9E]'} />
-                <span className={`font-semibold text-sm ${role === r ? 'text-white' : 'text-[#8B8B9E]'}`}>{label}</span>
+                <Icon size={24} className={role === r ? 'text-[#2563EB]' : 'text-[#4A5876]'} />
+                <span className={`font-semibold text-sm ${role === r ? 'text-white' : 'text-[#4A5876]'}`}>{label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-3xl p-6">
+        <div className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.06)] rounded-3xl p-6">
           <h2 className="text-xl font-bold mb-6 text-center">Crear cuenta</h2>
 
           {error && (
@@ -90,11 +90,11 @@ function RegisterForm() {
             <div className="grid grid-cols-2 gap-3">
               {[['firstName', 'Nombre'], ['lastName', 'Apellido']].map(([name, label]) => (
                 <div key={name}>
-                  <label className="block text-xs text-[#8B8B9E] mb-1.5 font-medium">{label}</label>
+                  <label className="block text-xs text-[#4A5876] mb-1.5 font-medium">{label}</label>
                   <input
                     name={name} value={form[name as keyof typeof form]} onChange={handleChange}
                     required placeholder={label}
-                    className="w-full bg-[#1A1A24] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-white placeholder-[#4A4A5A] focus:border-[#6C63FF] focus:outline-none transition-colors"
+                    className="w-full bg-[#F8FAFD] border border-[rgba(13,27,61,0.08)] rounded-xl px-4 py-3 text-sm text-white placeholder-[#8693AB] focus:border-[#2563EB] focus:outline-none transition-colors"
                   />
                 </div>
               ))}
@@ -105,26 +105,26 @@ function RegisterForm() {
               { name: 'email', label: 'Email (opcional)', type: 'email', placeholder: 'tu@email.com' },
             ].map(({ name, label, type, placeholder }) => (
               <div key={name}>
-                <label className="block text-xs text-[#8B8B9E] mb-1.5 font-medium">{label}</label>
+                <label className="block text-xs text-[#4A5876] mb-1.5 font-medium">{label}</label>
                 <input
                   name={name} value={form[name as keyof typeof form]} onChange={handleChange}
                   type={type} placeholder={placeholder}
                   required={name !== 'email'}
-                  className="w-full bg-[#1A1A24] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm text-white placeholder-[#4A4A5A] focus:border-[#6C63FF] focus:outline-none transition-colors"
+                  className="w-full bg-[#F8FAFD] border border-[rgba(13,27,61,0.08)] rounded-xl px-4 py-3 text-sm text-white placeholder-[#8693AB] focus:border-[#2563EB] focus:outline-none transition-colors"
                 />
               </div>
             ))}
 
             <div>
-              <label className="block text-xs text-[#8B8B9E] mb-1.5 font-medium">Contraseña</label>
+              <label className="block text-xs text-[#4A5876] mb-1.5 font-medium">Contraseña</label>
               <div className="relative">
                 <input
                   name="password" value={form.password} onChange={handleChange}
                   type={showPwd ? 'text' : 'password'} placeholder="Mínimo 8 caracteres"
                   required minLength={8}
-                  className="w-full bg-[#1A1A24] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 pr-12 text-sm text-white placeholder-[#4A4A5A] focus:border-[#6C63FF] focus:outline-none transition-colors"
+                  className="w-full bg-[#F8FAFD] border border-[rgba(13,27,61,0.08)] rounded-xl px-4 py-3 pr-12 text-sm text-white placeholder-[#8693AB] focus:border-[#2563EB] focus:outline-none transition-colors"
                 />
-                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8B8B9E] hover:text-white p-1">
+                <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A5876] hover:text-white p-1">
                   {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -132,7 +132,7 @@ function RegisterForm() {
 
             <button
               type="submit" disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#00B4FF] font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -143,9 +143,9 @@ function RegisterForm() {
           </form>
         </div>
 
-        <p className="text-center text-sm text-[#8B8B9E] mt-6">
+        <p className="text-center text-sm text-[#4A5876] mt-6">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-[#6C63FF] hover:text-[#7B72FF] font-medium transition-colors">
+          <Link href="/login" className="text-[#2563EB] hover:text-[#7B72FF] font-medium transition-colors">
             Iniciar sesión
           </Link>
         </p>
@@ -156,7 +156,7 @@ function RegisterForm() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0F]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#F2F6FB]" />}>
       <RegisterForm />
     </Suspense>
   );

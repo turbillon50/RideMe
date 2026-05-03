@@ -13,10 +13,10 @@ import { api } from '@/lib/api';
 type DriverTripStatus = 'accepted' | 'en_route' | 'arrived' | 'in_progress';
 
 const statusConfig: Record<DriverTripStatus, { label: string; color: string; action: string }> = {
-  accepted: { label: 'Ve a recoger al pasajero', color: '#6C63FF', action: 'Llegué al origen' },
-  en_route: { label: 'En camino al pasajero', color: '#6C63FF', action: 'Llegué al origen' },
+  accepted: { label: 'Ve a recoger al pasajero', color: '#2563EB', action: 'Llegué al origen' },
+  en_route: { label: 'En camino al pasajero', color: '#2563EB', action: 'Llegué al origen' },
   arrived: { label: 'Esperando al pasajero', color: '#FFA502', action: 'Iniciar viaje' },
-  in_progress: { label: 'Viaje en progreso', color: '#00D4AA', action: 'Completar viaje' },
+  in_progress: { label: 'Viaje en progreso', color: '#00B4FF', action: 'Completar viaje' },
 };
 
 export default function DriverTripPage() {
@@ -71,7 +71,7 @@ export default function DriverTripPage() {
   const cfg = statusConfig[status];
 
   return (
-    <div className="h-screen bg-[#0A0A0F] flex flex-col overflow-hidden">
+    <div className="h-screen bg-[#F2F6FB] flex flex-col overflow-hidden">
       {/* Map */}
       <div className="flex-1 relative">
         <MapView
@@ -86,7 +86,7 @@ export default function DriverTripPage() {
             key={status}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 bg-[rgba(17,17,24,0.95)] backdrop-blur-xl border border-[rgba(255,255,255,0.08)] rounded-2xl px-4 py-3"
+            className="flex items-center gap-3 bg-[rgba(17,17,24,0.95)] backdrop-blur-xl border border-[rgba(13,27,61,0.08)] rounded-2xl px-4 py-3"
           >
             <div
               className="w-3 h-3 rounded-full flex-shrink-0 animate-pulse"
@@ -102,41 +102,41 @@ export default function DriverTripPage() {
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
-        className="bg-[#111118] border-t border-[rgba(255,255,255,0.08)] rounded-t-3xl px-5 pt-4 pb-8"
+        className="bg-[#FFFFFF] border-t border-[rgba(13,27,61,0.08)] rounded-t-3xl px-5 pt-4 pb-8"
       >
         <div className="sheet-handle mb-4" />
 
         {/* Passenger info */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00D4AA] to-[#6C63FF] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00B4FF] to-[#2563EB] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
             {activeRide.passenger_name?.[0]?.toUpperCase() ?? 'P'}
           </div>
           <div className="flex-1">
             <div className="font-bold">{activeRide.passenger_name ?? 'Pasajero'}</div>
-            <div className="text-xs text-[#8B8B9E] mt-0.5">
+            <div className="text-xs text-[#4A5876] mt-0.5">
               {status === 'in_progress' ? 'En camino al destino' : 'Esperando en origen'}
             </div>
           </div>
           <div className="flex gap-2">
-            <button className="w-11 h-11 rounded-xl bg-[#1A1A24] flex items-center justify-center border border-[rgba(255,255,255,0.08)] hover:border-[rgba(0,212,170,0.3)] transition-colors">
-              <Phone size={18} className="text-[#00D4AA]" />
+            <button className="w-11 h-11 rounded-xl bg-[#F8FAFD] flex items-center justify-center border border-[rgba(13,27,61,0.08)] hover:border-[rgba(0,180,255,0.3)] transition-colors">
+              <Phone size={18} className="text-[#00B4FF]" />
             </button>
-            <button className="w-11 h-11 rounded-xl bg-[#1A1A24] flex items-center justify-center border border-[rgba(255,255,255,0.08)] hover:border-[rgba(0,212,170,0.3)] transition-colors">
-              <MessageCircle size={18} className="text-[#00D4AA]" />
+            <button className="w-11 h-11 rounded-xl bg-[#F8FAFD] flex items-center justify-center border border-[rgba(13,27,61,0.08)] hover:border-[rgba(0,180,255,0.3)] transition-colors">
+              <MessageCircle size={18} className="text-[#00B4FF]" />
             </button>
           </div>
         </div>
 
         {/* Route */}
         <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-3 bg-[#1A1A24] rounded-xl px-4 py-3">
-            <MapPin size={14} className="text-[#6C63FF] flex-shrink-0" />
-            <span className="text-sm text-[#8B8B9E] truncate flex-1">{activeRide.origin_address}</span>
+          <div className="flex items-center gap-3 bg-[#F8FAFD] rounded-xl px-4 py-3">
+            <MapPin size={14} className="text-[#2563EB] flex-shrink-0" />
+            <span className="text-sm text-[#4A5876] truncate flex-1">{activeRide.origin_address}</span>
           </div>
-          <div className="flex items-center gap-3 bg-[#1A1A24] rounded-xl px-4 py-3">
-            <Flag size={14} className="text-[#00D4AA] flex-shrink-0" />
-            <span className="text-sm text-[#8B8B9E] truncate flex-1">{activeRide.destination_address}</span>
-            <div className="ml-auto font-mono font-bold text-[#6C63FF]">${activeRide.final_price}</div>
+          <div className="flex items-center gap-3 bg-[#F8FAFD] rounded-xl px-4 py-3">
+            <Flag size={14} className="text-[#00B4FF] flex-shrink-0" />
+            <span className="text-sm text-[#4A5876] truncate flex-1">{activeRide.destination_address}</span>
+            <div className="ml-auto font-mono font-bold text-[#2563EB]">${activeRide.final_price}</div>
           </div>
         </div>
 
@@ -147,8 +147,8 @@ export default function DriverTripPage() {
           className="w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 disabled:opacity-50 transition-all"
           style={{
             background: status === 'in_progress'
-              ? 'linear-gradient(135deg, #2ED573, #00D4AA)'
-              : 'linear-gradient(135deg, #6C63FF, #00D4AA)',
+              ? 'linear-gradient(135deg, #2ED573, #00B4FF)'
+              : 'linear-gradient(135deg, #2563EB, #00B4FF)',
           }}
         >
           {loading ? (

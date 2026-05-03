@@ -22,7 +22,7 @@ export function LocationInputs({
     <div className="relative flex flex-col gap-3">
       {/* Pickup input */}
       <div className="flex items-center gap-3 rounded-xl bg-muted px-4 py-3">
-        <div className="h-3 w-3 rounded-full bg-primary shadow-[0_0_10px_rgba(108,99,255,0.6)]" />
+        <div className="h-3 w-3 rounded-full bg-primary shadow-[0_0_10px_rgba(37,99,235,0.6)]" />
         <input
           type="text"
           placeholder="¿Dónde te recogemos?"
@@ -45,7 +45,7 @@ export function LocationInputs({
 
       {/* Destination input */}
       <div className="flex items-center gap-3 rounded-xl bg-muted px-4 py-3">
-        <div className="h-3 w-3 rounded-full bg-secondary shadow-[0_0_10px_rgba(0,212,170,0.6)]" />
+        <div className="h-3 w-3 rounded-full bg-secondary shadow-[0_0_10px_rgba(0,180,255,0.6)]" />
         <input
           type="text"
           placeholder="¿A dónde vas?"

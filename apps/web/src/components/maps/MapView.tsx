@@ -23,11 +23,11 @@ interface MapViewProps {
 }
 
 const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
-  { elementType: 'geometry', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#4A4A5A' }] },
-  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1A1A24' }] },
-  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#111118' }] },
+  { elementType: 'geometry', stylers: [{ color: '#F2F6FB' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#F2F6FB' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#8693AB' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#F8FAFD' }] },
+  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#FFFFFF' }] },
   { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#24243A' }] },
   { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#06060D' }] },
   { featureType: 'poi', stylers: [{ visibility: 'off' }] },
@@ -84,7 +84,7 @@ export function MapView({
       routeRenderer.current = new google.maps.DirectionsRenderer({
         map: mapInstance.current,
         suppressMarkers: true,
-        polylineOptions: { strokeColor: '#6C63FF', strokeWeight: 4, strokeOpacity: 0.9 },
+        polylineOptions: { strokeColor: '#2563EB', strokeWeight: 4, strokeOpacity: 0.9 },
       });
       setLoaded(true);
     });
@@ -106,7 +106,7 @@ export function MapView({
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 10,
-          fillColor: '#6C63FF',
+          fillColor: '#2563EB',
           fillOpacity: 1,
           strokeColor: '#ffffff',
           strokeWeight: 3,
@@ -127,7 +127,7 @@ export function MapView({
         map: mapInstance.current,
         icon: {
           path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
-          fillColor: '#00D4AA',
+          fillColor: '#00B4FF',
           fillOpacity: 1,
           strokeColor: '#ffffff',
           strokeWeight: 2,
@@ -165,7 +165,7 @@ export function MapView({
           icon: {
             path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
             scale: 5,
-            fillColor: '#00D4AA',
+            fillColor: '#00B4FF',
             fillOpacity: 0.9,
             strokeColor: '#ffffff',
             strokeWeight: 1.5,
@@ -192,8 +192,8 @@ export function MapView({
   return (
     <div className={className} ref={mapRef}>
       {!loaded && (
-        <div className="w-full h-full bg-[#0A0A0F] flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-[rgba(108,99,255,0.3)] border-t-[#6C63FF] rounded-full animate-spin" />
+        <div className="w-full h-full bg-[#F2F6FB] flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-[rgba(37,99,235,0.3)] border-t-[#2563EB] rounded-full animate-spin" />
         </div>
       )}
     </div>

@@ -55,10 +55,10 @@ export default function SubscriptionPage() {
   const isPastDue = subscriptionStatus === 'past_due';
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] pb-24">
-      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(255,255,255,0.06)]">
+    <div className="min-h-screen bg-[#F2F6FB] pb-24">
+      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(13,27,61,0.06)]">
         <div className="flex items-center gap-3">
-          <Link href="/driver" className="text-[#8B8B9E] hover:text-white transition-colors">
+          <Link href="/driver" className="text-[#4A5876] hover:text-white transition-colors">
             <ArrowLeft size={22} />
           </Link>
           <h1 className="font-black text-xl">Mi Suscripción</h1>
@@ -89,7 +89,7 @@ export default function SubscriptionPage() {
                 {isActive ? 'Suscripción activa' : isPastDue ? 'Pago fallido' : 'Sin suscripción activa'}
               </div>
               {sub?.subscription_period_end && isActive && (
-                <div className="text-xs text-[#8B8B9E] mt-0.5">
+                <div className="text-xs text-[#4A5876] mt-0.5">
                   Renueva: {new Date(sub.subscription_period_end).toLocaleDateString('es')}
                 </div>
               )}
@@ -102,27 +102,27 @@ export default function SubscriptionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-[#111118] border border-[rgba(108,99,255,0.2)] rounded-3xl overflow-hidden"
+            className="bg-[#FFFFFF] border border-[rgba(37,99,235,0.2)] rounded-3xl overflow-hidden"
           >
-            <div className="bg-gradient-to-r from-[rgba(108,99,255,0.15)] to-[rgba(0,212,170,0.08)] px-5 py-4">
+            <div className="bg-gradient-to-r from-[rgba(37,99,235,0.15)] to-[rgba(0,180,255,0.08)] px-5 py-4">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-bold text-lg">{plan.name}</div>
-                  <div className="text-xs text-[#8B8B9E]">por {plan.interval}</div>
+                  <div className="text-xs text-[#4A5876]">por {plan.interval}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-black font-mono bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] bg-clip-text text-transparent">
+                  <div className="text-3xl font-black font-mono bg-gradient-to-r from-[#2563EB] to-[#00B4FF] bg-clip-text text-transparent">
                     ${plan.amount}
                   </div>
-                  <div className="text-xs text-[#8B8B9E]">{plan.currency}</div>
+                  <div className="text-xs text-[#4A5876]">{plan.currency}</div>
                 </div>
               </div>
             </div>
             <div className="px-5 py-4 space-y-2.5">
               {plan.features.map((f) => (
                 <div key={f} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[rgba(0,212,170,0.15)] flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-[#00D4AA]" />
+                  <div className="w-5 h-5 rounded-full bg-[rgba(0,180,255,0.15)] flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-[#00B4FF]" />
                   </div>
                   <span className="text-sm">{f}</span>
                 </div>
@@ -136,18 +136,18 @@ export default function SubscriptionPage() {
           <button
             onClick={handlePortal}
             disabled={portalLoading}
-            className="w-full py-4 rounded-2xl border border-[rgba(255,255,255,0.1)] font-semibold flex items-center justify-center gap-2 hover:border-[rgba(108,99,255,0.3)] transition-colors disabled:opacity-50"
+            className="w-full py-4 rounded-2xl border border-[rgba(13,27,61,0.10)] font-semibold flex items-center justify-center gap-2 hover:border-[rgba(37,99,235,0.3)] transition-colors disabled:opacity-50"
           >
             {portalLoading ? (
               <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
             ) : (
-              <><CreditCard size={18} /> Gestionar suscripción <ExternalLink size={14} className="text-[#8B8B9E]" /></>
+              <><CreditCard size={18} /> Gestionar suscripción <ExternalLink size={14} className="text-[#4A5876]" /></>
             )}
           </button>
         ) : (
           <Link
             href="/driver/subscription/checkout"
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#2563EB] to-[#00B4FF] font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
           >
             <Zap size={18} /> Activar suscripción
           </Link>

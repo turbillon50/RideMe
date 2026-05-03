@@ -48,7 +48,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-[#F2F6FB] flex items-center justify-center relative overflow-hidden">
       {/* Animated gradient orbs */}
       <motion.div
         animate={{
@@ -56,7 +56,7 @@ export default function LoginPage() {
           opacity: [0.15, 0.25, 0.15],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-[#6C63FF] blur-[120px] pointer-events-none"
+        className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-[#2563EB] blur-[120px] pointer-events-none"
       />
       <motion.div
         animate={{
@@ -64,7 +64,7 @@ export default function LoginPage() {
           opacity: [0.1, 0.2, 0.1],
         }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-[#00D4AA] blur-[120px] pointer-events-none"
+        className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-[#00B4FF] blur-[120px] pointer-events-none"
       />
 
       <motion.div
@@ -76,7 +76,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex flex-col items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center shadow-[0_0_30px_rgba(108,99,255,0.4)]">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2563EB] to-[#00B4FF] flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.4)]">
               <Car size={28} className="text-white" />
             </div>
             <span className="text-2xl font-black tracking-tight">RideMe</span>
@@ -110,7 +110,7 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium text-white/70">Password</label>
-                <Link href="/forgot-password" className="text-xs text-[#6C63FF] hover:text-[#00D4AA] transition-colors">
+                <Link href="/forgot-password" className="text-xs text-[#2563EB] hover:text-[#00B4FF] transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -177,14 +177,14 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => onSubmit({ email: 'passenger@demo.com', password: 'demo1234' })}
-              className="py-2.5 px-3 rounded-xl border border-white/10 hover:border-[#6C63FF]/40 hover:bg-[#6C63FF]/5 transition-all text-xs text-white/60 hover:text-white"
+              className="py-2.5 px-3 rounded-xl border border-white/10 hover:border-[#2563EB]/40 hover:bg-[#2563EB]/5 transition-all text-xs text-white/60 hover:text-white"
             >
               Demo Passenger
             </button>
             <button
               type="button"
               onClick={() => onSubmit({ email: 'driver@demo.com', password: 'demo1234' })}
-              className="py-2.5 px-3 rounded-xl border border-white/10 hover:border-[#00D4AA]/40 hover:bg-[#00D4AA]/5 transition-all text-xs text-white/60 hover:text-white"
+              className="py-2.5 px-3 rounded-xl border border-white/10 hover:border-[#00B4FF]/40 hover:bg-[#00B4FF]/5 transition-all text-xs text-white/60 hover:text-white"
             >
               Demo Driver
             </button>
@@ -194,7 +194,7 @@ export default function LoginPage() {
         {/* Register link */}
         <p className="text-center text-white/40 text-sm mt-6">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-[#6C63FF] hover:text-[#00D4AA] transition-colors font-medium">
+          <Link href="/register" className="text-[#2563EB] hover:text-[#00B4FF] transition-colors font-medium">
             Create one
           </Link>
         </p>

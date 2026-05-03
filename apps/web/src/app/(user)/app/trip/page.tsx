@@ -21,10 +21,10 @@ const statusMessages: Record<TripStatus, string> = {
 };
 
 const statusColors: Record<TripStatus, string> = {
-  accepted: '#6C63FF',
-  driver_en_route: '#6C63FF',
+  accepted: '#2563EB',
+  driver_en_route: '#2563EB',
   arrived: '#FFA502',
-  in_progress: '#00D4AA',
+  in_progress: '#00B4FF',
   completed: '#2ED573',
 };
 
@@ -79,10 +79,10 @@ export default function TripTrackingPage() {
 
   if (!activeRide) return null;
 
-  const color = statusColors[status] ?? '#6C63FF';
+  const color = statusColors[status] ?? '#2563EB';
 
   return (
-    <div className="h-screen bg-[#0A0A0F] flex flex-col overflow-hidden">
+    <div className="h-screen bg-[#F2F6FB] flex flex-col overflow-hidden">
       {/* Map */}
       <div className="flex-1 relative">
         <MapView
@@ -98,7 +98,7 @@ export default function TripTrackingPage() {
             key={status}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 bg-[rgba(17,17,24,0.95)] backdrop-blur-xl border border-[rgba(255,255,255,0.08)] rounded-2xl px-4 py-3"
+            className="flex items-center gap-3 bg-[rgba(17,17,24,0.95)] backdrop-blur-xl border border-[rgba(13,27,61,0.08)] rounded-2xl px-4 py-3"
           >
             <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color, boxShadow: `0 0 10px ${color}` }} />
             <span className="text-sm font-semibold">{statusMessages[status]}</span>
@@ -111,40 +111,40 @@ export default function TripTrackingPage() {
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
-        className="bg-[#111118] border-t border-[rgba(255,255,255,0.08)] rounded-t-3xl px-5 pt-4 pb-8"
+        className="bg-[#FFFFFF] border-t border-[rgba(13,27,61,0.08)] rounded-t-3xl px-5 pt-4 pb-8"
       >
         <div className="sheet-handle mb-4" />
 
         {/* Driver info */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2563EB] to-[#00B4FF] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
             {activeRide.driver_name?.[0] ?? 'C'}
           </div>
           <div className="flex-1">
             <div className="font-bold">{activeRide.driver_name ?? 'Tu chofer'}</div>
-            <div className="flex items-center gap-2 text-sm text-[#8B8B9E] mt-0.5">
+            <div className="flex items-center gap-2 text-sm text-[#4A5876] mt-0.5">
               <Star size={13} className="text-[#FFD700] fill-[#FFD700]" />
               <span>{activeRide.driver_rating ?? '5.0'}</span>
               <span>·</span>
               <span>{activeRide.vehicle_make} {activeRide.vehicle_model}</span>
             </div>
-            <div className="text-xs text-[#4A4A5A] mt-0.5">{activeRide.plate_number}</div>
+            <div className="text-xs text-[#8693AB] mt-0.5">{activeRide.plate_number}</div>
           </div>
           <div className="flex gap-2">
-            <button className="w-11 h-11 rounded-xl bg-[#1A1A24] flex items-center justify-center border border-[rgba(255,255,255,0.08)] hover:border-[rgba(108,99,255,0.3)] transition-colors">
-              <Phone size={18} className="text-[#6C63FF]" />
+            <button className="w-11 h-11 rounded-xl bg-[#F8FAFD] flex items-center justify-center border border-[rgba(13,27,61,0.08)] hover:border-[rgba(37,99,235,0.3)] transition-colors">
+              <Phone size={18} className="text-[#2563EB]" />
             </button>
-            <button className="w-11 h-11 rounded-xl bg-[#1A1A24] flex items-center justify-center border border-[rgba(255,255,255,0.08)] hover:border-[rgba(108,99,255,0.3)] transition-colors">
-              <MessageCircle size={18} className="text-[#6C63FF]" />
+            <button className="w-11 h-11 rounded-xl bg-[#F8FAFD] flex items-center justify-center border border-[rgba(13,27,61,0.08)] hover:border-[rgba(37,99,235,0.3)] transition-colors">
+              <MessageCircle size={18} className="text-[#2563EB]" />
             </button>
           </div>
         </div>
 
         {/* Destination */}
-        <div className="flex items-center gap-3 bg-[#1A1A24] rounded-xl px-4 py-3">
-          <MapPin size={15} className="text-[#00D4AA]" />
-          <span className="text-sm text-[#8B8B9E] truncate">{activeRide.destination_address}</span>
-          <div className="ml-auto font-mono font-bold text-[#6C63FF]">${activeRide.final_price}</div>
+        <div className="flex items-center gap-3 bg-[#F8FAFD] rounded-xl px-4 py-3">
+          <MapPin size={15} className="text-[#00B4FF]" />
+          <span className="text-sm text-[#4A5876] truncate">{activeRide.destination_address}</span>
+          <div className="ml-auto font-mono font-bold text-[#2563EB]">${activeRide.final_price}</div>
         </div>
       </motion.div>
 
@@ -159,21 +159,21 @@ export default function TripTrackingPage() {
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-sm bg-[#111118] border border-[rgba(255,255,255,0.1)] rounded-3xl p-6 text-center"
+              className="w-full max-w-sm bg-[#FFFFFF] border border-[rgba(13,27,61,0.10)] rounded-3xl p-6 text-center"
             >
               <div className="text-5xl mb-3">🎉</div>
               <h3 className="text-xl font-black mb-1">¡Llegaste!</h3>
-              <p className="text-[#8B8B9E] text-sm mb-6">¿Cómo fue tu viaje con {activeRide.driver_name}?</p>
+              <p className="text-[#4A5876] text-sm mb-6">¿Cómo fue tu viaje con {activeRide.driver_name}?</p>
 
               <div className="flex justify-center gap-3 mb-6">
                 {[1, 2, 3, 4, 5].map(s => (
                   <button key={s} onClick={() => setRating(s)}>
-                    <Star size={36} className={s <= rating ? 'text-[#FFD700] fill-[#FFD700]' : 'text-[#4A4A5A]'} />
+                    <Star size={36} className={s <= rating ? 'text-[#FFD700] fill-[#FFD700]' : 'text-[#8693AB]'} />
                   </button>
                 ))}
               </div>
 
-              <button onClick={handleRate} className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-bold">
+              <button onClick={handleRate} className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#2563EB] to-[#00B4FF] font-bold">
                 Enviar calificación
               </button>
             </motion.div>

@@ -41,11 +41,11 @@ export default function EarningsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] pb-24">
+    <div className="min-h-screen bg-[#F2F6FB] pb-24">
       {/* Header */}
-      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(255,255,255,0.06)]">
+      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(13,27,61,0.06)]">
         <div className="flex items-center gap-3">
-          <Link href="/driver" className="text-[#8B8B9E] hover:text-white transition-colors">
+          <Link href="/driver" className="text-[#4A5876] hover:text-white transition-colors">
             <ArrowLeft size={22} />
           </Link>
           <h1 className="font-black text-xl">Mis Ganancias</h1>
@@ -57,10 +57,10 @@ export default function EarningsPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-gradient-to-br from-[rgba(108,99,255,0.15)] to-[rgba(0,212,170,0.08)] border border-[rgba(108,99,255,0.2)] rounded-3xl p-6 text-center"
+          className="bg-gradient-to-br from-[rgba(37,99,235,0.15)] to-[rgba(0,180,255,0.08)] border border-[rgba(37,99,235,0.2)] rounded-3xl p-6 text-center"
         >
-          <p className="text-sm text-[#8B8B9E] mb-2">Este mes</p>
-          <div className="text-5xl font-black font-mono bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] bg-clip-text text-transparent">
+          <p className="text-sm text-[#4A5876] mb-2">Este mes</p>
+          <div className="text-5xl font-black font-mono bg-gradient-to-r from-[#2563EB] to-[#00B4FF] bg-clip-text text-transparent">
             {earnings ? <CountUp value={earnings.month_gross} /> : '...'}
           </div>
           <div className="flex items-center justify-center gap-1 mt-2 text-[#2ED573] text-sm">
@@ -80,24 +80,24 @@ export default function EarningsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl p-4"
+              className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.06)] rounded-2xl p-4"
             >
-              <div className="text-xs text-[#8B8B9E] mb-1">{p.label}</div>
+              <div className="text-xs text-[#4A5876] mb-1">{p.label}</div>
               <div className="text-2xl font-black font-mono text-white">
                 ${(p.gross ?? 0).toFixed(2)}
               </div>
-              <div className="text-xs text-[#4A4A5A] mt-1">{p.trips ?? 0} viajes</div>
+              <div className="text-xs text-[#8693AB] mt-1">{p.trips ?? 0} viajes</div>
             </motion.div>
           ))}
         </div>
 
         {/* Total */}
-        <div className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl p-4 flex items-center justify-between">
+        <div className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.06)] rounded-2xl p-4 flex items-center justify-between">
           <div>
             <div className="text-sm font-semibold">Total de viajes</div>
-            <div className="text-xs text-[#8B8B9E] mt-0.5">Desde que te uniste</div>
+            <div className="text-xs text-[#4A5876] mt-0.5">Desde que te uniste</div>
           </div>
-          <div className="text-2xl font-black font-mono text-[#00D4AA]">
+          <div className="text-2xl font-black font-mono text-[#00B4FF]">
             {earnings?.total_trips ?? 0}
           </div>
         </div>

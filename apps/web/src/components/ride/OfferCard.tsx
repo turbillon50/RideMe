@@ -22,11 +22,11 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 400, damping: 30 }}
-      className="bg-[#111118] border border-[rgba(255,255,255,0.08)] rounded-2xl p-4 hover:border-[rgba(108,99,255,0.3)] transition-colors"
+      className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.08)] rounded-2xl p-4 hover:border-[rgba(37,99,235,0.3)] transition-colors"
     >
       <div className="flex items-center gap-3 mb-4">
         {/* Avatar */}
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center font-bold text-white flex-shrink-0">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2563EB] to-[#00B4FF] flex items-center justify-center font-bold text-white flex-shrink-0">
           {d?.avatarUrl ? (
             <img src={d.avatarUrl} alt="" className="w-full h-full rounded-2xl object-cover" />
           ) : initials}
@@ -38,18 +38,18 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
             {d ? `${d.firstName} ${d.lastName}` : 'Chofer'}
           </div>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="flex items-center gap-1 text-xs text-[#8B8B9E]">
+            <span className="flex items-center gap-1 text-xs text-[#4A5876]">
               <Star size={11} className="text-[#FFD700] fill-[#FFD700]" />
               {d?.ratingAverage?.toFixed(1) ?? '5.0'}
             </span>
-            <span className="text-[#4A4A5A]">·</span>
-            <span className="text-xs text-[#8B8B9E]">{d?.totalTrips ?? 0} viajes</span>
+            <span className="text-[#8693AB]">·</span>
+            <span className="text-xs text-[#4A5876]">{d?.totalTrips ?? 0} viajes</span>
           </div>
         </div>
 
         {/* Price */}
         <div className="text-right">
-          <div className="text-xl font-black font-mono bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] bg-clip-text text-transparent">
+          <div className="text-xl font-black font-mono bg-gradient-to-r from-[#2563EB] to-[#00B4FF] bg-clip-text text-transparent">
             ${offer.offeredPrice.toFixed(2)}
           </div>
           {offer.offerType === 'counter' && (
@@ -60,9 +60,9 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
 
       {/* Vehicle info */}
       {d?.vehicle && (
-        <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-[#1A1A24] rounded-xl">
+        <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-[#F8FAFD] rounded-xl">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getColorDot(d.vehicle.color) }} />
-          <span className="text-xs text-[#8B8B9E]">
+          <span className="text-xs text-[#4A5876]">
             {d.vehicle.make} {d.vehicle.model} · {d.vehicle.color} · {d.vehicle.plateNumber}
           </span>
         </div>
@@ -71,7 +71,7 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
       {/* ETA + Actions */}
       <div className="flex items-center gap-3">
         {etaMin && (
-          <div className="flex items-center gap-1.5 text-xs text-[#8B8B9E]">
+          <div className="flex items-center gap-1.5 text-xs text-[#4A5876]">
             <Clock size={13} />
             <span>{etaMin} min</span>
           </div>
@@ -87,7 +87,7 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
           <button
             onClick={() => onAccept(offer.id)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#00B4FF] font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             <Check size={16} /> Aceptar
           </button>
@@ -100,7 +100,7 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
 function getColorDot(color: string): string {
   const map: Record<string, string> = {
     blanco: '#FFFFFF', negro: '#1A1A1A', gris: '#888', rojo: '#FF4757',
-    azul: '#6C63FF', verde: '#2ED573', amarillo: '#FFD700', naranja: '#FFA502',
+    azul: '#2563EB', verde: '#2ED573', amarillo: '#FFD700', naranja: '#FFA502',
   };
-  return map[color.toLowerCase()] ?? '#8B8B9E';
+  return map[color.toLowerCase()] ?? '#4A5876';
 }

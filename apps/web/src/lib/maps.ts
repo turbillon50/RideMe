@@ -29,8 +29,8 @@ export const loadGoogleMaps = async (): Promise<typeof google> => {
 // ─── Dark Map Style ───────────────────────────────────────────────────────────
 
 export const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
-  { elementType: 'geometry', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#0A0A0F' }] },
+  { elementType: 'geometry', stylers: [{ color: '#F2F6FB' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#F2F6FB' }] },
   { elementType: 'labels.text.fill', stylers: [{ color: 'rgba(255,255,255,0.4)' }] },
   {
     featureType: 'administrative.locality',
@@ -60,7 +60,7 @@ export const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
   {
     featureType: 'road',
     elementType: 'geometry.stroke',
-    stylers: [{ color: '#111118' }],
+    stylers: [{ color: '#FFFFFF' }],
   },
   {
     featureType: 'road',
@@ -85,7 +85,7 @@ export const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
   {
     featureType: 'transit',
     elementType: 'geometry',
-    stylers: [{ color: '#111118' }],
+    stylers: [{ color: '#FFFFFF' }],
   },
   {
     featureType: 'transit.station',

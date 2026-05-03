@@ -71,10 +71,10 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] pb-24">
-      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(255,255,255,0.06)]">
+    <div className="min-h-screen bg-[#F2F6FB] pb-24">
+      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(13,27,61,0.06)]">
         <div className="flex items-center gap-3">
-          <Link href="/app" className="text-[#8B8B9E] hover:text-white transition-colors">
+          <Link href="/app" className="text-[#4A5876] hover:text-white transition-colors">
             <ArrowLeft size={22} />
           </Link>
           <h1 className="font-black text-xl">Mi Perfil</h1>
@@ -88,10 +88,10 @@ export default function ProfilePage() {
           animate={{ opacity: 1, scale: 1 }}
           className="flex flex-col items-center"
         >
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center text-white font-black text-3xl mb-3">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#2563EB] to-[#00B4FF] flex items-center justify-center text-white font-black text-3xl mb-3">
             {user?.name?.[0]?.toUpperCase() ?? 'U'}
           </div>
-          <div className="text-xs text-[#8B8B9E]">Usuario</div>
+          <div className="text-xs text-[#4A5876]">Usuario</div>
         </motion.div>
 
         {/* Personal info */}
@@ -99,15 +99,15 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.06 }}
-          className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
+          className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.06)] rounded-2xl overflow-hidden"
         >
           <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.04)]">
-            <p className="text-xs font-semibold text-[#8B8B9E] uppercase tracking-wider">Información personal</p>
+            <p className="text-xs font-semibold text-[#4A5876] uppercase tracking-wider">Información personal</p>
           </div>
           <div className="space-y-0">
             {/* Name */}
             <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[rgba(255,255,255,0.04)]">
-              <User size={15} className="text-[#6C63FF] flex-shrink-0" />
+              <User size={15} className="text-[#2563EB] flex-shrink-0" />
               <input
                 type="text"
                 value={name}
@@ -118,13 +118,13 @@ export default function ProfilePage() {
             </div>
             {/* Email */}
             <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[rgba(255,255,255,0.04)]">
-              <Mail size={15} className="text-[#8B8B9E] flex-shrink-0" />
-              <span className="text-sm text-[#8B8B9E]">{user?.email}</span>
+              <Mail size={15} className="text-[#4A5876] flex-shrink-0" />
+              <span className="text-sm text-[#4A5876]">{user?.email}</span>
             </div>
             {/* Phone */}
             <div className="flex items-center gap-3 px-4 py-3.5">
-              <Phone size={15} className="text-[#8B8B9E] flex-shrink-0" />
-              <span className="text-sm text-[#8B8B9E]">{user?.phone ?? 'Sin teléfono'}</span>
+              <Phone size={15} className="text-[#4A5876] flex-shrink-0" />
+              <span className="text-sm text-[#4A5876]">{user?.phone ?? 'Sin teléfono'}</span>
             </div>
           </div>
         </motion.div>
@@ -135,7 +135,7 @@ export default function ProfilePage() {
           transition={{ delay: 0.1 }}
           onClick={handleSave}
           disabled={saving || name === user?.name}
-          className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-bold text-sm disabled:opacity-40 flex items-center justify-center gap-2"
+          className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#2563EB] to-[#00B4FF] font-bold text-sm disabled:opacity-40 flex items-center justify-center gap-2"
         >
           {saving ? (
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -151,11 +151,11 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.16 }}
-          className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
+          className="bg-[#FFFFFF] border border-[rgba(13,27,61,0.06)] rounded-2xl overflow-hidden"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.04)]">
-            <p className="text-xs font-semibold text-[#8B8B9E] uppercase tracking-wider">Métodos de pago</p>
-            <button className="flex items-center gap-1 text-xs text-[#6C63FF]">
+            <p className="text-xs font-semibold text-[#4A5876] uppercase tracking-wider">Métodos de pago</p>
+            <button className="flex items-center gap-1 text-xs text-[#2563EB]">
               <Plus size={13} /> Agregar
             </button>
           </div>
@@ -166,8 +166,8 @@ export default function ProfilePage() {
             </div>
           ) : methods.length === 0 ? (
             <div className="px-4 py-6 text-center">
-              <CreditCard size={28} className="text-[#4A4A5A] mx-auto mb-2" />
-              <p className="text-sm text-[#8B8B9E]">Sin tarjetas guardadas</p>
+              <CreditCard size={28} className="text-[#8693AB] mx-auto mb-2" />
+              <p className="text-sm text-[#4A5876]">Sin tarjetas guardadas</p>
             </div>
           ) : (
             <div className="divide-y divide-[rgba(255,255,255,0.04)]">
@@ -176,18 +176,18 @@ export default function ProfilePage() {
                   <span className="text-xl">{brandIcon[m.brand] ?? '💳'}</span>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium capitalize">{m.brand} ···· {m.last4}</div>
-                    <div className="text-xs text-[#4A4A5A]">Vence {m.exp_month}/{m.exp_year}</div>
+                    <div className="text-xs text-[#8693AB]">Vence {m.exp_month}/{m.exp_year}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     {m.is_default ? (
                       <span className="text-xs text-[#2ED573] font-medium">Principal</span>
                     ) : (
-                      <button onClick={() => handleSetDefault(m.id)} className="text-xs text-[#6C63FF]">
+                      <button onClick={() => handleSetDefault(m.id)} className="text-xs text-[#2563EB]">
                         Usar
                       </button>
                     )}
                     <button onClick={() => handleRemove(m.id)} className="p-1.5 rounded-lg hover:bg-[rgba(255,71,87,0.1)] transition-colors">
-                      <Trash2 size={13} className="text-[#4A4A5A] hover:text-[#FF4757] transition-colors" />
+                      <Trash2 size={13} className="text-[#8693AB] hover:text-[#FF4757] transition-colors" />
                     </button>
                   </div>
                 </div>

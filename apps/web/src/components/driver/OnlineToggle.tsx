@@ -18,7 +18,7 @@ export function OnlineToggle({ isOnline, onToggle, loading, disabled }: OnlineTo
         className={`relative w-20 h-20 rounded-full border-4 transition-all duration-500 flex items-center justify-center ${
           isOnline
             ? 'border-[#2ED573] bg-[rgba(46,213,115,0.15)] shadow-[0_0_30px_rgba(46,213,115,0.4)]'
-            : 'border-[rgba(255,255,255,0.15)] bg-[#1A1A24]'
+            : 'border-[rgba(255,255,255,0.15)] bg-[#F8FAFD]'
         } disabled:opacity-50`}
       >
         {loading ? (
@@ -27,7 +27,7 @@ export function OnlineToggle({ isOnline, onToggle, loading, disabled }: OnlineTo
           <motion.div
             animate={{ scale: isOnline ? [1, 1.1, 1] : 1 }}
             transition={{ repeat: isOnline ? Infinity : 0, duration: 2 }}
-            className={`w-8 h-8 rounded-full ${isOnline ? 'bg-[#2ED573]' : 'bg-[#4A4A5A]'}`}
+            className={`w-8 h-8 rounded-full ${isOnline ? 'bg-[#2ED573]' : 'bg-[#8693AB]'}`}
           />
         )}
 
@@ -49,11 +49,11 @@ export function OnlineToggle({ isOnline, onToggle, loading, disabled }: OnlineTo
       </button>
 
       <div className="text-center">
-        <span className={`font-bold text-sm ${isOnline ? 'text-[#2ED573]' : 'text-[#8B8B9E]'}`}>
+        <span className={`font-bold text-sm ${isOnline ? 'text-[#2ED573]' : 'text-[#4A5876]'}`}>
           {loading ? 'Actualizando...' : isOnline ? 'En línea' : 'Fuera de línea'}
         </span>
         {!isOnline && !loading && (
-          <p className="text-xs text-[#4A4A5A] mt-0.5">Toca para recibir viajes</p>
+          <p className="text-xs text-[#8693AB] mt-0.5">Toca para recibir viajes</p>
         )}
       </div>
     </div>
