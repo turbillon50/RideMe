@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? '';
 
 interface Driver {
   id: string;
@@ -22,30 +25,6 @@ interface MapViewProps {
   className?: string;
 }
 
-const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
-  { elementType: 'geometry', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#4A4A5A' }] },
-  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1A1A24' }] },
-  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#111118' }] },
-  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#24243A' }] },
-  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#06060D' }] },
-  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-];
-
-let loader: Loader | null = null;
-function getLoader() {
-  if (!loader) {
-    loader = new Loader({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? '',
-      version: 'weekly',
-      libraries: ['places', 'geometry'],
-    });
-  }
-  return loader;
-}
-
 export function MapView({
   center = { lat: 19.4326, lng: -99.1332 },
   zoom = 14,
@@ -57,89 +36,82 @@ export function MapView({
   onMapClick,
   className = 'w-full h-full',
 }: MapViewProps) {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<google.maps.Map | null>(null);
-  const driverMarkers = useRef<Map<string, google.maps.Marker>>(new Map());
-  const userMarker = useRef<google.maps.Marker | null>(null);
-  const driverTrackMarker = useRef<google.maps.Marker | null>(null);
-  const routeRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<mapboxgl.Map | null>(null);
+  const driverMarkers = useRef<Map<string, mapboxgl.Marker>>(new Map());
+  const userMarker = useRef<mapboxgl.Marker | null>(null);
+  const driverTrackMarker = useRef<mapboxgl.Marker | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    getLoader().load().then(() => {
-      if (!mapRef.current || mapInstance.current) return;
-      mapInstance.current = new google.maps.Map(mapRef.current, {
-        center, zoom,
-        styles: DARK_MAP_STYLE,
-        disableDefaultUI: true,
-        zoomControl: true,
-        zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_CENTER },
-        gestureHandling: 'greedy',
-      });
+    if (!mapContainerRef.current) return;
+
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [center.lng, center.lat],
+      zoom: zoom,
+      attributionControl: false,
+    });
+
+    map.on('load', () => {
+      mapInstance.current = map;
+      setLoaded(true);
+
       if (onMapClick) {
-        mapInstance.current.addListener('click', (e: google.maps.MapMouseEvent) => {
-          if (e.latLng) onMapClick(e.latLng.lat(), e.latLng.lng());
+        map.on('click', (e) => {
+          onMapClick(e.lngLat.lat, e.lngLat.lng);
         });
       }
-      routeRenderer.current = new google.maps.DirectionsRenderer({
-        map: mapInstance.current,
-        suppressMarkers: true,
-        polylineOptions: { strokeColor: '#6C63FF', strokeWeight: 4, strokeOpacity: 0.9 },
-      });
-      setLoaded(true);
     });
+
+    return () => {
+      map.remove();
+      mapInstance.current = null;
+    };
   }, []);
 
   // Update center
   useEffect(() => {
-    if (mapInstance.current) mapInstance.current.setCenter(center);
+    if (mapInstance.current) {
+      mapInstance.current.flyTo({
+        center: [center.lng, center.lat],
+        essential: true,
+      });
+    }
   }, [center.lat, center.lng]);
 
   // User location marker
   useEffect(() => {
     if (!loaded || !mapInstance.current) return;
     const pos = userLocation || center;
+
     if (!userMarker.current) {
-      userMarker.current = new google.maps.Marker({
-        position: pos,
-        map: mapInstance.current,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 10,
-          fillColor: '#6C63FF',
-          fillOpacity: 1,
-          strokeColor: '#ffffff',
-          strokeWeight: 3,
-        },
-        zIndex: 100,
-      });
+      const el = document.createElement('div');
+      el.className = 'w-4 h-4 bg-[#6C63FF] border-2 border-white rounded-full shadow-lg';
+      userMarker.current = new mapboxgl.Marker(el)
+        .setLngLat([pos.lng, pos.lat])
+        .addTo(mapInstance.current);
     } else {
-      userMarker.current.setPosition(pos);
+      userMarker.current.setLngLat([pos.lng, pos.lat]);
     }
-  }, [loaded, userLocation?.lat, userLocation?.lng]);
+  }, [loaded, userLocation?.lat, userLocation?.lng, center]);
 
   // Driver tracking marker
   useEffect(() => {
     if (!loaded || !mapInstance.current || !driverLocation) return;
+
     if (!driverTrackMarker.current) {
-      driverTrackMarker.current = new google.maps.Marker({
-        position: driverLocation,
-        map: mapInstance.current,
-        icon: {
-          path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
-          fillColor: '#00D4AA',
-          fillOpacity: 1,
-          strokeColor: '#ffffff',
-          strokeWeight: 2,
-          scale: 1.5,
-          anchor: new google.maps.Point(12, 22),
-        },
-        zIndex: 200,
-      });
+      const el = document.createElement('div');
+      el.className = 'w-6 h-6 bg-[#00D4AA] border-2 border-white rounded-full shadow-lg flex items-center justify-center';
+      el.innerHTML = '<div class="w-2 h-2 bg-white rounded-full"></div>';
+      driverTrackMarker.current = new mapboxgl.Marker(el)
+        .setLngLat([driverLocation.lng, driverLocation.lat])
+        .addTo(mapInstance.current);
     } else {
-      driverTrackMarker.current.setPosition(driverLocation);
+      driverTrackMarker.current.setLngLat([driverLocation.lng, driverLocation.lat]);
     }
-    mapInstance.current.panTo(driverLocation);
+    mapInstance.current.panTo([driverLocation.lng, driverLocation.lat]);
   }, [loaded, driverLocation?.lat, driverLocation?.lng]);
 
   // Nearby driver markers
@@ -150,47 +122,84 @@ export function MapView({
 
     // Remove stale markers
     driverMarkers.current.forEach((marker, id) => {
-      if (!currentIds.has(id)) { marker.setMap(null); driverMarkers.current.delete(id); }
+      if (!currentIds.has(id)) {
+        marker.remove();
+        driverMarkers.current.delete(id);
+      }
     });
 
     // Add/update markers
     drivers.forEach(d => {
-      const pos = { lat: d.latitude, lng: d.longitude };
       if (driverMarkers.current.has(d.id)) {
-        driverMarkers.current.get(d.id)!.setPosition(pos);
+        driverMarkers.current.get(d.id)!.setLngLat([d.longitude, d.latitude]);
       } else {
-        const marker = new google.maps.Marker({
-          position: pos,
-          map: mapInstance.current!,
-          icon: {
-            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-            scale: 5,
-            fillColor: '#00D4AA',
-            fillOpacity: 0.9,
-            strokeColor: '#ffffff',
-            strokeWeight: 1.5,
-            rotation: d.heading ?? 0,
-          },
-        });
+        const el = document.createElement('div');
+        el.className = 'w-4 h-4 bg-[#00D4AA]/80 border border-white/50 rounded-sm transform rotate-45';
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat([d.longitude, d.latitude])
+          .addTo(mapInstance.current!);
         driverMarkers.current.set(d.id, marker);
       }
     });
   }, [loaded, drivers]);
 
-  // Show route
+  // Route Rendering
   useEffect(() => {
-    if (!loaded || !routeRenderer.current || !origin || !destination) return;
-    const directionsService = new google.maps.DirectionsService();
-    directionsService.route({
-      origin, destination,
-      travelMode: google.maps.TravelMode.DRIVING,
-    }, (result, status) => {
-      if (status === 'OK' && result) routeRenderer.current!.setDirections(result);
-    });
+    if (!loaded || !mapInstance.current || !origin || !destination) return;
+
+    const map = mapInstance.current;
+
+    const getRoute = async () => {
+      const query = await fetch(
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+        { method: 'GET' }
+      );
+      const json = await query.json();
+      const data = json.routes[0];
+      const route = data.geometry.coordinates;
+      const geojson: GeoJSON.Feature = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: route
+        }
+      };
+
+      if (map.getSource('route')) {
+        (map.getSource('route') as mapboxgl.GeoJSONSource).setData(geojson);
+      } else {
+        map.addSource('route', {
+          type: 'geojson',
+          data: geojson
+        });
+        map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#6C63FF',
+            'line-width': 5,
+            'line-opacity': 0.75
+          }
+        });
+      }
+
+      // Fit bounds
+      const bounds = new mapboxgl.LngLatBounds();
+      route.forEach((coord: [number, number]) => bounds.extend(coord));
+      map.fitBounds(bounds, { padding: 50 });
+    };
+
+    getRoute();
   }, [loaded, origin?.lat, origin?.lng, destination?.lat, destination?.lng]);
 
   return (
-    <div className={className} ref={mapRef}>
+    <div className={className} ref={mapContainerRef}>
       {!loaded && (
         <div className="w-full h-full bg-[#0A0A0F] flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-[rgba(108,99,255,0.3)] border-t-[#6C63FF] rounded-full animate-spin" />

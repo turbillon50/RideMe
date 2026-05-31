@@ -123,7 +123,8 @@ export const useRideNegotiation = () => {
       try {
         setSelectedOffer(offer);
         await api.post(`/offers/${offer.id}/accept`);
-        emit(SOCKET_EVENTS.ACCEPT_OFFER, { rideId: activeRide.id, offerId: offer.id });
+        // The server will handle broadcasting the acceptance via sockets
+        // emit(SOCKET_EVENTS.ACCEPT_OFFER, { rideId: activeRide.id, offerId: offer.id });
       } catch (error) {
         console.error('Failed to accept offer:', error);
         throw error;
@@ -151,7 +152,8 @@ export const useRideNegotiation = () => {
     if (!activeRide) return;
     try {
       await api.post(`/rides/${activeRide.id}/cancel`);
-      emit(SOCKET_EVENTS.CANCEL_RIDE, { rideId: activeRide.id });
+      // The server will handle broadcasting the cancellation
+      // emit(SOCKET_EVENTS.CANCEL_RIDE, { rideId: activeRide.id });
       resetTrip();
       router.push('/app');
     } catch (error) {

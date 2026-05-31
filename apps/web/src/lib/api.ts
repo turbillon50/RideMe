@@ -20,25 +20,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
-const getTokens = (): AuthTokens | null => {
-  if (typeof window === 'undefined') return null;
-  const stored = localStorage.getItem('auth_tokens');
-  if (!stored) return null;
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return null;
-  }
-};
+let authTokenGetter: (() => Promise<string | null>) | null = null;
 
-const setTokens = (tokens: AuthTokens): void => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem('auth_tokens', JSON.stringify(tokens));
-};
-
-const clearTokens = (): void => {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem('auth_tokens');
+export const setAuthTokenGetter = (getter: () => Promise<string | null>) => {
+  authTokenGetter = getter;
 };
 
 const apiClient: AxiosInstance = axios.create({
@@ -51,72 +36,24 @@ const apiClient: AxiosInstance = axios.create({
 
 // Request interceptor – attach JWT
 apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const tokens = getTokens();
-    if (tokens?.accessToken) {
-      config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+  async (config: InternalAxiosRequestConfig) => {
+    if (authTokenGetter) {
+      const token = await authTokenGetter();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
   (error) => Promise.reject(error),
 );
 
-// Response interceptor – auto-refresh on 401
+// Response interceptor
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            if (originalRequest.headers) {
-              (originalRequest.headers as Record<string, string>).Authorization = `Bearer ${token}`;
-            }
-            return apiClient(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      const tokens = getTokens();
-      if (!tokens?.refreshToken) {
-        clearTokens();
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
-        return Promise.reject(error);
-      }
-
-      try {
-        const { data } = await axios.post<AuthTokens>(`${BASE_URL}/auth/refresh`, {
-          refreshToken: tokens.refreshToken,
-        });
-
-        setTokens(data);
-        processQueue(null, data.accessToken);
-
-        if (originalRequest.headers) {
-          (originalRequest.headers as Record<string, string>).Authorization = `Bearer ${data.accessToken}`;
-        }
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        clearTokens();
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
-    }
-
+    // With Clerk, we generally don't need manual refresh in axios interceptors
+    // as Clerk handles session token rotation.
     return Promise.reject(error);
   },
 );
@@ -140,5 +77,4 @@ export const api = {
     apiClient.delete<T>(url, config).then((r) => r.data),
 };
 
-export { getTokens, setTokens, clearTokens };
 export default apiClient;
