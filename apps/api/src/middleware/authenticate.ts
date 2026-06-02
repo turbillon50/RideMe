@@ -31,47 +31,27 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
 
     const token = authHeader.slice(7);
 
-    // First try to verify with Clerk
-    try {
-      const decoded = await verifyToken(token, {
-        secretKey: env.CLERK_SECRET_KEY,
-      });
+    // Verify with Clerk
+    const decoded = await verifyToken(token, {
+      secretKey: env.CLERK_SECRET_KEY,
+    });
 
-      if (!decoded.sub) {
-        throw new UnauthorizedError('Invalid token: missing sub claim');
-      }
-
-      // Get user from database using Clerk ID
-      const user = await getUserByClerkId(decoded.sub);
-      if (!user) {
-        throw new UnauthorizedError('User not found');
-      }
-
-      req.user = {
-        id: user.id as string,
-        email: user.email as string,
-        clerkId: decoded.sub,
-        role: user.role as AuthUser['role'],
-        ...(user.driverId ? { driverId: user.driverId as string } : {}),
-      };
-
-      next();
-      return;
-    } catch (clerkError) {
-      logger.debug('Clerk token verification failed, trying JWT fallback', {
-        error: (clerkError as Error).message,
-      });
+    if (!decoded.sub) {
+      throw new UnauthorizedError('Invalid token: missing sub claim');
     }
 
-    // Fallback to JWT verification (for backward compatibility)
-    const payload = verifyAccessToken(token);
+    // Get user from database using Clerk ID
+    const user = await getUserByClerkId(decoded.sub);
+    if (!user) {
+      throw new UnauthorizedError('User not found');
+    }
 
     req.user = {
-      id: payload.sub as string,
-      email: payload.email as string,
-      clerkId: payload.clerkId as string,
-      role: payload.role as AuthUser['role'],
-      ...(payload.driverId ? { driverId: payload.driverId as string } : {}),
+      id: user.id as string,
+      email: user.email as string,
+      clerkId: decoded.sub,
+      role: user.role as AuthUser['role'],
+      ...(user.driverId ? { driverId: user.driverId as string } : {}),
     };
 
     next();
@@ -100,18 +80,12 @@ export function requireAdmin(req: Request, _res: Response, next: NextFunction): 
   next();
 }
 
-export function optionalAuth(req: Request, _res: Response, next: NextFunction): void {
+export async function optionalAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.slice(7);
-      const payload = verifyAccessToken(token);
-      req.user = {
-        id: payload.sub as string,
-        phone: payload.phone as string,
-        role: payload.role as AuthUser['role'],
-        ...(payload.driverId ? { driverId: payload.driverId as string } : {}),
-      };
+      await authenticate(req, res, next);
+      return;
     }
   } catch {
     // ignore errors for optional auth

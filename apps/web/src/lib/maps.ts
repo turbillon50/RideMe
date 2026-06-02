@@ -1,159 +1,54 @@
-import { Loader } from '@googlemaps/js-api-loader';
 import { Coordinates } from '@/types';
 
-const GOOGLE_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || '';
-
-let loader: Loader | null = null;
-let isLoaded = false;
-
-export const getLoader = (): Loader => {
-  if (!loader) {
-    loader = new Loader({
-      apiKey: GOOGLE_MAPS_KEY,
-      version: 'weekly',
-      libraries: ['places', 'geometry', 'routes'],
-    });
-  }
-  return loader;
-};
-
-export const loadGoogleMaps = async (): Promise<typeof google> => {
-  if (typeof window === 'undefined') throw new Error('Must run in browser');
-  if (isLoaded && window.google) return window.google;
-
-  await getLoader().load();
-  isLoaded = true;
-  return window.google;
-};
-
-// ─── Dark Map Style ───────────────────────────────────────────────────────────
-
-export const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
-  { elementType: 'geometry', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#0A0A0F' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: 'rgba(255,255,255,0.4)' }] },
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: 'rgba(255,255,255,0.6)' }],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: 'rgba(255,255,255,0.3)' }],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'geometry',
-    stylers: [{ color: '#0F1A12' }],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#2A3D2A' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{ color: '#1A1A2E' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry.stroke',
-    stylers: [{ color: '#111118' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: 'rgba(255,255,255,0.35)' }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [{ color: '#22223A' }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry.stroke',
-    stylers: [{ color: '#1A1A2E' }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: 'rgba(255,255,255,0.5)' }],
-  },
-  {
-    featureType: 'transit',
-    elementType: 'geometry',
-    stylers: [{ color: '#111118' }],
-  },
-  {
-    featureType: 'transit.station',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: 'rgba(255,255,255,0.4)' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [{ color: '#060612' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: 'rgba(255,255,255,0.2)' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.stroke',
-    stylers: [{ color: '#060612' }],
-  },
-];
-
-// ─── Default Map Options ──────────────────────────────────────────────────────
-
-export const DEFAULT_MAP_OPTIONS: google.maps.MapOptions = {
-  disableDefaultUI: true,
-  clickableIcons: false,
-  gestureHandling: 'greedy',
-  styles: DARK_MAP_STYLE,
-  zoomControl: false,
-  streetViewControl: false,
-  mapTypeControl: false,
-  fullscreenControl: false,
-};
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 export const calculateDistance = (a: Coordinates, b: Coordinates): number => {
-  if (typeof window === 'undefined' || !window.google) return 0;
+  const R = 6371; // Earth radius in km
+  const dLat = (b.lat - a.lat) * Math.PI / 180;
+  const dLng = (b.lng - a.lng) * Math.PI / 180;
+  const lat1 = a.lat * Math.PI / 180;
+  const lat2 = b.lat * Math.PI / 180;
 
-  const from = new google.maps.LatLng(a.lat, a.lng);
-  const to = new google.maps.LatLng(b.lat, b.lng);
-  return google.maps.geometry.spherical.computeDistanceBetween(from, to) / 1000; // km
+  const x = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const y = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+  return R * y;
 };
 
 export const geocodeAddress = async (address: string): Promise<Coordinates | null> => {
-  await loadGoogleMaps();
-  const geocoder = new google.maps.Geocoder();
-  const result = await geocoder.geocode({ address });
-  if (result.results.length === 0) return null;
-  const loc = result.results[0].geometry.location;
-  return { lat: loc.lat(), lng: loc.lng() };
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${MAPBOX_TOKEN}&limit=1`
+    );
+    const data = await response.json();
+    if (data.features && data.features.length > 0) {
+      const [lng, lat] = data.features[0].center;
+      return { lat, lng };
+    }
+    return null;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return null;
+  }
 };
 
 export const getDirections = async (
   origin: Coordinates,
   destination: Coordinates,
-): Promise<google.maps.DirectionsResult | null> => {
-  await loadGoogleMaps();
-  const service = new google.maps.DirectionsService();
+): Promise<any | null> => {
   try {
-    return await service.route({
-      origin: new google.maps.LatLng(origin.lat, origin.lng),
-      destination: new google.maps.LatLng(destination.lat, destination.lng),
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
-  } catch {
+    const response = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?geometries=geojson&access_token=${MAPBOX_TOKEN}`
+    );
+    const data = await response.json();
+    if (data.routes && data.routes.length > 0) {
+      return data.routes[0];
+    }
+    return null;
+  } catch (error) {
+    console.error('Directions error:', error);
     return null;
   }
 };
@@ -163,7 +58,8 @@ export const formatDistance = (km: number): string => {
   return `${km.toFixed(1)} km`;
 };
 
-export const formatDuration = (minutes: number): string => {
+export const formatDuration = (seconds: number): string => {
+  const minutes = seconds / 60;
   if (minutes < 60) return `${Math.round(minutes)} min`;
   const h = Math.floor(minutes / 60);
   const m = Math.round(minutes % 60);

@@ -63,6 +63,13 @@ export function verifyRefreshToken(token: string): JwtPayload {
   }
 }
 
+// Re-export missing members for controller compatibility
+export const registerUser = async (...args: any[]) => { throw new BadRequestError('Use Clerk for registration'); };
+export const loginWithPassword = async (...args: any[]) => { throw new BadRequestError('Use Clerk for login'); };
+export const loginWithOtp = async (...args: any[]) => { throw new BadRequestError('Use Clerk for login'); };
+export const generateOtp = async (...args: any[]) => { throw new BadRequestError('Use Clerk for verification'); };
+export const changePassword = async (...args: any[]) => { throw new BadRequestError('Use Clerk for account management'); };
+
 /**
  * Create or update user from Clerk auth data
  * Called after successful Clerk authentication

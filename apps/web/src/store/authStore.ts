@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { User, AuthTokens } from '@/types';
-import { setTokens, clearTokens } from '@/lib/api';
 import { api } from '@/lib/api';
 
 interface AuthStore {
@@ -18,7 +17,7 @@ interface AuthStore {
   setTokens: (tokens: AuthTokens) => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
   refreshUser: () => Promise<void>;
-  initialize: () => void;
+  syncWithClerk: (isSignedIn: boolean, getToken: () => Promise<string | null>) => Promise<void>;
 }
 
 interface RegisterPayload {
@@ -44,70 +43,35 @@ export const useAuthStore = create<AuthStore>()(
       isLoading: false,
       isAuthenticated: false,
 
-      initialize: () => {
-        const { tokens, user } = get();
-        if (tokens && user) {
-          setTokens(tokens);
-          set({ isAuthenticated: true });
+      syncWithClerk: async (isSignedIn, getToken) => {
+        if (!isSignedIn) {
+          set({ user: null, tokens: null, isAuthenticated: false });
+          return;
+        }
+
+        try {
+          const user = await api.get<User>('/users/me');
+          set({ user, isAuthenticated: true });
+        } catch (error) {
+          console.error('Failed to sync user with clerk:', error);
         }
       },
 
       login: async (email: string, password: string) => {
-        set({ isLoading: true });
-        try {
-          const response = await api.post<AuthResponse>('/auth/login', { email, password });
-          const tokens: AuthTokens = {
-            accessToken: response.accessToken,
-            refreshToken: response.refreshToken,
-            expiresAt: response.expiresAt,
-          };
-          setTokens(tokens);
-          set({
-            user: response.user,
-            tokens,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-        } catch (error) {
-          set({ isLoading: false });
-          throw error;
-        }
+        // Redundant with Clerk, but kept for compatibility
       },
 
       register: async (payload: RegisterPayload) => {
-        set({ isLoading: true });
-        try {
-          const response = await api.post<AuthResponse>('/auth/register', payload);
-          const tokens: AuthTokens = {
-            accessToken: response.accessToken,
-            refreshToken: response.refreshToken,
-            expiresAt: response.expiresAt,
-          };
-          setTokens(tokens);
-          set({
-            user: response.user,
-            tokens,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-        } catch (error) {
-          set({ isLoading: false });
-          throw error;
-        }
+        // Redundant with Clerk, but kept for compatibility
       },
 
       logout: () => {
-        clearTokens();
         set({ user: null, tokens: null, isAuthenticated: false });
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
       },
 
       setUser: (user: User) => set({ user }),
 
       setTokens: (tokens: AuthTokens) => {
-        setTokens(tokens);
         set({ tokens });
       },
 

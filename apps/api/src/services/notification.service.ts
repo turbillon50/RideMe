@@ -17,6 +17,20 @@ export interface PushNotificationData {
   data?: Record<string, string>;
 }
 
+export async function sendPushToUser(
+  userId: string,
+  payload: PushNotificationData
+): Promise<void> {
+  // Push notifications currently disabled after Firebase removal.
+  // Emails are being sent instead where appropriate.
+  logger.debug('Push notification skipped (Firebase removed)', { userId, payload });
+}
+
+export async function sendOtpSms(phone: string, code: string): Promise<void> {
+  // SMS currently disabled after Twilio removal.
+  logger.debug('SMS skipped (Twilio removed)', { phone, code });
+}
+
 export async function sendEmail(
   to: string,
   payload: EmailNotificationPayload

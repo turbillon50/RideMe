@@ -28,9 +28,20 @@ export function initializeSocketServer(server: HttpServer): void {
 
     socket.on('authenticate', async ({ token }: { token: string }) => {
       try {
-        const payload = verifyAccessToken(token);
-        const userId = payload.sub as string;
-        const role = payload.role as string;
+        const { verifyToken } = await import('@clerk/backend');
+        const decoded = await verifyToken(token, {
+          secretKey: env.CLERK_SECRET_KEY,
+        });
+
+        if (!decoded.sub) throw new Error('Invalid token');
+
+        const { getUserByClerkId } = await import('../services/auth.service');
+        const user = await getUserByClerkId(decoded.sub);
+
+        if (!user) throw new Error('User not found');
+
+        const userId = user.id as string;
+        const role = user.role as string;
 
         // Attach to socket
         (socket as Socket & { userId?: string; role?: string; driverId?: string }).userId = userId;
@@ -38,11 +49,8 @@ export function initializeSocketServer(server: HttpServer): void {
 
         // Join private room
         if (role === 'driver') {
-          const { rows: [driver] } = await query(
-            `SELECT id FROM drivers WHERE user_id=$1`, [userId]
-          );
-          if (driver) {
-            const driverId = driver.id;
+          if (user.driverId) {
+            const driverId = user.driverId as string;
             (socket as Socket & { driverId?: string }).driverId = driverId;
             socket.join(`driver:${driverId}`);
 
@@ -57,8 +65,9 @@ export function initializeSocketServer(server: HttpServer): void {
         }
 
         socket.emit('authenticated', { userId, role });
-        logger.debug(`Socket authenticated: userId=${userId} role=${role}`);
-      } catch {
+        logger.debug(`Socket authenticated via Clerk: userId=${userId} role=${role}`);
+      } catch (err) {
+        logger.error('Socket authentication error', err);
         socket.emit('auth_error', { message: 'Invalid token' });
         socket.disconnect(true);
       }

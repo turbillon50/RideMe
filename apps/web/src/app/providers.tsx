@@ -3,8 +3,10 @@
 import { ReactNode, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AnimatePresence } from 'framer-motion';
+import { useAuth } from '@clerk/nextjs';
 import { useAuthStore } from '@/store/authStore';
 import { connectSocket, disconnectSocket } from '@/lib/socket';
+import { setAuthTokenGetter } from '@/lib/api';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,19 +19,28 @@ const queryClient = new QueryClient({
 });
 
 function AppProviders({ children }: { children: ReactNode }) {
-  const { tokens, isAuthenticated, initialize } = useAuthStore();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
+  const { syncWithClerk } = useAuthStore();
 
   useEffect(() => {
-    initialize();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    setAuthTokenGetter(() => getToken());
+  }, [getToken]);
 
   useEffect(() => {
-    if (isAuthenticated && tokens?.accessToken) {
-      connectSocket(tokens.accessToken);
+    if (isLoaded) {
+      syncWithClerk(isSignedIn, getToken);
+    }
+  }, [isLoaded, isSignedIn, getToken, syncWithClerk]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      getToken().then((token) => {
+        if (token) connectSocket(token);
+      });
     } else {
       disconnectSocket();
     }
-  }, [isAuthenticated, tokens?.accessToken]);
+  }, [isSignedIn, getToken]);
 
   return <>{children}</>;
 }
