@@ -60,13 +60,13 @@ export default function PassengerMapPage() {
         {/* Top bar */}
         <div className="absolute top-0 left-0 right-0 px-4 pt-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 bg-[rgba(17,17,24,0.9)] backdrop-blur-xl rounded-2xl px-3 py-2 border border-[rgba(255,255,255,0.08)]">
+            <div className="flex items-center gap-2 surface-glass backdrop-blur-xl rounded-2xl px-3 py-2 border border-[rgba(255,255,255,0.08)]">
               <img src="/brand/app.jpg" alt="" className="h-7 w-7 rounded-lg object-cover" />
               <span className="font-bold text-sm">RideMe</span>
             </div>
             <button
               onClick={() => router.push('/app/schedule')}
-              className="flex items-center gap-1.5 bg-[rgba(17,17,24,0.9)] backdrop-blur-xl rounded-2xl px-3 py-2 border border-[rgba(255,255,255,0.08)] text-sm text-[#8B8B9E] hover:text-white transition-colors"
+              className="flex items-center gap-1.5 surface-glass backdrop-blur-xl rounded-2xl px-3 py-2 border border-[rgba(255,255,255,0.08)] text-sm text-[#8B8B9E] hover:text-white transition-colors"
             >
               <Clock size={14} />
               Programar

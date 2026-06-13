@@ -167,14 +167,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Glass Effect ───────────────────────────────────────────────────────────── */
 .glass {
-  background: rgba(17, 17, 24, 0.8);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
 }
 
 .glass-strong {
-  background: rgba(17, 17, 24, 0.95);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -434,7 +434,7 @@ input[type='range']::-moz-range-thumb {
 /* ─── v0 Gradient Border ─────────────────────────────────────────────────────── */
 .gradient-border {
   position: relative;
-  background: #111118;
+  background: var(--surface);
 }
 
 .gradient-border::before {
@@ -502,3 +502,7 @@ input[type='range']::-moz-range-thumb {
 
 .loading-dot:nth-child(2) { animation-delay: 0.16s; }
 .loading-dot:nth-child(3) { animation-delay: 0.32s; }
+
+.surface-glass {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}

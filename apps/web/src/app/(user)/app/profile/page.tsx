@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, User, Phone, Mail, CreditCard, Plus, Trash2, Check, LogOut } from '@/components/icons';
 import { BottomNav } from '@/components/layout/BottomNav';
-import { useAuthStore } from '@/store/authStore';
+import { useUser, useClerk } from '@clerk/nextjs';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -20,7 +20,15 @@ interface PaymentMethod {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, logout } = useAuthStore();
+  const { user: clerkUser } = useUser();
+  const { signOut } = useClerk();
+  const user = clerkUser
+    ? {
+        name: clerkUser.firstName || clerkUser.fullName || '',
+        email: clerkUser.primaryEmailAddress?.emailAddress || '',
+        phone: clerkUser.primaryPhoneNumber?.phoneNumber || '',
+      }
+    : null;
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [loadingMethods, setLoadingMethods] = useState(true);
   const [name, setName] = useState(user?.name ?? '');
@@ -40,7 +48,7 @@ export default function ProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await api.put('/users/me', { name });
+      await clerkUser?.update({ firstName: name });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch {
@@ -59,9 +67,9 @@ export default function ProfilePage() {
     setMethods(prev => prev.filter(m => m.id !== id));
   };
 
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
   };
 
   const brandIcon: Record<string, string> = {
@@ -99,7 +107,7 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.06 }}
-          className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
+          className="bg-card border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
         >
           <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.04)]">
             <p className="text-xs font-semibold text-[#8B8B9E] uppercase tracking-wider">Información personal</p>
@@ -151,7 +159,7 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.16 }}
-          className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
+          className="bg-card border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.04)]">
             <p className="text-xs font-semibold text-[#8B8B9E] uppercase tracking-wider">Métodos de pago</p>
