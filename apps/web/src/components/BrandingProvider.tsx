@@ -43,24 +43,7 @@ export function applyBranding(branding: BrandingConfig) {
   root.style.setProperty('--secondary', branding.accent_color);
   root.style.setProperty('--gradient-cta', `linear-gradient(135deg, ${branding.primary_color}, ${branding.accent_color})`);
 
-  document.title = branding.app_name || DEFAULT_BRANDING.app_name;
-
-  const iconHref = branding.icon_url || DEFAULT_BRANDING.icon_url;
-  let icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-  if (!icon) {
-    icon = document.createElement('link');
-    icon.rel = 'icon';
-    document.head.appendChild(icon);
-  }
-  icon.href = iconHref;
-
-  let apple = document.querySelector<HTMLLinkElement>('link[rel="apple-touch-icon"]');
-  if (!apple) {
-    apple = document.createElement('link');
-    apple.rel = 'apple-touch-icon';
-    document.head.appendChild(apple);
-  }
-  apple.href = iconHref;
+  
 }
 
 export function BrandingProvider({ children }: { children: ReactNode }) {
