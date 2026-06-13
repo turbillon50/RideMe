@@ -47,10 +47,11 @@ export function SupportButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-24 right-4 z-[70] inline-flex items-center gap-2 rounded-2xl border border-primary/30 bg-surface/95 px-4 py-3 text-sm font-semibold text-foreground shadow-modal backdrop-blur transition hover:border-primary md:bottom-6"
+        aria-label="Reportar un problema"
+        title="Reportar"
+        className="fixed bottom-24 right-4 z-[60] inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface/90 text-muted-foreground shadow-card backdrop-blur transition hover:text-primary hover:border-primary/40 md:bottom-6"
       >
-        <AlertCircle size={17} className="text-primary" />
-        Reportar
+        <AlertCircle size={18} />
       </button>
 
       {open && (

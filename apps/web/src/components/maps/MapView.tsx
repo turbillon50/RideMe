@@ -66,6 +66,8 @@ export function MapView({
       center: [center.lng, center.lat],
       zoom,
       attributionControl: false,
+      preserveDrawingBuffer: true,
+      fadeDuration: 0,
     });
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
     if (onMapClick) {
@@ -74,6 +76,7 @@ export function MapView({
     map.on('load', () => {
       setLoaded(true);
       map.resize();
+      setTimeout(() => { map.resize(); map.triggerRepaint(); }, 500);
     });
     mapInstance.current = map;
     const ro = new ResizeObserver(() => map.resize());

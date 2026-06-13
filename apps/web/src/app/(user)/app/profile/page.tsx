@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, User, Phone, Mail, CreditCard, Plus, Trash2, Check, LogOut } from '@/components/icons';
 import { BottomNav } from '@/components/layout/BottomNav';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useUser, useClerk } from '@clerk/nextjs';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
@@ -202,6 +203,22 @@ export default function ProfilePage() {
               ))}
             </div>
           )}
+        </motion.div>
+
+        {/* Appearance */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-card border border-border rounded-2xl overflow-hidden"
+        >
+          <div className="flex items-center justify-between px-4 py-3.5">
+            <div>
+              <p className="text-sm font-medium">Apariencia</p>
+              <p className="text-xs text-[#8B8B9E]">Tema claro u oscuro</p>
+            </div>
+            <ThemeToggle />
+          </div>
         </motion.div>
 
         {/* Logout */}
