@@ -8,11 +8,10 @@ const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^p
 
 const isPublicRoute = createRouteMatcher([
   '/', '/login(.*)', '/demo(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
-  '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)', '/api/invitations/validate', '/api/drivers/(.*)', '/api/driver/(.*)',
+  '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)', '/api/invitations/validate', '/api/drivers/(.*)', '/api/driver/(.*)', '/api/push/(.*)',
 ]);
 
 const clerkHandler = clerkMiddleware((auth, req) => {
-  if (req.cookies.get('rideme_demo')?.value === '1') return;
   if (!isPublicRoute(req)) auth().protect();
 });
 

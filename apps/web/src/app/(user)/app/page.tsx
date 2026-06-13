@@ -9,13 +9,12 @@ import { BottomNav } from '@/components/layout/BottomNav';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useAuthStore } from '@/store/authStore';
 import { useTripStore } from '@/store/tripStore';
-import { api } from '@/lib/api';
 
 export default function PassengerMapPage() {
   const router = useRouter();
   const { user } = useAuthStore();
   const { activeRide } = useTripStore();
-  const { location } = useGeolocation();
+  const { location, requestPermission } = useGeolocation({ watch: true, enableHighAccuracy: true });
 
   const [nearbyDrivers, setNearbyDrivers] = useState<Array<{ id: string; latitude: number; longitude: number }>>([]);
   const [mounted, setMounted] = useState(false);
@@ -36,11 +35,9 @@ export default function PassengerMapPage() {
 
   useEffect(() => {
     if (!location) return;
-    api
-      .get('/drivers/nearby', {
-        params: { lat: location.latitude, lng: location.longitude, radius: 5000 },
-      })
-      .then((res) => setNearbyDrivers(res.data?.data ?? []))
+    fetch(`/api/drivers/nearby?lat=${location.latitude}&lng=${location.longitude}&radius=8000`)
+      .then((r) => r.json())
+      .then((d) => setNearbyDrivers(d.data ?? []))
       .catch(() => {});
   }, [location?.latitude, location?.longitude]);
 

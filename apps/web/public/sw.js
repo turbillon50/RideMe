@@ -1,1 +1,58 @@
-if(!self.define){let s,r={};const e=(e,a)=>(e=new URL(e+".js",a).href,r[e]||new Promise(r=>{if("document"in self){const s=document.createElement("script");s.src=e,s.onload=r,document.head.appendChild(s)}else s=e,importScripts(e),r()}).then(()=>{let s=r[e];if(!s)throw new Error(`Module ${e} didn’t register its module`);return s}));self.define=(a,c)=>{const i=s||("document"in self?document.currentScript.src:"")||location.href;if(r[i])return;let n={};const t=s=>e(s,i),d={module:{uri:i},exports:n,require:t};r[i]=Promise.all(a.map(s=>d[s]||t(s))).then(s=>(c(...s),n))}}define(["./workbox-334f681c"],function(s){"use strict";importScripts(),self.skipWaiting(),s.clientsClaim(),s.precacheAndRoute([{url:"/_next/app-build-manifest.json",revision:"2df8e02a409ef5fd727e7b2005cca1d1"},{url:"/_next/static/9g-6PdZwcr-rsPDaNZD45/_buildManifest.js",revision:"1de5fa3e081a679892be37ea3de6113c"},{url:"/_next/static/9g-6PdZwcr-rsPDaNZD45/_ssgManifest.js",revision:"b6652df95db52feb4daf4eca35380933"},{url:"/_next/static/chunks/1074-11d2be536a6e8531.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/1840-c61a84c0e8e6e26f.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/1dd3208c-a52a7cd865200bb1.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/286-63c4b0818626a79f.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/3074-3f473e8fa48309a2.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/3323-af141824e7a06bfe.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/3428-3ac4fc0a963251d9.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/3467-c7777b1652239075.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/5469-56d06a1f557729e2.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/5768-c5f97f356df982f1.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/579-8dc45794c2332092.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/6000-98b3955a3f745ff7.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/6242-1ea338852751df7c.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/651-b2840a3c21181c29.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/7720-d5c448cd33bf1b6c.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/9520-4e8d484d5cd115b1.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/9643-a568743976e78b8b.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(auth)/login/page-ffdcef8110e34673.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(auth)/register/page-746a687369312a93.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/driver/earnings/page-f73279ce7e8949c6.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/driver/page-1ecfdf438d323b0f.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/driver/profile/page-67e4dcab81c2d657.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/driver/subscription/checkout/page-c5e6c1b8399f7e05.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/driver/subscription/page-89e5a5c58ec96115.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/driver/trip/page-b3fd09816a3357f8.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(driver)/layout-4f35159ebf63e9f6.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/app/history/page-7cf8310397d6c2b1.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/app/offers/page-36a884a897b33734.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/app/page-5fce48c7a08b09f2.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/app/profile/page-75abfc5a5dd35fb2.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/app/schedule/page-8ef167ad9d7e8c66.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/app/trip/page-5ed213bfadeb4b56.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/(user)/layout-dc5f19e3cef664f0.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/_not-found/page-431efd641fb4d159.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/branding/page-2f3e097c2d824f8b.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/drivers/page-fc451741bc76ae27.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/invitations/page-bcf480b4bd8c944f.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/layout-c9071477c17d3736.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/page-473736300182d17f.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/rides/page-ced80f8e32264ce8.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/support/page-338e03a8b772368f.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/admin/users/page-a4c110949bdb99be.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/invite/%5Bcode%5D/page-540863f01a4343a7.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/layout-8c91d62192014a21.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/page-35b710aa7afd075d.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/sign-in/%5B%5B...sign-in%5D%5D/page-995e1272fc34f3b8.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/app/sign-up/%5B%5B...sign-up%5D%5D/page-538158d964f9dfe8.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/framework-648e1ae7da590300.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/main-app-8e1887a706df3ee9.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/main-fa05f411943206d6.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/pages/_app-5cae9f4e3da1ca65.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/pages/_error-2fa67138f23652db.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/chunks/polyfills-78c92fac7aa8fdd8.js",revision:"79330112775102f91e1010318bae2bd3"},{url:"/_next/static/chunks/webpack-b9ae94f180b30d22.js",revision:"9g-6PdZwcr-rsPDaNZD45"},{url:"/_next/static/css/c54064afc67239b2.css",revision:"c54064afc67239b2"},{url:"/brand/app.jpg",revision:"537cdf9773123a63aca2637f06015248"},{url:"/brand/apple-touch-icon.png",revision:"4b54c04ef31eaefc67246a2038301cd2"},{url:"/brand/driver.jpg",revision:"f1a565062d655aa26399dd4cb90c04ae"},{url:"/brand/hero.jpg",revision:"d21839e2a1a2709a8a2b88be12aea06c"},{url:"/brand/icon-192.png",revision:"7bad845eff0a5217266675af60ca8c30"},{url:"/brand/icon-512.png",revision:"7310a829fa07c89a2767da92c7b66fff"},{url:"/manifest.json",revision:"7ca5ecbef30a22c461a4b9c722f1cdae"}],{ignoreURLParametersMatching:[]}),s.cleanupOutdatedCaches(),s.registerRoute("/",new s.NetworkFirst({cacheName:"start-url",plugins:[{cacheWillUpdate:async({request:s,response:r,event:e,state:a})=>r&&"opaqueredirect"===r.type?new Response(r.body,{status:200,statusText:"OK",headers:r.headers}):r}]}),"GET"),s.registerRoute(/^https?:\/\/[^/]+\/$/,new s.NetworkFirst({cacheName:"start-url",plugins:[]}),"GET"),s.registerRoute(/^https?:\/\/[^/]+\/brand\/.*\.(?:png|jpg|jpeg|webp)$/i,new s.StaleWhileRevalidate({cacheName:"brand-assets",plugins:[]}),"GET"),s.registerRoute(/^https?:\/\/[^/]+\/api\/(?:branding|support)/,new s.NetworkFirst({cacheName:"rideme-api",networkTimeoutSeconds:10,plugins:[]}),"GET")});
+// RideMe Service Worker v2 — con push notifications
+const CACHE = 'rideme-v2';
+const STATIC = ['/', '/manifest.json', '/brand/icon-192.png'];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(STATIC)));
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (e) => {
+  const url = new URL(e.request.url);
+  if (e.request.method !== 'GET') return;
+  if (url.pathname.startsWith('/api/')) return; // never cache API
+  e.respondWith(
+    fetch(e.request)
+      .then((r) => {
+        const clone = r.clone();
+        caches.open(CACHE).then((c) => c.put(e.request, clone));
+        return r;
+      })
+      .catch(() => caches.match(e.request))
+  );
+});
+
+// Push notifications
+self.addEventListener('push', (e) => {
+  if (!e.data) return;
+  const data = e.data.json();
+  e.waitUntil(
+    self.registration.showNotification(data.title || 'RideMe', {
+      body: data.body || '',
+      icon: '/brand/icon-192.png',
+      badge: '/brand/icon-192.png',
+      tag: data.tag || 'rideme',
+      data: { url: data.url || '/app' },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((cs) => {
+      const c = cs.find((c) => c.focus);
+      if (c) return c.focus();
+      return clients.openWindow(e.notification.data?.url || '/app');
+    })
+  );
+});

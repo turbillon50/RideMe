@@ -15,7 +15,6 @@ export function isDemoMode(): boolean {
  *  - their users.role = 'admin' or 'owner' in the database (matched by clerk_id or email)
  */
 export async function isAdmin(): Promise<boolean> {
-  if (isDemoMode()) return true;
   if (!CLERK_ON) return false;
 
   const { userId } = auth();
@@ -44,7 +43,6 @@ export async function isAdmin(): Promise<boolean> {
 
 /** Returns a 401/403 NextResponse if not admin, otherwise null. */
 export async function requireAdmin(): Promise<NextResponse | null> {
-  if (isDemoMode()) return null;
   if (!CLERK_ON) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
 
   const { userId } = auth();
