@@ -18,6 +18,8 @@ export default function PassengerMapPage() {
   const { location } = useGeolocation();
 
   const [nearbyDrivers, setNearbyDrivers] = useState<Array<{ id: string; latitude: number; longitude: number }>>([]);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const center = location
     ? { lat: location.latitude, lng: location.longitude }
@@ -41,6 +43,8 @@ export default function PassengerMapPage() {
       .then((res) => setNearbyDrivers(res.data?.data ?? []))
       .catch(() => {});
   }, [location?.latitude, location?.longitude]);
+
+  if (!mounted) return <div className='flex min-h-screen items-center justify-center bg-background' />;
 
   return (
     <div className="mx-auto flex min-h-screen max-w-[430px] flex-col overflow-x-hidden bg-background md:max-w-none md:pl-20">
