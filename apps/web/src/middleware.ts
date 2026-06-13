@@ -7,7 +7,7 @@ const pk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
 const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^pk_test_demo$/i.test(pk);
 
 const isPublicRoute = createRouteMatcher([
-  '/', '/demo(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
+  '/', '/login(.*)', '/demo(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
   '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)', '/api/invitations/validate',
 ]);
 
