@@ -1,9 +1,5 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-
 interface Driver {
   id: string;
   latitude: number;
@@ -23,19 +19,11 @@ interface MapViewProps {
   className?: string;
 }
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
-const MAP_STYLE = 'mapbox://styles/mapbox/dark-v11';
+const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
+const STYLE = 'mapbox/dark-v11';
 
-function makeDot(color: string, size: number): HTMLDivElement {
-  const el = document.createElement('div');
-  el.style.width = `${size}px`;
-  el.style.height = `${size}px`;
-  el.style.borderRadius = '50%';
-  el.style.background = color;
-  el.style.border = '3px solid #ffffff';
-  el.style.boxShadow = `0 0 12px ${color}`;
-  el.style.cursor = 'pointer';
-  return el;
+function f(n: number): string {
+  return n.toFixed(5);
 }
 
 export function MapView({
@@ -46,151 +34,52 @@ export function MapView({
   driverLocation,
   origin,
   destination,
-  onMapClick,
   className = 'w-full h-full',
 }: MapViewProps) {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<mapboxgl.Map | null>(null);
-  const driverMarkers = useRef<Map<string, mapboxgl.Marker>>(new Map());
-  const userMarker = useRef<mapboxgl.Marker | null>(null);
-  const driverTrackMarker = useRef<mapboxgl.Marker | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const focus = userLocation || origin || center;
 
-  // Init map (once)
-  useEffect(() => {
-    if (!mapRef.current || mapInstance.current) return;
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-    const map = new mapboxgl.Map({
-      container: mapRef.current,
-      style: MAP_STYLE,
-      center: [center.lng, center.lat],
-      zoom,
-      attributionControl: false,
-      preserveDrawingBuffer: true,
-      fadeDuration: 0,
-    });
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-    if (onMapClick) {
-      map.on('click', (e) => onMapClick(e.lngLat.lat, e.lngLat.lng));
-    }
-    map.on('load', () => {
-      setLoaded(true);
-      map.resize();
-      setTimeout(() => { map.resize(); map.triggerRepaint(); }, 500);
-    });
-    mapInstance.current = map;
-    const ro = new ResizeObserver(() => map.resize());
-    ro.observe(mapRef.current);
-    return () => {
-      ro.disconnect();
-      map.remove();
-      mapInstance.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const pins: string[] = [];
+  // Driver pins (teal)
+  drivers.slice(0, 14).forEach((d) => {
+    pins.push(`pin-s+00D4AA(${f(d.longitude)},${f(d.latitude)})`);
+  });
+  if (driverLocation) pins.push(`pin-l+00D4AA(${f(driverLocation.lng)},${f(driverLocation.lat)})`);
+  if (origin) pins.push(`pin-l+6C63FF(${f(origin.lng)},${f(origin.lat)})`);
+  if (destination) pins.push(`pin-l+00D4AA(${f(destination.lng)},${f(destination.lat)})`);
+  // User pin (violet) — last so it sits on top
+  pins.push(`pin-l+6C63FF(${f(focus.lng)},${f(focus.lat)})`);
 
-  // Update center
-  useEffect(() => {
-    if (mapInstance.current) mapInstance.current.setCenter([center.lng, center.lat]);
-  }, [center.lat, center.lng]);
-
-  // User location marker
-  useEffect(() => {
-    if (!loaded || !mapInstance.current) return;
-    const pos = userLocation || center;
-    if (!userMarker.current) {
-      userMarker.current = new mapboxgl.Marker({ element: makeDot('#6C63FF', 18) })
-        .setLngLat([pos.lng, pos.lat])
-        .addTo(mapInstance.current);
-    } else {
-      userMarker.current.setLngLat([pos.lng, pos.lat]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loaded, userLocation?.lat, userLocation?.lng]);
-
-  // Driver tracking marker
-  useEffect(() => {
-    if (!loaded || !mapInstance.current || !driverLocation) return;
-    if (!driverTrackMarker.current) {
-      driverTrackMarker.current = new mapboxgl.Marker({ element: makeDot('#00D4AA', 22) })
-        .setLngLat([driverLocation.lng, driverLocation.lat])
-        .addTo(mapInstance.current);
-    } else {
-      driverTrackMarker.current.setLngLat([driverLocation.lng, driverLocation.lat]);
-    }
-    mapInstance.current.panTo([driverLocation.lng, driverLocation.lat]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loaded, driverLocation?.lat, driverLocation?.lng]);
-
-  // Nearby driver markers
-  useEffect(() => {
-    if (!loaded || !mapInstance.current) return;
-    const currentIds = new Set(drivers.map((d) => d.id));
-
-    driverMarkers.current.forEach((marker, id) => {
-      if (!currentIds.has(id)) {
-        marker.remove();
-        driverMarkers.current.delete(id);
-      }
-    });
-
-    drivers.forEach((d) => {
-      const existing = driverMarkers.current.get(d.id);
-      if (existing) {
-        existing.setLngLat([d.longitude, d.latitude]);
-      } else {
-        const marker = new mapboxgl.Marker({ element: makeDot('#00D4AA', 12) })
-          .setLngLat([d.longitude, d.latitude])
-          .addTo(mapInstance.current!);
-        driverMarkers.current.set(d.id, marker);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loaded, drivers]);
-
-  // Route (origin -> destination) via Mapbox Directions
-  useEffect(() => {
-    if (!loaded || !mapInstance.current || !origin || !destination) return;
-    const map = mapInstance.current;
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?geometries=geojson&overview=full&access_token=${MAPBOX_TOKEN}`;
-    fetch(url)
-      .then((r) => r.json())
-      .then((data) => {
-        const geometry = data?.routes?.[0]?.geometry;
-        if (!geometry) return;
-        const gj: any = { type: 'Feature', properties: {}, geometry };
-        const src = map.getSource('route') as mapboxgl.GeoJSONSource | undefined;
-        if (src) {
-          src.setData(gj);
-        } else {
-          map.addSource('route', { type: 'geojson', data: gj });
-          map.addLayer({
-            id: 'route',
-            type: 'line',
-            source: 'route',
-            layout: { 'line-join': 'round', 'line-cap': 'round' },
-            paint: { 'line-color': '#6C63FF', 'line-width': 4, 'line-opacity': 0.9 },
-          });
-        }
-        const bounds = new mapboxgl.LngLatBounds(
-          [origin.lng, origin.lat],
-          [origin.lng, origin.lat],
-        );
-        bounds.extend([destination.lng, destination.lat]);
-        map.fitBounds(bounds, { padding: 70, maxZoom: 15 });
-      })
-      .catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loaded, origin?.lat, origin?.lng, destination?.lat, destination?.lng]);
+  const overlay = pins.join(',');
+  const center2 =
+    origin && destination
+      ? 'auto'
+      : `${f(focus.lng)},${f(focus.lat)},${zoom},0`;
+  const size = '600x500@2x';
+  const src = `https://api.mapbox.com/styles/v1/${STYLE}/static/${overlay}/${center2}/${size}?access_token=${TOKEN}&logo=false&attribution=false`;
 
   return (
-    <div className={`relative ${className}`}>
-      <div ref={mapRef} className="absolute inset-0" />
-      {!loaded && (
-        <div className="absolute inset-0 bg-[#0A0A0F] flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-[rgba(108,99,255,0.3)] border-t-[#6C63FF] rounded-full animate-spin" />
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={{ height: '100%', minHeight: '100%', background: '#0A0A0F' }}
+    >
+      {TOKEN ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt="Mapa"
+          className="h-full w-full"
+          style={{ height: '100%', width: '100%', objectFit: 'cover', display: 'block' }}
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-sm text-white/40">
+          Mapa no disponible
         </div>
       )}
+      {/* subtle bottom fade to blend into the sheet */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0"
+        style={{ height: '64px', background: 'linear-gradient(to top, var(--bg), transparent)' }}
+      />
     </div>
   );
 }
