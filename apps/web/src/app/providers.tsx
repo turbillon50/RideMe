@@ -2,7 +2,6 @@
 
 import { ReactNode, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/store/authStore';
 import { connectSocket, disconnectSocket } from '@/lib/socket';
 import { BrandingProvider } from '@/components/BrandingProvider';
@@ -40,9 +39,9 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <BrandingProvider>
         <AppProviders>
-          <AnimatePresence mode="wait">
+          
             {children}
-          </AnimatePresence>
+          
         </AppProviders>
       </BrandingProvider>
     </QueryClientProvider>
