@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Eye, EyeOff, Car, Mail, Lock, Loader2 } from '@/components/icons';
-import { useAuthStore } from '@/store/authStore';
+import { useSignIn } from '@clerk/nextjs';
 
 const loginSchema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -19,9 +19,10 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isLoading } = useAuthStore();
+  const { signIn, setActive, isLoaded } = useSignIn();
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const {
     register,
@@ -31,21 +32,26 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginForm) => {
+  const doSignIn = async (email: string, password: string, dest = '/app') => {
+    if (!isLoaded || !signIn) return;
     setServerError('');
+    setSubmitting(true);
     try {
-      await login(data.email, data.password);
-      const user = useAuthStore.getState().user;
-      if (user?.role === 'driver') {
-        router.push('/driver');
+      const res = await signIn.create({ identifier: email, password });
+      if (res.status === 'complete') {
+        await setActive({ session: res.createdSessionId });
+        router.push(dest);
       } else {
-        router.push('/app');
+        setServerError('No se pudo completar el inicio de sesion');
       }
-    } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      setServerError(error?.response?.data?.message || 'Invalid email or password');
+    } catch (err: any) {
+      setServerError(err?.errors?.[0]?.message || 'Invalid email or password');
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  const onSubmit = (data: LoginForm) => doSignIn(data.email, data.password, '/app');
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center relative overflow-hidden">
@@ -150,11 +156,11 @@ export default function LoginPage() {
             {/* Submit */}
             <motion.button
               type="submit"
-              disabled={isLoading}
+              disabled={submitting}
               whileTap={{ scale: 0.98 }}
               className="btn-gradient w-full py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
             >
-              {isLoading ? (
+              {submitting ? (
                 <>
                   <Loader2 size={18} className="animate-spin" />
                   Signing in...
@@ -176,14 +182,14 @@ export default function LoginPage() {
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              onClick={() => onSubmit({ email: 'passenger@demo.com', password: 'demo1234' })}
+              onClick={() => doSignIn('passenger@demo.com', 'demo1234', '/app')}
               className="py-2.5 px-3 rounded-xl border border-white/10 hover:border-[#6C63FF]/40 hover:bg-[#6C63FF]/5 transition-all text-xs text-white/60 hover:text-white"
             >
               Demo Passenger
             </button>
             <button
               type="button"
-              onClick={() => onSubmit({ email: 'driver@demo.com', password: 'demo1234' })}
+              onClick={() => doSignIn('driver@demo.com', 'demo1234', '/driver')}
               className="py-2.5 px-3 rounded-xl border border-white/10 hover:border-[#00D4AA]/40 hover:bg-[#00D4AA]/5 transition-all text-xs text-white/60 hover:text-white"
             >
               Demo Driver
