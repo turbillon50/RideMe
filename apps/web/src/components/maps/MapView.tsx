@@ -190,9 +190,10 @@ export function MapView({
   }, [loaded, origin?.lat, origin?.lng, destination?.lat, destination?.lng]);
 
   return (
-    <div className={className} ref={mapRef}>
+    <div className={`relative ${className}`}>
+      <div ref={mapRef} className="absolute inset-0" />
       {!loaded && (
-        <div className="w-full h-full bg-[#0A0A0F] flex items-center justify-center">
+        <div className="absolute inset-0 bg-[#0A0A0F] flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-[rgba(108,99,255,0.3)] border-t-[#6C63FF] rounded-full animate-spin" />
         </div>
       )}
