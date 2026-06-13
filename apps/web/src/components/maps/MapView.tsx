@@ -71,9 +71,15 @@ export function MapView({
     if (onMapClick) {
       map.on('click', (e) => onMapClick(e.lngLat.lat, e.lngLat.lng));
     }
-    map.on('load', () => setLoaded(true));
+    map.on('load', () => {
+      setLoaded(true);
+      map.resize();
+    });
     mapInstance.current = map;
+    const ro = new ResizeObserver(() => map.resize());
+    ro.observe(mapRef.current);
     return () => {
+      ro.disconnect();
       map.remove();
       mapInstance.current = null;
     };
