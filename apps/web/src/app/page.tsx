@@ -120,7 +120,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <ThemeToggle className="hidden sm:inline-flex" />
             <Link
-              href="/login"
+              href="/sign-in"
               className="hidden px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
             >
               Sign In
