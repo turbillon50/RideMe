@@ -1,106 +1,71 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/admin-auth';
 import { getDb } from '@/lib/db';
+import { isAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
-// GET /api/admin/drivers?status=&online=&q=&page=&limit=
+// GET – lista de onboardings (por defecto los pending)
 export async function GET(req: NextRequest) {
-  const guard = await requireAdmin();
-  if (guard) return guard;
-
-  const sp = req.nextUrl.searchParams;
-  const status = sp.get('status');
-  const online = sp.get('online');
-  const q = sp.get('q');
-  const page = Math.max(1, parseInt(sp.get('page') ?? '1', 10));
-  const limit = Math.min(100, Math.max(1, parseInt(sp.get('limit') ?? '20', 10)));
-
-  const where: string[] = [];
-  const params: any[] = [];
-  if (status) { params.push(status); where.push(`d.approval_status = $${params.length}::driver_approval_status`); }
-  if (online === 'true') where.push(`d.is_online = true`);
-  if (online === 'false') where.push(`d.is_online = false`);
-  if (q) {
-    params.push(`%${q}%`);
-    where.push(`(u.name ILIKE $${params.length} OR u.email ILIKE $${params.length} OR u.phone ILIKE $${params.length} OR d.license_number ILIKE $${params.length})`);
-  }
-  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
-
-  try {
-    const sql = getDb();
-    const countRows = (await sql.query(
-      `SELECT COUNT(*) AS total FROM drivers d JOIN users u ON u.id = d.user_id ${whereSql}`,
-      params
-    )) as any[];
-    const total = Number(countRows[0]?.total ?? 0);
-
-    params.push(limit, (page - 1) * limit);
-    const rows = (await sql.query(
-      `SELECT d.id, d.license_number, d.license_expiry_date, d.rating_average, d.rating_count,
-              d.total_trips, d.total_earnings, d.is_online, d.is_approved, d.approval_status,
-              d.subscription_status, d.created_at,
-              u.id AS user_id, u.name, u.email, u.phone, u.is_blocked,
-              v.make, v.model, v.plate_number
-       FROM drivers d
-       JOIN users u ON u.id = d.user_id
-       LEFT JOIN LATERAL (
-         SELECT make, model, plate_number FROM vehicles WHERE driver_id = d.id AND is_active LIMIT 1
-       ) v ON true
-       ${whereSql}
-       ORDER BY d.created_at DESC
-       LIMIT $${params.length - 1} OFFSET $${params.length}`,
-      params
-    )) as any[];
-
-    return NextResponse.json({ drivers: rows, total, page, limit });
-  } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Error interno' }, { status: 500 });
-  }
+  if (!(await isAdmin())) return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
+  const status = new URL(req.url).searchParams.get('status') ?? 'pending';
+  const sql = getDb();
+  const rows = await sql.query(
+    `SELECT * FROM driver_onboarding WHERE ($1 = 'all' OR status = $1::driver_approval_status)
+     ORDER BY submitted_at DESC NULLS LAST, created_at DESC LIMIT 50`,
+    [status]
+  ) as any[];
+  return NextResponse.json({ ok: true, data: rows });
 }
 
-// PATCH /api/admin/drivers  { id, action: 'approve'|'reject'|'toggle_block', notes? }
+// PATCH – aprobar o rechazar un onboarding y activar al chofer en DB
 export async function PATCH(req: NextRequest) {
-  const guard = await requireAdmin();
-  if (guard) return guard;
+  if (!(await isAdmin())) return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
+  const { id, action, notes } = await req.json(); // action: 'approve' | 'reject'
+  if (!id || !['approve','reject'].includes(action))
+    return NextResponse.json({ error: 'Parámetros inválidos' }, { status: 400 });
 
-  try {
-    const { id, action, notes } = (await req.json()) ?? {};
-    if (!id || !action) {
-      return NextResponse.json({ error: 'Faltan campos: id y action' }, { status: 400 });
+  const sql = getDb();
+  const newStatus = action === 'approve' ? 'approved' : 'rejected';
+
+  // Actualizar onboarding
+  const [ob] = await sql.query(
+    `UPDATE driver_onboarding SET status=$1::driver_approval_status, admin_notes=$2, reviewed_at=NOW()
+     WHERE id=$3 RETURNING *`,
+    [newStatus, notes ?? null, id]
+  ) as any[];
+  if (!ob) return NextResponse.json({ error: 'No encontrado' }, { status: 404 });
+
+  if (action === 'approve') {
+    // Crear o actualizar user en tabla users
+    const [user] = await sql.query(
+      `INSERT INTO users (clerk_id, email, name, first_name, role, is_active)
+       VALUES ($1,$2,$3,$4,'driver',true)
+       ON CONFLICT (clerk_id) DO UPDATE SET role='driver', updated_at=NOW()
+       RETURNING id`,
+      [ob.clerk_id, ob.email, ob.full_name, ob.full_name?.split(' ')[0]]
+    ) as any[];
+
+    // Crear driver row
+    await sql.query(
+      `INSERT INTO drivers
+         (user_id, license_number, license_expiry_date, is_online, is_approved, approval_status, subscription_status)
+       VALUES ($1,$2,$3,true,true,'approved','active')
+       ON CONFLICT (user_id) DO UPDATE SET
+         is_approved=true, is_online=true, approval_status='approved', updated_at=NOW()`,
+      [user.id, ob.license_number ?? 'PENDIENTE', ob.license_expiry ?? null]
+    );
+
+    // Crear vehículo
+    if (ob.plate_number) {
+      await sql.query(
+        `INSERT INTO vehicles (driver_id, make, model, year, color, plate_number, vehicle_type)
+         VALUES ((SELECT id FROM drivers WHERE user_id=$1),$2,$3,$4,$5,$6,$7::vehicle_type)
+         ON CONFLICT (plate_number) DO NOTHING`,
+        [user.id, ob.vehicle_make??'N/A', ob.vehicle_model??'N/A',
+         ob.vehicle_year??2020, ob.vehicle_color??'N/A', ob.plate_number, ob.vehicle_type]
+      );
     }
-    const sql = getDb();
-
-    if (action === 'approve' || action === 'reject') {
-      const approved = action === 'approve';
-      const rows = (await sql.query(
-        `UPDATE drivers SET
-           approval_status = $2::driver_approval_status,
-           is_approved = $3,
-           approval_notes = COALESCE($4, approval_notes),
-           updated_at = NOW()
-         WHERE id = $1
-         RETURNING id, approval_status, is_approved`,
-        [id, approved ? 'approved' : 'rejected', approved, notes ?? null]
-      )) as any[];
-      if (!rows.length) return NextResponse.json({ error: 'Chofer no encontrado' }, { status: 404 });
-      return NextResponse.json({ driver: rows[0] });
-    }
-
-    if (action === 'toggle_block') {
-      const rows = (await sql.query(
-        `UPDATE users u SET is_blocked = NOT u.is_blocked, updated_at = NOW()
-         FROM drivers d
-         WHERE d.id = $1 AND u.id = d.user_id
-         RETURNING u.id, u.is_blocked`,
-        [id]
-      )) as any[];
-      if (!rows.length) return NextResponse.json({ error: 'Chofer no encontrado' }, { status: 404 });
-      return NextResponse.json({ user: rows[0] });
-    }
-
-    return NextResponse.json({ error: 'action inválida' }, { status: 400 });
-  } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Error interno' }, { status: 500 });
   }
+
+  return NextResponse.json({ ok: true, status: newStatus, data: ob });
 }
