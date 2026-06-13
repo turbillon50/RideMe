@@ -8,7 +8,7 @@ const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^p
 
 const isPublicRoute = createRouteMatcher([
   '/', '/login(.*)', '/demo(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
-  '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)', '/api/invitations/validate',
+  '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)', '/api/invitations/validate', '/api/drivers/(.*)', '/api/driver/(.*)',
 ]);
 
 const clerkHandler = clerkMiddleware((auth, req) => {
