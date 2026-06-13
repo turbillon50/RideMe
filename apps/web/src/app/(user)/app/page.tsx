@@ -49,7 +49,7 @@ export default function PassengerMapPage() {
   return (
     <div className="mx-auto flex min-h-screen max-w-[430px] flex-col overflow-x-hidden bg-background md:max-w-none md:pl-20">
       {/* Map area */}
-      <div className="relative h-[42vh] w-full">
+      <div className="relative w-full" style={{ height: '42vh' }}>
         <MapView
           center={center}
           userLocation={location ? { lat: location.latitude, lng: location.longitude } : undefined}
