@@ -10,7 +10,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
   useEffect(() => {
     const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('rideme-theme') : null;
     const current = stored || (document.documentElement.classList.contains('light') ? 'light' : 'dark');
-    setTheme(current);
+    setTheme(current as 'dark' | 'light');
   }, []);
 
   const nextTheme = theme === 'dark' ? 'light' : 'dark';
