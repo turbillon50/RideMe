@@ -491,12 +491,7 @@ export default function LandingPage() {
                 >
                   Get Started Free <ArrowRight size={20} />
                 </Link>
-                <Link
-                  className="flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-semibold border border-white/20 hover:bg-white/5 transition-all justify-center"
-                >
-                  Demo admin
-                </Link>
-              </div>
+                              </div>
             </div>
           </motion.div>
         </div>
