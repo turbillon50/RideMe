@@ -1,5 +1,6 @@
-import { I18nProvider } from '@/lib/i18n';
 'use client';
+
+import { I18nProvider } from '@/lib/i18n';
 
 import { ReactNode, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
