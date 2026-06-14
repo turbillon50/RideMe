@@ -19,6 +19,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const tree = (
     <html lang="en" className="dark">
       <head>
+        <script dangerouslySetInnerHTML={{__html:`
+  (function(){
+    try {
+      var t = localStorage.getItem('rideme-theme') || 'dark';
+      document.documentElement.classList.remove('dark','light');
+      document.documentElement.classList.add(t);
+    } catch(e) {}
+  })();
+`}} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="RideMe" />

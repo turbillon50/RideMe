@@ -8,7 +8,8 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
-    const current = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('rideme-theme') : null;
+    const current = stored || (document.documentElement.classList.contains('light') ? 'light' : 'dark');
     setTheme(current);
   }, []);
 
@@ -22,6 +23,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       onClick={() => {
         applyTheme(nextTheme);
         setTheme(nextTheme);
+        try { localStorage.setItem('rideme-theme', nextTheme); } catch(e) {}
       }}
       className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-surface/90 text-foreground shadow-card backdrop-blur transition hover:border-primary/40 ${className}`}
     >

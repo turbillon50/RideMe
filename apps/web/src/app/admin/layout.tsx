@@ -12,6 +12,7 @@ const nav = [
   { href: '/admin/invitations',  label: 'Invitaciones',    emoji: '✉️' },
   { href: '/admin/support',      label: 'Soporte',         emoji: '💬' },
   { href: '/admin/branding',     label: 'Branding',        emoji: '🎨' },
+  { href: '/admin/intelligence',  label: 'Vulcano IQ' },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

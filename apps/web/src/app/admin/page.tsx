@@ -81,7 +81,7 @@ function KpiCard({ label, value, sub, accent, icon }: { label: string; value: st
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: accent ? `linear-gradient(90deg, ${accentColor}88, transparent)` : 'transparent' }} />
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
         <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.textMuted, margin: 0 }}>{label}</p>
-        <span style={{ fontSize: 18, opacity: 0.5 }}>{icon}</span>
+        <div style={{ width:24,height:24,borderRadius:7,background:accentColor+"22",display:"flex",alignItems:"center",justifyContent:"center" }}><div style={{ width:5,height:5,borderRadius:"50%",background:accentColor }} /></div>
       </div>
       <p style={{ fontSize: 26, fontWeight: 700, color: accent ? accentColor : C.textPrimary, margin: 0, fontFamily: 'JetBrains Mono, monospace' }}>{value}</p>
       {sub && <p style={{ fontSize: 11, color: C.textMuted, marginTop: 4 }}>{sub}</p>}
