@@ -11,16 +11,16 @@ async function req(method: string, path: string, body?: unknown): Promise<any> {
 }
 
 export const api = {
-  get: (url: string, config?: { params?: Record<string, string | number> }) => {
+  get: <T = any>(url: string, config?: { params?: Record<string, string | number> }) => {
     const qs = config?.params ? '?' + new URLSearchParams(Object.fromEntries(
       Object.entries(config.params).map(([k,v]) => [k, String(v)])
     )).toString() : '';
     return req('GET', url + qs);
   },
-  post:   (url: string, data?: unknown) => req('POST',   url, data),
-  put:    (url: string, data?: unknown) => req('PUT',    url, data),
-  patch:  (url: string, data?: unknown) => req('PATCH',  url, data),
-  delete: (url: string)                 => req('DELETE', url),
+  post:   <T = any>(url: string, data?: unknown) => req('POST',   url, data) as Promise<T>,
+  put:    <T = any>(url: string, data?: unknown) => req('PUT',    url, data) as Promise<T>,
+  patch:  <T = any>(url: string, data?: unknown) => req('PATCH',  url, data) as Promise<T>,
+  delete: <T = any>(url: string)                 => req('DELETE', url) as Promise<T>,
 };
 
 export default api;
