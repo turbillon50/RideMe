@@ -1,59 +1,45 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { isAdmin } from '@/lib/admin-auth';
-import { LayoutDashboard, Car, Users, Route, Mail, MessageCircle, Settings } from '@/components/icons';
-import { SupportButton } from '@/components/SupportButton';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const dynamic = 'force-dynamic';
 
 const nav = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/rides', label: 'Viajes', icon: Route },
-  { href: '/admin/drivers', label: 'Choferes', icon: Car },
-  { href: '/admin/users', label: 'Usuarios', icon: Users },
-  { href: '/admin/invitations', label: 'Invitaciones', icon: Mail },
-  { href: '/admin/support', label: 'Soporte', icon: MessageCircle },
-  { href: '/admin/branding', label: 'Personalizacion', icon: Settings },
+  { href: '/admin',             label: 'C4 Centro',       emoji: '⚡' },
+  { href: '/admin/rides',        label: 'Viajes',          emoji: '🚗' },
+  { href: '/admin/drivers',      label: 'Choferes',        emoji: '👨‍✈️' },
+  { href: '/admin/users',        label: 'Usuarios',        emoji: '👥' },
+  { href: '/admin/invitations',  label: 'Invitaciones',    emoji: '✉️' },
+  { href: '/admin/support',      label: 'Soporte',         emoji: '💬' },
+  { href: '/admin/branding',     label: 'Branding',        emoji: '🎨' },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const admin = await isAdmin();
-  if (!admin) redirect('/');
-
+  if (!admin) redirect("/");
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
-      <aside className="hidden w-64 shrink-0 flex-col gap-1 border-r border-white/5 bg-surface p-4 md:flex">
-        <div className="px-3 py-4">
-          <span className="text-lg font-bold text-primary">RideMe</span>
-          <span className="ml-2 text-xs uppercase tracking-widest text-muted-foreground">Admin</span>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#03020a', color: '#f8f7ff' }}>
+      <aside style={{ width: 200, flexShrink: 0, borderRight: '1px solid rgba(124,58,237,0.18)', background: '#0a0814', display: 'flex', flexDirection: 'column', padding: '16px 10px', gap: 2 }} className="hidden md:flex">
+        <div style={{ padding: '8px 12px 20px', borderBottom: '1px solid rgba(124,58,237,0.18)', marginBottom: 8 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#22d3ee', margin: 0 }}>RideMe</p>
+          <p style={{ fontSize: 10, color: '#9891c4', letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0 }}>Admin</p>
         </div>
-        {nav.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-surface-2 hover:text-foreground transition-colors"
-          >
-            <Icon size={18} />
-            {label}
+        {nav.map(({ href, label, emoji }) => (
+          <Link key={href} href={href}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', borderRadius: 8, fontSize: 13, color: '#9891c4', textDecoration: 'none', transition: 'all 0.15s' }}
+            className="hover:bg-[rgba(124,58,237,0.12)] hover:text-white">
+            <span style={{ fontSize: 15 }}>{emoji}</span>{label}
           </Link>
         ))}
-        <div className="mt-auto px-3 py-3">
-          <ThemeToggle />
-        </div>
       </aside>
-      <div className="flex-1 min-w-0">
-        <header className="flex gap-2 overflow-x-auto border-b border-white/5 bg-surface px-4 py-3 md:hidden">
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        <header style={{ display: 'flex', gap: 8, overflowX: 'auto', borderBottom: '1px solid rgba(124,58,237,0.18)', background: '#0a0814', padding: '10px 12px' }} className="md:hidden">
           {nav.map(({ href, label }) => (
-            <Link key={href} href={href} className="text-sm text-muted-foreground whitespace-nowrap px-2 py-1 rounded hover:bg-surface-2">
-              {label}
-            </Link>
+            <Link key={href} href={href} style={{ fontSize: 12, color: '#9891c4', whiteSpace: 'nowrap', padding: '4px 10px', borderRadius: 6, textDecoration: 'none' }}>{label}</Link>
           ))}
-          <ThemeToggle className="h-8 w-8 shrink-0" />
         </header>
-        <main className="p-4 md:p-8">{children}</main>
+        {children}
       </div>
-      <SupportButton />
     </div>
   );
 }
