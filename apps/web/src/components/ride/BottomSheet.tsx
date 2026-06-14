@@ -89,7 +89,7 @@ export function BottomSheet({ nearbyDriversCount = 0 }: { nearbyDriversCount?: n
           <p style={{ fontSize:11, color:'#9891c4', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>Tipo de viaje</p>
           <div style={{ display:'flex', gap:6 }}>
             {([['standard','Estándar'],['airport','Aeropuerto 🛫'],['shared','Compartido 👥']] as const).map(([t,lbl]) => (
-              <button key={t} onClick={() => { setRideType(t); if(t==='airport') setIsScheduled(true); }}
+              <button key={t} onClick={() => { setRideType(t);  }}
                 style={{ flex:1, padding:'7px 0', borderRadius:8, border:`1.5px solid ${rideType===t ? '#7c3aed' : 'rgba(124,58,237,0.2)'}`, background: rideType===t ? 'rgba(124,58,237,0.15)' : 'transparent', color: rideType===t ? '#7c3aed' : '#9891c4', fontSize:11, fontWeight:700, cursor:'pointer', transition:'all 0.2s' }}>
                 {lbl}
               </button>
