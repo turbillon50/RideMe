@@ -13,6 +13,7 @@ const C = { bg: '#0a0814', surface: '#0d0b1a', surface2: '#12102a',
   gold: '#fbbf24', green: '#10b981', text: '#f8f7ff', muted: '#9891c4' };
 
 const STATUS_LABEL: Record<string, string> = {
+  arrived: '📍 Tu chofer llegó — ¿estás en el auto?',
   accepted: '✓ Chofer en camino',
   driver_en_route: '🚗 Tu chofer está en camino',
   arrived: '📍 Tu chofer llegó',
@@ -20,7 +21,7 @@ const STATUS_LABEL: Record<string, string> = {
   completed: '✅ ¡Llegaste!',
 };
 const STATUS_COLOR: Record<string, string> = {
-  accepted: '#7c3aed', driver_en_route: '#22d3ee',
+  accepted: '#7c3aed', driver_en_route: '#22d3ee', arrived: '#fbbf24',
   arrived: '#fbbf24', in_progress: '#10b981', completed: '#10b981',
 };
 
@@ -155,6 +156,32 @@ export default function TripTrackingPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Botón de boarding cuando el chofer llegó */}
+        {status === 'arrived' && (
+          <motion.button initial={{ scale:0.95, opacity:0 }} animate={{ scale:1, opacity:1 }}
+            onClick={async () => {
+              await fetch(`/api/rides/${ride?.id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action: 'start' }) });
+            }}
+            style={{ width:'100%', padding:'15px 0', borderRadius:12, border:'none', background:`linear-gradient(135deg, #fbbf24, #22d3ee)`, color:'#fff', fontWeight:700, fontSize:16, cursor:'pointer', marginBottom:12 }}>
+            🚗 Estoy en el auto — Iniciar viaje
+          </motion.button>
+        )}
+
+        {/* Popup de pertenencias al completar */}
+        {status === 'completed' && ride?.belongings_confirmed_at === null && !ratingSent && (
+          <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+            style={{ background:'rgba(251,191,36,0.1)', border:`1.5px solid #fbbf24`, borderRadius:14, padding:'16px', marginBottom:14, textAlign:'center' }}>
+            <p style={{ fontSize:20, margin:'0 0 8px' }}>🎒</p>
+            <p style={{ fontSize:15, fontWeight:700, color:'#fbbf24', margin:'0 0 6px' }}>¡No olvides tus pertenencias!</p>
+            <p style={{ fontSize:12, color:'#9891c4', margin:'0 0 14px' }}>Revisa que no dejaste nada en el auto antes de salir</p>
+            <button onClick={async () => {
+              await fetch(`/api/rides/${ride?.id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action: 'confirm_belongings' }) });
+            }} style={{ width:'100%', padding:'11px 0', borderRadius:10, border:'none', background:'#fbbf24', color:'#03020a', fontWeight:700, cursor:'pointer' }}>
+              ✓ Confirmado, ya revisé
+            </button>
+          </motion.div>
+        )}
 
         {canCancel && !isCompleted && (
           <button onClick={handleCancel} style={{ width: '100%', padding: '13px 0', borderRadius: 12, border: '1px solid rgba(239,68,68,0.3)', background: 'transparent', color: '#ef4444', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>

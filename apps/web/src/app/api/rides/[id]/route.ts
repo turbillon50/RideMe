@@ -36,6 +36,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (action === 'cancel') {
     q = `UPDATE rides SET status='cancelled', cancelled_at=NOW(), cancel_reason=$2, updated_at=NOW() WHERE id=$1 RETURNING *`;
     vals.push(cancelReason ?? 'Cancelado por usuario');
+  } else if (action === 'arrived') {
+    // Chofer llegó al punto de encuentro
+    q = `UPDATE rides SET status='arrived', driver_arrived_at=NOW(), updated_at=NOW() WHERE id=$1 RETURNING *`;
+  } else if (action === 'start') {
+    // Pasajero confirmó "Estoy en el auto"
+    q = `UPDATE rides SET status='in_progress', boarding_confirmed_at=NOW(), updated_at=NOW() WHERE id=$1 RETURNING *`;
+  } else if (action === 'confirm_belongings') {
+    // Pasajero confirmó que no olvidó pertenencias → deslinde legal
+    q = `UPDATE rides SET belongings_confirmed_at=NOW(), updated_at=NOW() WHERE id=$1 RETURNING *`;
   } else if (action === 'rate') {
     const { rating } = await req.json().catch(() => ({ rating: 5 }));
     q = `UPDATE rides SET rating_by_passenger=$2, updated_at=NOW() WHERE id=$1 RETURNING *`;

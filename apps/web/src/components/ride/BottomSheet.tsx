@@ -25,6 +25,8 @@ export function BottomSheet({ nearbyDriversCount = 0 }: { nearbyDriversCount?: n
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [vehicleType, setVehicleType] = useState<VehicleType>("standard");
+  const [rideType, setRideType] = useState<"standard"|"airport"|"shared">("standard");
+  const [invoiceRequested, setInvoiceRequested] = useState(false);
   const [price, setPrice] = useState(95);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [isSearching, setIsSearching] = useState(false);
@@ -50,6 +52,8 @@ export function BottomSheet({ nearbyDriversCount = 0 }: { nearbyDriversCount?: n
           proposedPrice: price,
           paymentMethod,
           vehicleType,
+        rideType,
+        invoiceRequested,
           isScheduled: false,
         }),
       });
@@ -80,9 +84,29 @@ export function BottomSheet({ nearbyDriversCount = 0 }: { nearbyDriversCount?: n
       <div className="flex flex-col gap-5">
         <LocationInputs pickup={pickup} destination={destination}
           onPickupChange={setPickup} onDestinationChange={setDestination} onSwap={handleSwap} />
+        {/* Tipo de viaje */}
+        <div>
+          <p style={{ fontSize:11, color:'#9891c4', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>Tipo de viaje</p>
+          <div style={{ display:'flex', gap:6 }}>
+            {([['standard','Estándar'],['airport','Aeropuerto 🛫'],['shared','Compartido 👥']] as const).map(([t,lbl]) => (
+              <button key={t} onClick={() => { setRideType(t); if(t==='airport') setIsScheduled(true); }}
+                style={{ flex:1, padding:'7px 0', borderRadius:8, border:`1.5px solid ${rideType===t ? '#7c3aed' : 'rgba(124,58,237,0.2)'}`, background: rideType===t ? 'rgba(124,58,237,0.15)' : 'transparent', color: rideType===t ? '#7c3aed' : '#9891c4', fontSize:11, fontWeight:700, cursor:'pointer', transition:'all 0.2s' }}>
+                {lbl}
+              </button>
+            ))}
+          </div>
+          {rideType === 'airport' && <p style={{ fontSize:11, color:'#fbbf24', marginTop:6 }}>⚠️ Aeropuerto: mínimo $800 MXN · solo por reservación</p>}
+        </div>
+
         <VehicleSelector selected={vehicleType} onSelect={setVehicleType} />
         <PriceSelector price={price} onPriceChange={setPrice} />
         <PaymentSelector selected={paymentMethod} onSelect={setPaymentMethod} />
+        {/* Solicitar factura */}
+        <label style={{ display:'flex', alignItems:'center', gap:8, cursor:'pointer' }}>
+          <input type="checkbox" checked={invoiceRequested} onChange={e => setInvoiceRequested(e.target.checked)} />
+          <span style={{ fontSize:12, color:'#9891c4' }}>Necesito factura (CFDI)</span>
+        </label>
+
         {error && <p style={{ color: '#ef4444', fontSize: 13, textAlign: 'center' }}>{error}</p>}
         <motion.button onClick={handleSearch}
           disabled={isSearching || !pickup || !destination}
