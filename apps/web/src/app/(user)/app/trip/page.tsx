@@ -13,15 +13,14 @@ const C = { bg: '#0a0814', surface: '#0d0b1a', surface2: '#12102a',
   gold: '#fbbf24', green: '#10b981', text: '#f8f7ff', muted: '#9891c4' };
 
 const STATUS_LABEL: Record<string, string> = {
-  arrived: '📍 Tu chofer llegó — ¿estás en el auto?',
-  accepted: '✓ Chofer en camino',
+  accepted: '✓ Chofer confirmado – en camino a ti',
   driver_en_route: '🚗 Tu chofer está en camino',
-  arrived: '📍 Tu chofer llegó',
+  arrived: '📍 Tu chofer llegó — ¿estás en el auto?',
   in_progress: '🏁 En camino a tu destino',
   completed: '✅ ¡Llegaste!',
 };
 const STATUS_COLOR: Record<string, string> = {
-  accepted: '#7c3aed', driver_en_route: '#22d3ee', arrived: '#fbbf24',
+  accepted: '#7c3aed', driver_en_route: '#22d3ee',
   arrived: '#fbbf24', in_progress: '#10b981', completed: '#10b981',
 };
 
