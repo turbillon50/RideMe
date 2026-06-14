@@ -3,12 +3,17 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const pk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
-// Clerk solo se activa con una llave real; si no, la app corre en modo demo abierto.
-const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^pk_test_demo$/i.test(pk);
+const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^pk_test_demo\$/i.test(pk);
 
 const isPublicRoute = createRouteMatcher([
   '/', '/login(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
-  '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)', '/api/invitations/validate', '/api/drivers/(.*)', '/api/driver/(.*)', '/api/push/(.*)', '/api/upload',
+  '/driver/onboarding', '/user-onboarding',
+  '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)',
+  '/api/invitations/validate',
+  '/api/drivers/(.*)', '/api/driver/(.*)',
+  '/api/rides/(.*)', '/api/pricing(.*)',
+  '/api/push/(.*)', '/api/upload',
+  '/api/stripe/(.*)', '/api/mp/(.*)',
 ]);
 
 const clerkHandler = clerkMiddleware((auth, req) => {
