@@ -26,5 +26,5 @@ export const api = {
 export default api;
 // Compat shims (archivos viejos que importan esto)
 export const getTokens = () => null;
-export const setTokens = () => {};
+export const setTokens = (_?: unknown) => {};
 export const clearTokens = () => {};
