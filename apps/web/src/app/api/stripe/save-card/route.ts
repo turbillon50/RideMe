@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   if (!paymentMethodId) return NextResponse.json({ error: 'paymentMethodId requerido' }, { status: 400 });
 
   // 1. Crear/obtener customer en Stripe
-  let customerId = dbUser.stripe_customer_id ?? '';
+  let customerId = (dbUser as any).stripe_customer_id ?? '';
   if (!customerId) {
     const cRes = await fetch('https://api.stripe.com/v1/customers', {
       method: 'POST',
