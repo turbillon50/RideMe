@@ -126,7 +126,7 @@ export default function LandingPage() {
               Sign In
             </Link>
             <Link
-              href="/register"
+              href="/sign-up"
               className="btn-gradient text-sm px-5 py-2 rounded-xl font-semibold"
             >
               Get Started
@@ -187,21 +187,17 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link
-              href="/register"
+              href="/sign-up"
               className="btn-gradient flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-semibold w-full sm:w-auto justify-center"
             >
-              Book a Ride <ArrowRight size={20} />
+              Solicitar viaje
             </Link>
+
             <Link
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/20 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/40 hover:bg-white/10 sm:w-auto"
-            >
-              Ver demo
-            </Link>
-            <Link
-              href="/register?role=driver"
+              href="/driver/onboarding"
               className="flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-semibold border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all w-full sm:w-auto justify-center text-white"
             >
-              <Car size={20} /> Become a Driver
+              Quiero ser conductor
             </Link>
           </motion.div>
 
