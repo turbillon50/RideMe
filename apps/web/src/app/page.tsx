@@ -193,10 +193,8 @@ export default function LandingPage() {
               Book a Ride <ArrowRight size={20} />
             </Link>
             <Link
-              href="/demo?to=/app"
               className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/20 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/40 hover:bg-white/10 sm:w-auto"
             >
-              Ver demo
             </Link>
             <Link
               href="/register?role=driver"
@@ -212,11 +210,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.45 }}
             className="mt-4 flex flex-wrap items-center justify-center gap-3 text-sm"
           >
-            <Link href="/demo?to=/driver" className="rounded-full border border-white/15 px-4 py-2 text-white/75 transition hover:bg-white/10 hover:text-white">
-              Demo conductor
             </Link>
-            <Link href="/demo?to=/admin" className="rounded-full border border-white/15 px-4 py-2 text-white/75 transition hover:bg-white/10 hover:text-white">
-              Demo admin
             </Link>
           </motion.div>
 
@@ -402,8 +396,6 @@ export default function LandingPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Set pickup, destination, payment method and your price from a focused ride request surface.
               </p>
-              <Link href="/demo?to=/app" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                Ver demo usuario <ArrowRight size={16} />
               </Link>
             </div>
           </motion.div>
@@ -421,8 +413,6 @@ export default function LandingPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Drivers stay in control with live requests, counter-offers, subscription status and earnings.
               </p>
-              <Link href="/demo?to=/driver" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-secondary">
-                Demo conductor <ArrowRight size={16} />
               </Link>
             </div>
           </motion.div>
@@ -509,10 +499,8 @@ export default function LandingPage() {
                   Get Started Free <ArrowRight size={20} />
                 </Link>
                 <Link
-                  href="/demo?to=/admin"
                   className="flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-semibold border border-white/20 hover:bg-white/5 transition-all justify-center"
                 >
-                  Demo admin
                 </Link>
               </div>
             </div>
