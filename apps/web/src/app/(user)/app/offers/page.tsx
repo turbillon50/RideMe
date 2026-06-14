@@ -1,145 +1,107 @@
-'use client';
+"use client";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTripStore } from "@/store/tripStore";
+import { useI18n } from "@/lib/i18n";
+import { BottomNav } from "@/components/layout/BottomNav";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Clock, X, Loader2 } from '@/components/icons';
-import { OfferCard } from '@/components/ride/OfferCard';
-import { useSocket } from '@/hooks/useSocket';
-import { useTripStore } from '@/store/tripStore';
-import { api } from '@/lib/api';
+const C = { bg: '#0a0814', surface: '#0d0b1a', border: 'rgba(124,58,237,0.18)',
+  violet: '#7c3aed', cyan: '#22d3ee', text: '#f8f7ff', muted: '#9891c4' };
+
+const STEPS = [
+  "Publicando tu solicitud...",
+  "Notificando choferes cercanos...",
+  "Esperando confirmación...",
+  "Conectando con el mejor chofer...",
+];
 
 export default function OffersPage() {
   const router = useRouter();
-  const { activeRide, offers, addOffer, setActiveRide } = useTripStore();
-  const { socket } = useSocket();
-  const [loading, setLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300);
+  const { activeRide, setActiveRide } = useTripStore();
+  const { t } = useI18n();
+  const [stepIdx, setStepIdx] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
 
-  // Countdown
-  useEffect(() => {
-    if (!activeRide?.offer_expiry_at) return;
-    const expiry = new Date(activeRide.offer_expiry_at).getTime();
-    const interval = setInterval(() => {
-      const remaining = Math.ceil((expiry - Date.now()) / 1000);
-      setTimeLeft(Math.max(0, remaining));
-      if (remaining <= 0) clearInterval(interval);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [activeRide?.offer_expiry_at]);
-
-  // Socket events
-  useEffect(() => {
-    if (!socket || !activeRide?.id) return;
-
-    socket.emit('ride:join', { rideId: activeRide.id });
-
-    socket.on('trip:offer_received', ({ offer }) => addOffer(offer));
-    socket.on('trip:accepted', (data) => {
-      setActiveRide({ ...activeRide, ...data, status: 'accepted' });
-      router.push('/app/trip');
-    });
-    socket.on('trip:expired', () => {
-      setActiveRide({ ...activeRide, status: 'expired' });
-      router.push('/app');
-    });
-
-    return () => {
-      socket.off('trip:offer_received');
-      socket.off('trip:accepted');
-      socket.off('trip:expired');
-    };
-  }, [socket, activeRide?.id]);
-
-  const handleAccept = async (offerId: string) => {
-    setLoading(true);
+  const poll = useCallback(async () => {
+    if (!activeRide?.id) return;
     try {
-      await api.put(`/offers/${offerId}/accept`);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleReject = async (offerId: string) => {
-    try {
-      await api.put(`/offers/${offerId}/reject`);
-      useTripStore.getState().removeOffer(offerId);
+      const res = await fetch(`/api/rides/${activeRide.id}`);
+      const data = await res.json();
+      const ride = data.data;
+      if (!ride) return;
+      setActiveRide(ride);
+      if (ride.status === 'accepted' || ride.status === 'driver_en_route') {
+        router.push('/app/trip');
+      }
     } catch {}
-  };
+  }, [activeRide?.id]);
+
+  useEffect(() => {
+    if (!activeRide?.id) { router.push('/app'); return; }
+    const pollId = setInterval(poll, 6000);
+    const stepId = setInterval(() => setStepIdx(i => Math.min(i + 1, STEPS.length - 1)), 4000);
+    const elId   = setInterval(() => setElapsed(e => e + 1), 1000);
+    return () => { clearInterval(pollId); clearInterval(stepId); clearInterval(elId); };
+  }, [activeRide?.id, poll]);
 
   const handleCancel = async () => {
     if (!activeRide?.id) return;
-    await api.post(`/rides/${activeRide.id}/cancel`, { reason: 'Cancelado por pasajero' }).catch(() => {});
+    await fetch(`/api/rides/${activeRide.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'cancel', cancelReason: 'Cancelado por pasajero' }),
+    });
     setActiveRide(null);
     router.push('/app');
   };
 
-  const mins = Math.floor(timeLeft / 60);
-  const secs = timeLeft % 60;
+  const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background md:pl-20">
-      {/* Header */}
-      <div className="safe-top px-4 pt-4 pb-3 border-b border-[rgba(255,255,255,0.06)]">
-        <div className="flex items-center justify-between mb-3">
-          <h1 className="font-black text-xl">Ofertas de choferes</h1>
-          <button onClick={handleCancel} className="text-[#8B8B9E] hover:text-[#FF4757] transition-colors">
-            <X size={22} />
-          </button>
+    <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      {/* Radar animation */}
+      <div style={{ position: 'relative', width: 140, height: 140, marginBottom: 32 }}>
+        {[1,2,3].map(i => (
+          <motion.div key={i} style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1px solid ${C.violet}` }}
+            animate={{ scale: [1, 2.5], opacity: [0.5, 0] }}
+            transition={{ duration: 2.5, delay: i * 0.8, repeat: Infinity, ease: 'easeOut' }} />
+        ))}
+        <div style={{ position: 'absolute', inset: 20, borderRadius: '50%', background: C.violet + '22', border: `2px solid ${C.violet}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={C.violet} strokeWidth="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/></svg>
         </div>
+      </div>
 
-        {/* Route summary */}
-        {activeRide && (
-          <div className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3 space-y-1.5">
-            <div className="flex items-center gap-2 text-sm">
-              <div className="w-2 h-2 rounded-full bg-[#6C63FF]" />
-              <span className="text-[#8B8B9E] truncate">{activeRide.origin_address ?? 'Origen'}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <MapPin size={10} className="text-[#00D4AA]" />
-              <span className="text-[#8B8B9E] truncate">{activeRide.destination_address ?? 'Destino'}</span>
-            </div>
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-[#8B8B9E]">Tu precio</span>
-              <span className="font-mono font-bold text-[#6C63FF]">${activeRide.proposed_price}</span>
-            </div>
+      <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: '0 0 8px', textAlign: 'center' }}>
+        {t('searching')}
+      </h2>
+
+      {activeRide && (
+        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px 20px', marginBottom: 20, width: '100%', maxWidth: 340 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.muted, marginBottom: 8 }}>
+            <span>Solicitud enviada</span>
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', color: C.cyan }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</span>
           </div>
-        )}
-      </div>
+          <p style={{ fontSize: 13, color: C.text, margin: '0 0 4px' }}>📍 {activeRide.origin_address || 'Tu ubicación'}</p>
+          <p style={{ fontSize: 13, color: C.muted, margin: 0 }}>🏁 {activeRide.destination_address || 'Destino'}</p>
+          <p style={{ fontSize: 20, fontWeight: 800, color: C.violet, margin: '10px 0 0', fontFamily: 'JetBrains Mono, monospace' }}>
+            ${activeRide.proposed_price} MXN
+          </p>
+        </div>
+      )}
 
-      {/* Timer */}
-      <div className="flex items-center justify-center gap-2 py-3 bg-[rgba(108,99,255,0.06)] border-b border-[rgba(255,255,255,0.04)]">
-        <Clock size={14} className={timeLeft < 60 ? 'text-[#FF4757]' : 'text-[#8B8B9E]'} />
-        <span className={`text-sm font-mono font-bold ${timeLeft < 60 ? 'text-[#FF4757]' : 'text-[#8B8B9E]'}`}>
-          Busqueda expira en {mins}:{secs.toString().padStart(2, '0')}
-        </span>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.p key={stepIdx} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+          style={{ fontSize: 13, color: C.muted, marginBottom: 32, textAlign: 'center' }}>
+          {STEPS[stepIdx]}
+        </motion.p>
+      </AnimatePresence>
 
-      {/* Offers list */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 pb-24">
-        <AnimatePresence>
-          {offers.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-48 text-center">
-              <Loader2 size={40} className="text-[#6C63FF] animate-spin mb-4" />
-              <p className="text-[#8B8B9E]">Buscando choferes cerca de ti...</p>
-              <p className="text-xs text-[#4A4A5A] mt-1">Las ofertas aparecerán aquí</p>
-            </motion.div>
-          ) : (
-            offers.map((offer, i) => (
-              <OfferCard
-                key={offer.id}
-                offer={offer}
-                index={i}
-                onAccept={handleAccept}
-                onReject={handleReject}
-                loading={loading}
-              />
-            ))
-          )}
-        </AnimatePresence>
-      </div>
+      <button onClick={handleCancel} style={{ background: 'transparent', border: `1px solid rgba(239,68,68,0.3)`, color: '#ef4444', padding: '10px 28px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+        {t('cancel_ride')}
+      </button>
+
+      <BottomNav role="passenger" />
     </div>
   );
 }

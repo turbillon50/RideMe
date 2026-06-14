@@ -1,3 +1,4 @@
+import { I18nProvider } from '@/lib/i18n';
 'use client';
 
 import { ReactNode, useEffect } from 'react';
@@ -31,7 +32,7 @@ function AppProviders({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, tokens?.accessToken]);
 
-  return <>{children}</>;
+  return <><I18nProvider>{children}</I18nProvider></>;
 }
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -40,7 +41,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <BrandingProvider>
         <AppProviders>
           
-            {children}
+            <I18nProvider>{children}</I18nProvider>
           
         </AppProviders>
       </BrandingProvider>

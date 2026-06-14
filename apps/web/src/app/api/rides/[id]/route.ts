@@ -36,6 +36,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (action === 'cancel') {
     q = `UPDATE rides SET status='cancelled', cancelled_at=NOW(), cancel_reason=$2, updated_at=NOW() WHERE id=$1 RETURNING *`;
     vals.push(cancelReason ?? 'Cancelado por usuario');
+  } else if (action === 'rate') {
+    const { rating } = await req.json().catch(() => ({ rating: 5 }));
+    q = `UPDATE rides SET rating_by_passenger=$2, updated_at=NOW() WHERE id=$1 RETURNING *`;
+    vals.push(Math.min(5, Math.max(1, Number(rating) || 5)));
   } else if (action === 'complete') {
     q = `UPDATE rides SET status='completed', completed_at=NOW(), updated_at=NOW() WHERE id=$1 RETURNING *`;
   } else {

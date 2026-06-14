@@ -1,69 +1,71 @@
-"use client"
+"use client";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { LocationInputs } from "./LocationInputs";
+import { VehicleSelector } from "./VehicleSelector";
+import { PriceSelector } from "./PriceSelector";
+import { PaymentSelector } from "./PaymentSelector";
+import { DriversNearby } from "./DriversNearby";
+import { useGeolocation } from "@/hooks/useGeolocation";
+import { useTripStore } from "@/store/tripStore";
+import { useI18n } from "@/lib/i18n";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { LocationInputs } from "./LocationInputs"
-import { VehicleSelector } from "./VehicleSelector"
-import { PriceSelector } from "./PriceSelector"
-import { PaymentSelector } from "./PaymentSelector"
-import { DriversNearby } from "./DriversNearby"
-import { useGeolocation } from "@/hooks/useGeolocation"
-import { useTripStore } from "@/store/tripStore"
-import { api } from "@/lib/api"
+type VehicleType = "standard" | "comfort" | "xl";
+type PaymentMethod = "cash" | "card";
 
-type VehicleType = "standard" | "comfort" | "xl"
-type PaymentMethod = "cash" | "card"
-
-interface BottomSheetProps {
-  nearbyDriversCount?: number
-}
-
-export function BottomSheet({ nearbyDriversCount = 0 }: BottomSheetProps) {
-  const router = useRouter()
-  const { location } = useGeolocation()
+export function BottomSheet({ nearbyDriversCount = 0 }: { nearbyDriversCount?: number }) {
+  const router = useRouter();
+  const { location } = useGeolocation({ watch: true });
+  const { t } = useI18n();
   const center = location
     ? { lat: location.latitude, lng: location.longitude }
-    : { lat: 19.4326, lng: -99.1332 }
+    : { lat: 19.4326, lng: -99.1332 };
 
-  const [pickup, setPickup] = useState("")
-  const [destination, setDestination] = useState("")
-  const [vehicleType, setVehicleType] = useState<VehicleType>("standard")
-  const [price, setPrice] = useState(95)
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash")
-  const [isSearching, setIsSearching] = useState(false)
+  const [pickup, setPickup] = useState("");
+  const [destination, setDestination] = useState("");
+  const [vehicleType, setVehicleType] = useState<VehicleType>("standard");
+  const [price, setPrice] = useState(95);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSwap = () => {
-    const temp = pickup
-    setPickup(destination)
-    setDestination(temp)
-  }
+  const handleSwap = () => { const tmp = pickup; setPickup(destination); setDestination(tmp); };
 
   const handleSearch = async () => {
-    if (!pickup || !destination) return
-    setIsSearching(true)
+    if (!pickup || !destination) return;
+    setIsSearching(true);
+    setError("");
     try {
-      const res = await api.post("/rides", {
-        originAddress: pickup,
-        originLatitude: center.lat,
-        originLongitude: center.lng,
-        destinationAddress: destination,
-        destinationLatitude: center.lat + 0.01,
-        destinationLongitude: center.lng + 0.01,
-        proposedPrice: price,
-        paymentMethod,
-        vehicleType,
-        isScheduled: false,
-      })
-      const { setActiveRide } = useTripStore.getState()
-      setActiveRide(res.data?.data?.ride)
-      router.push("/app/offers")
-    } catch (err) {
-      console.error(err)
+      const res = await fetch("/api/rides", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          originAddress: pickup,
+          originLatitude: center.lat,
+          originLongitude: center.lng,
+          destinationAddress: destination,
+          destinationLatitude: center.lat + 0.012,
+          destinationLongitude: center.lng + 0.008,
+          proposedPrice: price,
+          paymentMethod,
+          vehicleType,
+          isScheduled: false,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al crear viaje");
+      const ride = data.data?.ride;
+      if (ride) {
+        useTripStore.getState().setActiveRide(ride);
+        router.push("/app/offers");
+      }
+    } catch (err: any) {
+      setError(err.message || "Error al buscar chofer");
     } finally {
-      setIsSearching(false)
+      setIsSearching(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -75,48 +77,29 @@ export function BottomSheet({ nearbyDriversCount = 0 }: BottomSheetProps) {
       <div className="mb-6 flex justify-center">
         <div className="h-1 w-12 rounded-full bg-muted" />
       </div>
-
       <div className="flex flex-col gap-5">
-        <LocationInputs
-          pickup={pickup}
-          destination={destination}
-          onPickupChange={setPickup}
-          onDestinationChange={setDestination}
-          onSwap={handleSwap}
-        />
-
+        <LocationInputs pickup={pickup} destination={destination}
+          onPickupChange={setPickup} onDestinationChange={setDestination} onSwap={handleSwap} />
         <VehicleSelector selected={vehicleType} onSelect={setVehicleType} />
-
         <PriceSelector price={price} onPriceChange={setPrice} />
-
         <PaymentSelector selected={paymentMethod} onSelect={setPaymentMethod} />
-
-        <motion.button
-          onClick={handleSearch}
+        {error && <p style={{ color: '#ef4444', fontSize: 13, textAlign: 'center' }}>{error}</p>}
+        <motion.button onClick={handleSearch}
           disabled={isSearching || !pickup || !destination}
-          className="cta-glow gradient-bg pulse-glow relative w-full rounded-xl py-4 text-base font-semibold text-white transition-opacity disabled:opacity-50"
+          className="w-full rounded-xl py-4 text-base font-semibold text-white disabled:opacity-50"
+          style={{ background: 'linear-gradient(135deg, #7c3aed, #22d3ee)' }}
           whileTap={{ scale: 0.98 }}
         >
           {isSearching ? (
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center justify-center gap-2"
-            >
-              <motion.span
-                className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              />
-              Buscando...
-            </motion.span>
-          ) : (
-            "Buscar chofer"
-          )}
+            <span className="flex items-center justify-center gap-2">
+              <motion.span className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white"
+                animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+              {t('searching')}
+            </span>
+          ) : t('search_driver')}
         </motion.button>
-
         {nearbyDriversCount > 0 && <DriversNearby count={nearbyDriversCount} />}
       </div>
     </motion.div>
-  )
+  );
 }

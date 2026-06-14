@@ -1,3 +1,4 @@
+import { useI18n } from '@/lib/i18n';
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ interface PaymentMethod {
 export default function ProfilePage() {
   const router = useRouter();
   const { user: clerkUser } = useUser();
+  const { t, lang, setLang } = useI18n();
   const { signOut } = useClerk();
   const user = clerkUser
     ? {
@@ -217,7 +219,17 @@ export default function ProfilePage() {
               <p className="text-sm font-medium">Apariencia</p>
               <p className="text-xs text-[#8B8B9E]">Tema claro u oscuro</p>
             </div>
-            <ThemeToggle />
+            <div style={{ display:'flex', flexDirection:'column', gap:8, alignItems:'flex-end' }}>
+              <ThemeToggle />
+              <div style={{ display:'flex', gap:6 }}>
+                {(['es','en'] as const).map(l => (
+                  <button key={l} onClick={() => setLang(l)}
+                    style={{ padding:'3px 10px', borderRadius:6, fontSize:11, fontWeight:700, cursor:'pointer', border:`1px solid ${lang===l ? 'var(--brand-accent)' : 'rgba(255,255,255,0.1)'}`, background: lang===l ? 'rgba(34,211,238,0.1)' : 'transparent', color: lang===l ? 'var(--brand-accent)' : '#9891c4' }}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 
