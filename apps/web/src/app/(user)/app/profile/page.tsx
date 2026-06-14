@@ -1,7 +1,7 @@
-import { useI18n } from '@/lib/i18n';
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useI18n } from '@/lib/i18n';
+mport { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, User, Phone, Mail, CreditCard, Plus, Trash2, Check, LogOut } from '@/components/icons';
 import { BottomNav } from '@/components/layout/BottomNav';
