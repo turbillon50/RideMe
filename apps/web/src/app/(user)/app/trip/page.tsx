@@ -188,6 +188,15 @@ export default function TripTrackingPage() {
           </button>
         )}
       </div>
+      
+        {/* Botón de emergencia */}
+        <div style={{ textAlign:'center', marginTop:8 }}>
+          <button onClick={() => window.open('tel:911')}
+            style={{ background:'transparent', border:`1px solid rgba(239,68,68,0.3)`, color:'#ef4444',
+            padding:'8px 20px', borderRadius:10, fontSize:12, fontWeight:600, cursor:'pointer' }}>
+            🆘 Emergencia — llamar al 911
+          </button>
+        </div>
       <BottomNav role="passenger" />
     </div>
   );

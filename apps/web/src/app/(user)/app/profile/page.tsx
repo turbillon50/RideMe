@@ -1,251 +1,263 @@
-'use client';
+"use client";
 
-import { useI18n } from '@/lib/i18n';
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, User, Phone, Mail, CreditCard, Plus, Trash2, Check, LogOut } from '@/components/icons';
-import { BottomNav } from '@/components/layout/BottomNav';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useUser, useClerk } from '@clerk/nextjs';
-import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { BottomNav } from '@/components/layout/BottomNav';
+import { useI18n } from '@/lib/i18n';
 
-interface PaymentMethod {
-  id: string;
-  brand: string;
-  last4: string;
-  exp_month: number;
-  exp_year: number;
-  is_default: boolean;
+const C = {
+  bg:'#0a0814',surface:'#0d0b1a',surface2:'#12102a',border:'rgba(124,58,237,0.18)',
+  violet:'#7c3aed',cyan:'#22d3ee',gold:'#fbbf24',green:'#10b981',red:'#ef4444',
+  text:'#f8f7ff',muted:'#9891c4',
+};
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div style={{ background:C.surface,border:`1px solid ${C.border}`,borderRadius:16,marginBottom:12,overflow:'hidden' }}>
+      <p style={{ fontSize:10,color:C.muted,textTransform:'uppercase',letterSpacing:'0.12em',padding:'12px 16px 0',margin:0,fontWeight:700 }}>{title}</p>
+      {children}
+    </div>
+  );
+}
+
+function Row({ icon, label, value, action, onClick, color }: any) {
+  return (
+    <button onClick={onClick} style={{ width:'100%',display:'flex',alignItems:'center',gap:12,padding:'13px 16px',background:'none',border:'none',cursor:onClick?'pointer':'default',borderTop:`1px solid ${C.border}` }}>
+      <span style={{ fontSize:18,flexShrink:0 }}>{icon}</span>
+      <div style={{ flex:1,textAlign:'left' }}>
+        <p style={{ fontSize:13,color:color||C.text,margin:0,fontWeight:500 }}>{label}</p>
+        {value && <p style={{ fontSize:11,color:C.muted,margin:'2px 0 0' }}>{value}</p>}
+      </div>
+      {action && <span style={{ fontSize:12,color:C.muted }}>{action}</span>}
+    </button>
+  );
 }
 
 export default function ProfilePage() {
-  const router = useRouter();
-  const { user: clerkUser } = useUser();
-  const { t, lang, setLang } = useI18n();
+  const { user } = useUser();
   const { signOut } = useClerk();
-  const user = clerkUser
-    ? {
-        name: clerkUser.firstName || clerkUser.fullName || '',
-        email: clerkUser.primaryEmailAddress?.emailAddress || '',
-        phone: clerkUser.primaryPhoneNumber?.phoneNumber || '',
-      }
-    : null;
-  const [methods, setMethods] = useState<PaymentMethod[]>([]);
-  const [loadingMethods, setLoadingMethods] = useState(true);
-  const [name, setName] = useState(user?.name ?? '');
+  const router = useRouter();
+  const { t, lang, setLang } = useI18n();
+  const [dbUser, setDbUser] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [homeAddr, setHomeAddr] = useState('');
+  const [workAddr, setWorkAddr] = useState('');
+  const [prefVehicle, setPrefVehicle] = useState('standard');
+  const [prefPayment, setPrefPayment] = useState('cash');
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string|null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    api.get('/payments/methods').then(res => {
-      setMethods(res.data?.data ?? []);
-    }).catch(() => {}).finally(() => setLoadingMethods(false));
-  }, []);
+    if (!user) return;
+    setName(user.fullName || '');
+    setPhone(user.primaryPhoneNumber?.phoneNumber || '');
+    fetch('/api/user/profile').then(r=>r.json()).then(d=>{
+      if (d.ok && d.user) {
+        const u = d.user;
+        setDbUser(u);
+        setHomeAddr(u.home_address||'');
+        setWorkAddr(u.work_address||'');
+        setPrefVehicle(u.preferred_vehicle||'standard');
+        setPrefPayment(u.preferred_payment||'cash');
+        if (u.avatar_url) setAvatarPreview(u.avatar_url);
+      }
+    });
+  }, [user]);
 
-  useEffect(() => {
-    setName(user?.name ?? '');
-  }, [user?.name]);
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; if (!file) return;
+    setUploadingPhoto(true);
+    const form = new FormData();
+    form.append('file', file);
+    form.append('doc_type', 'photo_selfie');
+    const res = await fetch('/api/upload', { method:'POST', body:form });
+    const d = await res.json();
+    if (d.ok) {
+      setAvatarPreview(d.url);
+      await fetch('/api/user/profile', { method:'PATCH', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ avatar_url: d.url }) });
+    }
+    setUploadingPhoto(false);
+  };
 
   const handleSave = async () => {
+    if (!user) return;
     setSaving(true);
-    try {
-      await clerkUser?.update({ firstName: name });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    } catch {
-    } finally {
-      setSaving(false);
+    const parts = name.trim().split(' ');
+    if (parts.length && name !== user.fullName) {
+      await user.update({ firstName: parts[0], lastName: parts.slice(1).join(' ') || undefined });
     }
+    await fetch('/api/user/profile', { method:'PATCH', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name: name.trim(), phone, home_address: homeAddr, work_address: workAddr,
+        preferred_vehicle: prefVehicle, preferred_payment: prefPayment }) });
+    setSaving(false); setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
   };
 
-  const handleSetDefault = async (id: string) => {
-    await api.put(`/payments/methods/${id}/default`).catch(() => {});
-    setMethods(prev => prev.map(m => ({ ...m, is_default: m.id === id })));
-  };
-
-  const handleRemove = async (id: string) => {
-    await api.delete(`/payments/methods/${id}`).catch(() => {});
-    setMethods(prev => prev.filter(m => m.id !== id));
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-    router.push('/');
-  };
-
-  const brandIcon: Record<string, string> = {
-    visa: '💳',
-    mastercard: '💳',
-    amex: '💳',
-  };
+  const initials = (name || user?.fullName || 'U').split(' ').map((n:string)=>n[0]).join('').slice(0,2).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-background pb-24 md:pl-20">
-      <div className="safe-top px-4 pt-4 pb-4 border-b border-[rgba(255,255,255,0.06)]">
-        <div className="flex items-center gap-3">
-          <Link href="/app" className="text-[#8B8B9E] hover:text-white transition-colors">
-            <ArrowLeft size={22} />
-          </Link>
-          <h1 className="font-black text-xl">Mi Perfil</h1>
-        </div>
+    <div style={{ minHeight:'100vh', background:C.bg, color:C.text, paddingBottom:80, fontFamily:'Inter,system-ui,sans-serif' }}>
+
+      {/* Header */}
+      <div style={{ position:'sticky',top:0,zIndex:40,background:C.bg,borderBottom:`1px solid ${C.border}`,padding:'14px 20px',display:'flex',alignItems:'center',gap:12 }}>
+        <button onClick={()=>router.back()} style={{ background:'none',border:'none',color:C.muted,cursor:'pointer',padding:4 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <h1 style={{ fontSize:18,fontWeight:700,margin:0 }}>{t('my_profile')}</h1>
+        <AnimatePresence>
+          {saved && <motion.span initial={{opacity:0,scale:0.8}} animate={{opacity:1,scale:1}} exit={{opacity:0}} style={{ marginLeft:'auto',fontSize:12,color:C.green,fontWeight:700 }}>✓ Guardado</motion.span>}
+        </AnimatePresence>
       </div>
 
-      <div className="px-4 py-6 space-y-5">
+      <div style={{ maxWidth:480,margin:'0 auto',padding:'16px 16px 0' }}>
+
         {/* Avatar */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center"
-        >
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center text-white font-black text-3xl mb-3">
-            {user?.name?.[0]?.toUpperCase() ?? 'U'}
-          </div>
-          <div className="text-xs text-[#8B8B9E]">Usuario</div>
-        </motion.div>
-
-        {/* Personal info */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.06 }}
-          className="bg-card border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
-        >
-          <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.04)]">
-            <p className="text-xs font-semibold text-[#8B8B9E] uppercase tracking-wider">Información personal</p>
-          </div>
-          <div className="space-y-0">
-            {/* Name */}
-            <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[rgba(255,255,255,0.04)]">
-              <User size={15} className="text-[#6C63FF] flex-shrink-0" />
-              <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="Tu nombre"
-                className="flex-1 bg-transparent text-sm outline-none"
-              />
-            </div>
-            {/* Email */}
-            <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[rgba(255,255,255,0.04)]">
-              <Mail size={15} className="text-[#8B8B9E] flex-shrink-0" />
-              <span className="text-sm text-[#8B8B9E]">{user?.email}</span>
-            </div>
-            {/* Phone */}
-            <div className="flex items-center gap-3 px-4 py-3.5">
-              <Phone size={15} className="text-[#8B8B9E] flex-shrink-0" />
-              <span className="text-sm text-[#8B8B9E]">{user?.phone ?? 'Sin teléfono'}</span>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          onClick={handleSave}
-          disabled={saving || name === user?.name}
-          className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-bold text-sm disabled:opacity-40 flex items-center justify-center gap-2"
-        >
-          {saving ? (
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : saved ? (
-            <><Check size={16} /> Guardado</>
-          ) : (
-            'Guardar cambios'
-          )}
-        </motion.button>
-
-        {/* Payment methods */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
-          className="bg-card border border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden"
-        >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.04)]">
-            <p className="text-xs font-semibold text-[#8B8B9E] uppercase tracking-wider">Métodos de pago</p>
-            <button className="flex items-center gap-1 text-xs text-[#6C63FF]">
-              <Plus size={13} /> Agregar
-            </button>
-          </div>
-
-          {loadingMethods ? (
-            <div className="p-4 space-y-2">
-              {[1, 2].map(i => <div key={i} className="skeleton h-12 rounded-xl" />)}
-            </div>
-          ) : methods.length === 0 ? (
-            <div className="px-4 py-6 text-center">
-              <CreditCard size={28} className="text-[#4A4A5A] mx-auto mb-2" />
-              <p className="text-sm text-[#8B8B9E]">Sin tarjetas guardadas</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-[rgba(255,255,255,0.04)]">
-              {methods.map(m => (
-                <div key={m.id} className="flex items-center gap-3 px-4 py-3.5">
-                  <span className="text-xl">{brandIcon[m.brand] ?? '💳'}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium capitalize">{m.brand} ···· {m.last4}</div>
-                    <div className="text-xs text-[#4A4A5A]">Vence {m.exp_month}/{m.exp_year}</div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {m.is_default ? (
-                      <span className="text-xs text-[#2ED573] font-medium">Principal</span>
-                    ) : (
-                      <button onClick={() => handleSetDefault(m.id)} className="text-xs text-[#6C63FF]">
-                        Usar
-                      </button>
-                    )}
-                    <button onClick={() => handleRemove(m.id)} className="p-1.5 rounded-lg hover:bg-[rgba(255,71,87,0.1)] transition-colors">
-                      <Trash2 size={13} className="text-[#4A4A5A] hover:text-[#FF4757] transition-colors" />
-                    </button>
-                  </div>
+        <div style={{ textAlign:'center',padding:'20px 0 16px' }}>
+          <div style={{ position:'relative',display:'inline-block' }}>
+            <div onClick={()=>fileRef.current?.click()} style={{ width:90,height:90,borderRadius:'50%',cursor:'pointer',overflow:'hidden',
+              background:`linear-gradient(135deg, ${C.violet}, ${C.cyan})`,display:'flex',alignItems:'center',justifyContent:'center',
+              border:`2px solid ${C.border}`,position:'relative' }}>
+              {avatarPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatarPreview} alt="avatar" style={{ width:'100%',height:'100%',objectFit:'cover' }} />
+              ) : (
+                <span style={{ fontSize:32,fontWeight:800,color:'white' }}>{initials}</span>
+              )}
+              {uploadingPhoto && (
+                <div style={{ position:'absolute',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center' }}>
+                  <div style={{ width:20,height:20,borderRadius:'50%',border:'2px solid white',borderTopColor:'transparent',animation:'spin 0.8s linear infinite' }} />
                 </div>
-              ))}
+              )}
+            </div>
+            <button onClick={()=>fileRef.current?.click()} style={{ position:'absolute',bottom:0,right:0,width:28,height:28,borderRadius:'50%',
+              background:C.violet,border:`2px solid ${C.bg}`,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </button>
+            <input ref={fileRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display:'none' }} capture="user" />
+          </div>
+          <p style={{ fontSize:16,fontWeight:700,margin:'10px 0 2px' }}>{name || user?.fullName || 'Usuario'}</p>
+          <p style={{ fontSize:12,color:C.muted,margin:0 }}>{user?.primaryEmailAddress?.emailAddress}</p>
+          {dbUser?.referral_code && (
+            <div style={{ marginTop:8,display:'inline-flex',alignItems:'center',gap:6,padding:'4px 12px',background:'rgba(34,211,238,0.1)',borderRadius:99,border:`1px solid rgba(34,211,238,0.2)` }}>
+              <span style={{ fontSize:11,color:C.cyan,fontWeight:700 }}>Código de referido: {dbUser.referral_code}</span>
             </div>
           )}
-        </motion.div>
+        </div>
 
-        {/* Appearance */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-card border border-border rounded-2xl overflow-hidden"
-        >
-          <div className="flex items-center justify-between px-4 py-3.5">
+        {/* Info Personal */}
+        <Section title="Información personal">
+          <div style={{ padding:'10px 16px 16px',display:'flex',flexDirection:'column',gap:12 }}>
             <div>
-              <p className="text-sm font-medium">Apariencia</p>
-              <p className="text-xs text-[#8B8B9E]">Tema claro u oscuro</p>
+              <p style={{ fontSize:11,color:C.muted,margin:'0 0 5px',fontWeight:600 }}>Nombre completo</p>
+              <input value={name} onChange={e=>setName(e.target.value)} style={{ width:'100%',background:C.surface2,border:`1px solid ${C.border}`,borderRadius:10,padding:'10px 12px',color:C.text,fontSize:14,outline:'none',boxSizing:'border-box' as const }} />
             </div>
-            <div style={{ display:'flex', flexDirection:'column', gap:8, alignItems:'flex-end' }}>
-              <ThemeToggle />
-              <div style={{ display:'flex', gap:6 }}>
-                {(['es','en'] as const).map(l => (
-                  <button key={l} onClick={() => setLang(l)}
-                    style={{ padding:'3px 10px', borderRadius:6, fontSize:11, fontWeight:700, cursor:'pointer', border:`1px solid ${lang===l ? 'var(--brand-accent)' : 'rgba(255,255,255,0.1)'}`, background: lang===l ? 'rgba(34,211,238,0.1)' : 'transparent', color: lang===l ? 'var(--brand-accent)' : '#9891c4' }}>
-                    {l.toUpperCase()}
+            <div>
+              <p style={{ fontSize:11,color:C.muted,margin:'0 0 5px',fontWeight:600 }}>Teléfono</p>
+              <input value={phone} onChange={e=>setPhone(e.target.value)} type="tel" placeholder="+52 55 1234 5678" style={{ width:'100%',background:C.surface2,border:`1px solid ${C.border}`,borderRadius:10,padding:'10px 12px',color:C.text,fontSize:14,outline:'none',boxSizing:'border-box' as const }} />
+            </div>
+          </div>
+        </Section>
+
+        {/* Direcciones guardadas */}
+        <Section title="Direcciones frecuentes">
+          <div style={{ padding:'10px 16px 16px',display:'flex',flexDirection:'column',gap:12 }}>
+            {[['🏠','Casa',homeAddr,setHomeAddr],['💼','Trabajo',workAddr,setWorkAddr]].map(([icon,label,val,setter]:any) => (
+              <div key={label}>
+                <p style={{ fontSize:11,color:C.muted,margin:'0 0 5px',fontWeight:600 }}>{icon} {label}</p>
+                <input value={val} onChange={(e:any)=>setter(e.target.value)} placeholder={`Agrega tu dirección de ${label.toLowerCase()}`}
+                  style={{ width:'100%',background:C.surface2,border:`1px solid ${C.border}`,borderRadius:10,padding:'10px 12px',color:C.text,fontSize:13,outline:'none',boxSizing:'border-box' as const }} />
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Preferencias */}
+        <Section title="Preferencias de viaje">
+          <div style={{ padding:'10px 16px 16px',display:'flex',flexDirection:'column',gap:14 }}>
+            <div>
+              <p style={{ fontSize:11,color:C.muted,margin:'0 0 8px',fontWeight:600 }}>Tipo de vehículo predeterminado</p>
+              <div style={{ display:'flex',gap:6 }}>
+                {[['standard','Estándar'],['comfort','Confort'],['xl','XL']].map(([v,l])=>(
+                  <button key={v} onClick={()=>setPrefVehicle(v)}
+                    style={{ flex:1,padding:'8px 4px',borderRadius:9,border:`1.5px solid ${prefVehicle===v?C.violet:C.border}`,background:prefVehicle===v?C.violet+'22':'transparent',color:prefVehicle===v?C.violet:C.muted,fontSize:12,fontWeight:700,cursor:'pointer',transition:'all 0.2s' }}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p style={{ fontSize:11,color:C.muted,margin:'0 0 8px',fontWeight:600 }}>Método de pago predeterminado</p>
+              <div style={{ display:'flex',gap:6 }}>
+                {[['cash','💵 Efectivo'],['card','💳 Tarjeta'],['mp','💙 Mercado Pago']].map(([v,l])=>(
+                  <button key={v} onClick={()=>setPrefPayment(v)}
+                    style={{ flex:1,padding:'8px 4px',borderRadius:9,border:`1.5px solid ${prefPayment===v?C.cyan:C.border}`,background:prefPayment===v?C.cyan+'15':'transparent',color:prefPayment===v?C.cyan:C.muted,fontSize:11,fontWeight:700,cursor:'pointer',transition:'all 0.2s' }}>
+                    {l}
                   </button>
                 ))}
               </div>
             </div>
           </div>
-        </motion.div>
+        </Section>
 
-        {/* Logout */}
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.24 }}
-          onClick={handleLogout}
-          className="w-full py-3.5 rounded-2xl border border-[rgba(255,71,87,0.2)] text-[#FF4757] font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[rgba(255,71,87,0.06)] transition-colors"
-        >
-          <LogOut size={16} /> Cerrar sesión
-        </motion.button>
+        {/* Métodos de pago */}
+        <Section title="Métodos de pago">
+          <Row icon="💳" label="Tarjeta de crédito/débito" value="Sin tarjetas guardadas" action="Agregar →" onClick={()=>router.push('/app/payment/add-card')} />
+          <Row icon="💙" label="Mercado Pago" value="Conectar cuenta MP" action="→" onClick={()=>router.push('/app/payment/mercado-pago')} />
+        </Section>
+
+        {/* Historial rápido */}
+        <Section title="Mi actividad">
+          <Row icon="🚗" label="Historial de viajes" value={`${dbUser?.total_rides||0} viajes`} action="Ver →" onClick={()=>router.push('/app/history')} />
+          <Row icon="⭐" label="Mi calificación promedio" value="Próximamente" />
+        </Section>
+
+        {/* Apariencia e idioma */}
+        <Section title={t('appearance')}>
+          <div style={{ padding:'12px 16px',display:'flex',justifyContent:'space-between',alignItems:'center',borderTop:`1px solid ${C.border}` }}>
+            <div>
+              <p style={{ fontSize:13,color:C.text,margin:0,fontWeight:500 }}>Tema</p>
+              <p style={{ fontSize:11,color:C.muted,margin:'2px 0 0' }}>Claro u oscuro</p>
+            </div>
+            <ThemeToggle />
+          </div>
+          <div style={{ padding:'12px 16px',display:'flex',justifyContent:'space-between',alignItems:'center',borderTop:`1px solid ${C.border}` }}>
+            <div>
+              <p style={{ fontSize:13,color:C.text,margin:0,fontWeight:500 }}>{t('language')}</p>
+            </div>
+            <div style={{ display:'flex',gap:6 }}>
+              {(['es','en'] as const).map(l=>(
+                <button key={l} onClick={()=>setLang(l)} style={{ padding:'4px 12px',borderRadius:7,fontSize:12,fontWeight:700,cursor:'pointer',
+                  border:`1px solid ${lang===l?C.cyan:C.border}`,background:lang===l?C.cyan+'15':'transparent',color:lang===l?C.cyan:C.muted }}>
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* Guardar */}
+        <button onClick={handleSave} disabled={saving}
+          style={{ width:'100%',padding:'14px',borderRadius:12,border:'none',background:`linear-gradient(135deg, ${C.violet}, ${C.cyan})`,color:'white',fontWeight:700,fontSize:15,cursor:'pointer',opacity:saving?0.7:1,marginBottom:12 }}>
+          {saving ? 'Guardando...' : t('save_changes')}
+        </button>
+
+        {/* Soporte + Cerrar sesión */}
+        <Section title="Cuenta">
+          <Row icon="💬" label="Soporte" value="¿Necesitas ayuda?" action="→" onClick={()=>window.open('https://wa.me/521XXXXXXXXXX?text=Hola%20RideMe%20soporte','_blank')} />
+          <Row icon="📤" label={t('sign_out')} onClick={()=>signOut(()=>router.push('/'))} color={C.red} />
+        </Section>
       </div>
 
       <BottomNav role="passenger" />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

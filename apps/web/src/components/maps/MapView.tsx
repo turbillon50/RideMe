@@ -1,12 +1,9 @@
-'use client';
+"use client";
 
-interface Driver {
-  id: string;
-  latitude: number;
-  longitude: number;
-  heading?: number;
-}
+import { useState } from 'react';
+import { useGeolocation } from '@/hooks/useGeolocation';
 
+interface Driver { id: string; latitude: number; longitude: number; }
 interface MapViewProps {
   center?: { lat: number; lng: number };
   zoom?: number;
@@ -15,16 +12,13 @@ interface MapViewProps {
   driverLocation?: { lat: number; lng: number };
   origin?: { lat: number; lng: number };
   destination?: { lat: number; lng: number };
-  onMapClick?: (lat: number, lng: number) => void;
   className?: string;
+  showGpsButton?: boolean;
 }
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
 const STYLE = 'mapbox/dark-v11';
-
-function f(n: number): string {
-  return n.toFixed(5);
-}
+const f = (n: number) => n.toFixed(5);
 
 export function MapView({
   center = { lat: 19.4326, lng: -99.1332 },
@@ -35,51 +29,76 @@ export function MapView({
   origin,
   destination,
   className = 'w-full h-full',
+  showGpsButton = true,
 }: MapViewProps) {
-  const focus = userLocation || origin || center;
+  const { location, requestPermission, isLoading, error, hasPermission } = useGeolocation({ watch: true });
+  const [imgError, setImgError] = useState(false);
+
+  // Prioridad: GPS real > userLocation prop > center default
+  const gpsLoc = location ? { lat: location.latitude, lng: location.longitude } : null;
+  const focus = gpsLoc || userLocation || origin || center;
 
   const pins: string[] = [];
-  // Driver pins (teal)
-  drivers.slice(0, 14).forEach((d) => {
-    pins.push(`pin-s+00D4AA(${f(d.longitude)},${f(d.latitude)})`);
-  });
-  if (driverLocation) pins.push(`pin-l+00D4AA(${f(driverLocation.lng)},${f(driverLocation.lat)})`);
-  if (origin) pins.push(`pin-l+6C63FF(${f(origin.lng)},${f(origin.lat)})`);
-  if (destination) pins.push(`pin-l+00D4AA(${f(destination.lng)},${f(destination.lat)})`);
-  // User pin (violet) — last so it sits on top
-  pins.push(`pin-l+6C63FF(${f(focus.lng)},${f(focus.lat)})`);
+  drivers.slice(0, 10).forEach(d => pins.push(`pin-s+22d3ee(${f(d.longitude)},${f(d.latitude)})`));
+  if (driverLocation) pins.push(`pin-l+22d3ee(${f(driverLocation.lng)},${f(driverLocation.lat)})`);
+  if (origin) pins.push(`pin-l+7c3aed(${f(origin.lng)},${f(origin.lat)})`);
+  if (destination) pins.push(`pin-l+22d3ee(${f(destination.lng)},${f(destination.lat)})`);
+  pins.push(`pin-l+7c3aed(${f(focus.lng)},${f(focus.lat)})`);
 
   const overlay = pins.join(',');
-  const center2 =
-    origin && destination
-      ? 'auto'
-      : `${f(focus.lng)},${f(focus.lat)},${zoom},0`;
-  const size = '600x500@2x';
-  const src = `https://api.mapbox.com/styles/v1/${STYLE}/static/${overlay}/${center2}/${size}?access_token=${TOKEN}&logo=false&attribution=false`;
+  const centerStr = origin && destination ? 'auto' : `${f(focus.lng)},${f(focus.lat)},${zoom},0`;
+  const src = TOKEN && !imgError
+    ? `https://api.mapbox.com/styles/v1/${STYLE}/static/${overlay}/${centerStr}/600x500@2x?access_token=${TOKEN}&logo=false&attribution=false`
+    : null;
 
   return (
-    <div
-      className={`relative overflow-hidden ${className}`}
-      style={{ height: '100%', minHeight: '100%', background: '#0A0A0F' }}
-    >
-      {TOKEN ? (
+    <div className={`relative overflow-hidden ${className}`} style={{ background: '#0a0814' }}>
+      {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt="Mapa"
-          className="h-full w-full"
-          style={{ height: '100%', width: '100%', objectFit: 'cover', display: 'block' }}
-        />
+        <img src={src} alt="Mapa" onError={() => setImgError(true)}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-sm text-white/40">
+        <div style={{ width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'rgba(255,255,255,0.3)',fontSize:13 }}>
           Mapa no disponible
         </div>
       )}
-      {/* subtle bottom fade to blend into the sheet */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0"
-        style={{ height: '64px', background: 'linear-gradient(to top, var(--bg), transparent)' }}
-      />
+
+      {/* Botón GPS */}
+      {showGpsButton && (
+        <button onClick={requestPermission}
+          style={{ position:'absolute',bottom:80,right:14,width:40,height:40,borderRadius:10,
+            background: gpsLoc ? 'rgba(34,211,238,0.9)' : 'rgba(10,8,20,0.85)',
+            border:`1.5px solid ${gpsLoc ? '#22d3ee' : 'rgba(255,255,255,0.2)'}`,
+            backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',
+            cursor:'pointer',transition:'all 0.2s',boxShadow:'0 2px 12px rgba(0,0,0,0.4)' }}>
+          {isLoading ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={gpsLoc ? '#0a0814' : 'white'} strokeWidth="2"
+              style={{ animation:'spin 1s linear infinite' }}>
+              <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/>
+              <path d="M12 2 a10 10 0 0 1 10 10"/>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={gpsLoc ? '#0a0814' : 'white'} strokeWidth="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>
+            </svg>
+          )}
+        </button>
+      )}
+
+      {/* Error de GPS */}
+      {error && hasPermission === false && (
+        <div style={{ position:'absolute',top:10,left:10,right:10,background:'rgba(239,68,68,0.9)',
+          backdropFilter:'blur(8px)',borderRadius:10,padding:'8px 12px',fontSize:12,color:'white',fontWeight:600 }}>
+          📍 {error}
+        </div>
+      )}
+
+      {/* Fade inferior */}
+      <div style={{ position:'absolute',bottom:0,left:0,right:0,height:60,
+        background:'linear-gradient(to top, #0a0814, transparent)',pointerEvents:'none' }} />
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

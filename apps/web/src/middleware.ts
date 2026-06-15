@@ -14,6 +14,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/rides/(.*)', '/api/pricing(.*)',
   '/api/push/(.*)', '/api/upload',
   '/api/stripe/(.*)', '/api/mp/(.*)',
+  '/api/user/(.*)',
 ]);
 
 const clerkHandler = clerkMiddleware((auth, req) => {

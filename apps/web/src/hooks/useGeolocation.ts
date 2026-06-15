@@ -1,119 +1,64 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Coordinates } from '@/types';
 
+interface LocationCoords { latitude: number; longitude: number; }
 interface GeolocationState {
-  coords: Coordinates | null;
+  location: LocationCoords | null;
   accuracy: number | null;
   error: string | null;
   isLoading: boolean;
   hasPermission: boolean | null;
 }
 
-interface UseGeolocationOptions {
+export const useGeolocation = (options: {
   watch?: boolean;
   enableHighAccuracy?: boolean;
   timeout?: number;
   maximumAge?: number;
-  onUpdate?: (coords: Coordinates) => void;
-}
-
-interface LocationCoords {
-  latitude: number;
-  longitude: number;
-}
-
-export const useGeolocation = (options: UseGeolocationOptions = {}): GeolocationState & {
-  location: LocationCoords | null;
-  requestPermission: () => void;
-  requestLocation: () => void;
-  stopWatching: () => void;
-} => {
-  const {
-    watch = false,
-    enableHighAccuracy = true,
-    timeout = 15000,
-    maximumAge = 5000,
-    onUpdate,
-  } = options;
-
+} = {}) => {
+  const { watch = false, enableHighAccuracy = true, timeout = 15000, maximumAge = 10000 } = options;
   const [state, setState] = useState<GeolocationState>({
-    coords: null,
-    accuracy: null,
-    error: null,
-    isLoading: false,
-    hasPermission: null,
+    location: null, accuracy: null, error: null, isLoading: false, hasPermission: null,
   });
-
   const watchIdRef = useRef<number | null>(null);
-  const onUpdateRef = useRef(onUpdate);
-  onUpdateRef.current = onUpdate;
 
-  const geoOptions: PositionOptions = {
-    enableHighAccuracy,
-    timeout,
-    maximumAge,
-  };
+  const geoOptions: PositionOptions = { enableHighAccuracy, timeout, maximumAge };
 
-  const handleSuccess = useCallback((position: GeolocationPosition) => {
-    const coords: Coordinates = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-    setState((prev) => ({
+  const handleSuccess = useCallback((pos: GeolocationPosition) => {
+    setState(prev => ({
       ...prev,
-      coords,
-      accuracy: position.coords.accuracy,
+      location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude },
+      accuracy: pos.coords.accuracy,
       error: null,
       isLoading: false,
       hasPermission: true,
     }));
-    onUpdateRef.current?.(coords);
   }, []);
 
-  const handleError = useCallback((error: GeolocationPositionError) => {
-    let message = 'Location unavailable';
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        message = 'Location permission denied';
-        break;
-      case error.POSITION_UNAVAILABLE:
-        message = 'Location information unavailable';
-        break;
-      case error.TIMEOUT:
-        message = 'Location request timed out';
-        break;
-    }
-    setState((prev) => ({
+  const handleError = useCallback((err: GeolocationPositionError) => {
+    const msgs: Record<number, string> = {
+      1: 'Permiso de ubicación denegado. Actívalo en Ajustes.',
+      2: 'Ubicación no disponible.',
+      3: 'Tiempo agotado obteniendo ubicación.',
+    };
+    setState(prev => ({
       ...prev,
-      error: message,
+      error: msgs[err.code] ?? 'Error de ubicación',
       isLoading: false,
-      hasPermission: error.code === error.PERMISSION_DENIED ? false : prev.hasPermission,
+      hasPermission: err.code === 1 ? false : prev.hasPermission,
     }));
   }, []);
 
   const requestPermission = useCallback(() => {
-    if (!navigator.geolocation) {
-      setState((prev) => ({
-        ...prev,
-        error: 'Geolocation not supported',
-        isLoading: false,
-      }));
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      setState(p => ({ ...p, error: 'Geolocalización no disponible en este dispositivo' }));
       return;
     }
-
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
+    setState(p => ({ ...p, isLoading: true, error: null }));
     if (watch) {
-      if (watchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-      }
-      watchIdRef.current = navigator.geolocation.watchPosition(
-        handleSuccess,
-        handleError,
-        geoOptions,
-      );
+      if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = navigator.geolocation.watchPosition(handleSuccess, handleError, geoOptions);
     } else {
       navigator.geolocation.getCurrentPosition(handleSuccess, handleError, geoOptions);
     }
@@ -127,30 +72,28 @@ export const useGeolocation = (options: UseGeolocationOptions = {}): Geolocation
   }, []);
 
   useEffect(() => {
-    // Check existing permission
-    if (typeof navigator !== 'undefined' && navigator.permissions) {
-      navigator.permissions
-        .query({ name: 'geolocation' })
-        .then((result) => {
-          if (result.state === 'granted') {
-            setState((prev) => ({ ...prev, hasPermission: true }));
+    if (typeof navigator === 'undefined') return;
+    // SIEMPRE pedir permiso al montar — fix del bug original
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' as PermissionName })
+        .then(result => {
+          if (result.state === 'denied') {
+            setState(p => ({ ...p, hasPermission: false, error: 'Permiso denegado. Actívalo en Ajustes > Privacidad.' }));
+          } else {
+            // 'granted' o 'prompt' → siempre intentar
             requestPermission();
-          } else if (result.state === 'denied') {
-            setState((prev) => ({ ...prev, hasPermission: false }));
           }
+          result.onchange = () => {
+            if (result.state === 'granted') requestPermission();
+          };
         })
-        .catch(() => {
-          // Permissions API not available, try directly
-          requestPermission();
-        });
+        .catch(() => requestPermission()); // iOS Safari fallback
+    } else {
+      requestPermission(); // Fallback directo
     }
-
     return () => stopWatching();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const location: LocationCoords | null = state.coords
-    ? { latitude: state.coords.lat, longitude: state.coords.lng }
-    : null;
-
-  return { ...state, location, requestPermission, requestLocation: requestPermission, stopWatching };
+  return { ...state, requestPermission, requestLocation: requestPermission, stopWatching };
 };
