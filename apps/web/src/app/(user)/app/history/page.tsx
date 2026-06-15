@@ -64,7 +64,7 @@ export default function HistoryPage() {
                 <p style={{ fontSize:13,color:C.muted,margin:0 }}>🏁 {ride.destination_address||'Destino'}</p>
                 {ride.driver_name && <p style={{ fontSize:11,color:C.muted,marginTop:6 }}>Chofer: {ride.driver_name}</p>}
                 {ride.rating_by_passenger && (
-                  <p style={{ fontSize:11,color:C.gold,marginTop:4 }}>{'⭐'.repeat(ride.rating_by_passenger)} Tu calificación</p>
+                  <p style={{ fontSize:11,color:'#fbbf24',marginTop:4 }}>{'⭐'.repeat(ride.rating_by_passenger)} Tu calificación</p>
                 )}
               </motion.div>
             );
