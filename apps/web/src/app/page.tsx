@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   IconCar,
   IconLightning,
@@ -10,6 +10,7 @@ import {
   IconProfile,
   IconTrips,
 } from "@/components/rm-icons";
+import { Splash } from "@/components/Splash";
 import { useI18n } from "@/lib/i18n";
 
 const T = {
@@ -235,13 +236,15 @@ function BrandMark({ size = 16, box = 32 }: { size?: number; box?: number }) {
 export default function LandingPage() {
   const { lang, setLang } = useI18n();
   const t = T[lang] as typeof T["es"];
+  const reduceMotion = useReducedMotion();
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -80]);
 
   return (
     <div className="rm-landing min-h-screen overflow-x-hidden bg-[var(--rm-bg)] text-[var(--rm-text)]">
+      <Splash />
       {/* NAV — Iniciar sesión visible a 390 (antes hidden sm:flex) */}
       <nav className="safe-top sticky top-0 z-50 border-b border-[var(--rm-border)] bg-[color-mix(in_srgb,var(--rm-bg)_88%,transparent)] backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
@@ -279,7 +282,7 @@ export default function LandingPage() {
             </div>
             <Link
               href="/sign-in"
-              className="inline-flex min-h-11 min-w-[44px] items-center justify-center whitespace-nowrap px-2 text-sm font-semibold text-[var(--rm-text-2)] sm:px-4"
+              className="rm-pressable min-h-11 min-w-[44px] whitespace-nowrap px-2 text-sm font-semibold text-[var(--rm-text-2)] sm:px-4"
             >
               {t.signin}
             </Link>
@@ -299,53 +302,28 @@ export default function LandingPage() {
         <div className="absolute inset-0" style={{ background: "var(--rm-scrim-hero)" }} />
         <motion.div
           style={{ opacity: heroOpacity, y: heroY }}
-          className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-10 pt-20 text-center sm:px-6 sm:pb-20"
+          className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-10 pt-20 text-center sm:px-6 sm:pb-20 rm-enter"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rm-accent)]/35 bg-[var(--rm-accent-muted)] px-4 py-1.5 text-sm font-medium text-[var(--rm-accent)]"
-          >
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rm-accent)]/35 bg-[var(--rm-accent-muted)] px-4 py-1.5 text-sm font-medium text-[var(--rm-accent)]">
             <IconLightning size={14} />
             {t.badge}
-          </motion.div>
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mb-3 text-[length:var(--rm-text-3xl)] font-bold leading-[var(--rm-leading-tight)] tracking-[var(--rm-tracking-tight)] text-[var(--rm-text)] sm:text-7xl lg:text-8xl"
-          >
+          <h1 className="mb-3 text-[length:var(--rm-text-3xl)] font-bold leading-[var(--rm-leading-tight)] tracking-[var(--rm-tracking-tight)] text-[var(--rm-text)] sm:text-7xl lg:text-8xl">
             RideMe
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--rm-accent)]"
-          >
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--rm-accent)]">
             {t.coverage}
-          </motion.p>
+          </p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mx-auto mb-3 max-w-2xl text-[length:var(--rm-text-md)] leading-[var(--rm-leading)] text-[var(--rm-text-2)] sm:text-2xl"
-          >
+          <p className="mx-auto mb-3 max-w-2xl text-[length:var(--rm-text-md)] leading-[var(--rm-leading)] text-[var(--rm-text-2)] sm:text-2xl">
             {t.hero_sub}
-          </motion.p>
+          </p>
           <p className="mb-8 text-xs text-[var(--rm-text-3)] sm:text-sm">{t.cities}</p>
 
           {/* CTAs 390: stack ≥48px · Comenzar → Solicitar viaje → Chofer · login en thumb */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center"
-          >
+          <div className="mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
             <Link href="/sign-up" className="rm-btn rm-btn--primary rm-btn--block rm-btn--lg sm:w-auto sm:min-w-[220px]">
               {t.get_started}
             </Link>
@@ -361,14 +339,9 @@ export default function LandingPage() {
             <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--block rm-btn--lg sm:hidden">
               {t.signin}
             </Link>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 60, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mx-auto mt-12 max-w-sm sm:mt-16"
-          >
+          <div className="mx-auto mt-12 max-w-sm sm:mt-16">
             <div className="rm-card rm-card--glass p-5 text-left">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--rm-accent-muted)] text-sm font-bold text-[var(--rm-accent)]">
@@ -400,7 +373,7 @@ export default function LandingPage() {
                 <span className="ml-auto font-medium text-[var(--rm-success)]">● {t.accepted}</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </section>
 

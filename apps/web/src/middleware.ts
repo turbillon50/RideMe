@@ -17,12 +17,25 @@ const isPublicRoute = createRouteMatcher([
   '/api/user/(.*)',
 ]);
 
+function redirectToSignIn(req: NextRequest) {
+  const url = new URL('/sign-in', req.url);
+  const next = `${req.nextUrl.pathname}${req.nextUrl.search}`;
+  if (next && next !== '/' && next !== '/sign-in') {
+    url.searchParams.set('redirect_url', next);
+  }
+  return NextResponse.redirect(url);
+}
+
 const clerkHandler = clerkMiddleware((auth, req) => {
-  if (!isPublicRoute(req)) auth().protect();
+  if (isPublicRoute(req)) return;
+  if (!auth().userId) return redirectToSignIn(req);
 });
 
 export default function middleware(req: NextRequest, ev: any) {
-  if (!clerkEnabled) return NextResponse.next();
+  if (!clerkEnabled) {
+    if (!isPublicRoute(req)) return redirectToSignIn(req);
+    return NextResponse.next();
+  }
   return (clerkHandler as any)(req, ev);
 }
 

@@ -21,6 +21,7 @@ export const viewport = {
 
 const pk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
 const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^pk_test_demo$/i.test(pk);
+const clerkPublishableKey = clerkEnabled ? pk : 'pk_test_cmidZW1lLWludC1zc2ck';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const tree = (
@@ -52,11 +53,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </body>
     </html>
   );
-  return clerkEnabled ? (
-    <ClerkProvider localization={esMX} appearance={clerkAppearance}>
+  return (
+    <ClerkProvider publishableKey={clerkPublishableKey} localization={esMX} appearance={clerkAppearance}>
       {tree}
     </ClerkProvider>
-  ) : (
-    tree
   );
 }
