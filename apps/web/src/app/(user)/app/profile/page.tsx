@@ -15,7 +15,7 @@ export default function ProfilePage() {
 
   const rows = [
     { icon: IconTrips, label: 'Viajes', href: '/app/history' },
-    { icon: IconWallet, label: 'Pago · Efectivo', href: '/app' },
+    { icon: IconWallet, label: 'Pago · Efectivo', href: '/app/wallet' },
     { icon: IconShield, label: 'Seguridad', href: '/app' },
   ];
 
