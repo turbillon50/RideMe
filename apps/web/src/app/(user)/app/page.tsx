@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { IconCash, IconDot, IconLightning, IconPin } from '@/components/rm-icons';
+import { IconCash, IconDot, IconLightning, IconSearch } from '@/components/rm-icons';
 import { RideMap } from '@/components/ride/RideMap';
 import { AppNav } from '@/components/layout/AppNav';
 import { useTripStore } from '@/store/tripStore';
@@ -81,7 +81,7 @@ export default function PassengerHome() {
           />
         </div>
         <div className="mb-3 rm-field">
-          <IconPin size={18} className="rm-map__pin" />
+          <IconSearch size={18} className="text-[var(--rm-accent)]" />
           <input
             value={destination}
             onChange={(e) => setDestination(e.target.value)}

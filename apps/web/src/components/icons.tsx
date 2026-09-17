@@ -189,12 +189,7 @@ export function ChevronRight(props: IconProps) {
 }
 
 export function Clock(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </Icon>
-  );
+  return <RmTrips size={props.size} className={props.className} />;
 }
 
 export function CreditCard(props: IconProps) {

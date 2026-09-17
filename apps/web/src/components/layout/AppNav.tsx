@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IconHome, IconProfile, IconTrips } from '@/components/rm-icons';
+import { IconHome, IconProfile, IconTrips, IconWallet } from '@/components/rm-icons';
 
 const items = [
   { href: '/app', icon: IconHome, label: 'Viajar' },
   { href: '/app/history', icon: IconTrips, label: 'Viajes' },
+  { href: '/app/wallet', icon: IconWallet, label: 'Pago' },
   { href: '/app/profile', icon: IconProfile, label: 'Tú' },
 ];
 
