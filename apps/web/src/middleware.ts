@@ -6,13 +6,13 @@ import type { NextRequest } from 'next/server';
  * Auth wall PR1 — MUST FIX.
  * Prod rideme.ink: 404 `x-clerk-auth-reason: protect-rewrite` (auth().protect()).
  * Este PR: 307 a /sign-in?redirect_url=…  NUNCA auth.protect().
+ * Unauth `/app` | `/driver` | `/demo` → sign-in. Booking interno = PR2.
  */
 const pk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
 const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^pk_test_demo$/i.test(pk);
 
 const isPublicRoute = createRouteMatcher([
   '/', '/login(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
-  '/app(.*)', '/demo(.*)',
   '/driver/onboarding', '/onboarding', '/user-onboarding',
   '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)',
   '/api/invitations/validate',
@@ -23,8 +23,10 @@ const isPublicRoute = createRouteMatcher([
   '/api/user/(.*)',
 ]);
 
-/** Chofer app sigue muro. Producto pasajero /app es visitable (preview + Pedir RideMe). */
+/** Unauth: /app, /driver (salvo onboarding), /demo → 307 /sign-in. */
 export function isAuthWallPath(pathname: string) {
+  if (pathname === '/app' || pathname.startsWith('/app/')) return true;
+  if (pathname === '/demo' || pathname.startsWith('/demo/')) return true;
   if (pathname === '/driver' || pathname.startsWith('/driver/')) {
     if (pathname === '/driver/onboarding' || pathname.startsWith('/driver/onboarding/')) return false;
     return true;

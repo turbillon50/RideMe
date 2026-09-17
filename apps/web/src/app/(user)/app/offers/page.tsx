@@ -48,7 +48,7 @@ export default function OffersPage() {
         <div className="rm-price rounded-2xl bg-[var(--rm-bg)]/80 px-3 py-2 text-lg">${ride.proposed_price}</div>
       </header>
 
-      <section className="rm-app__sheet rm-enter" style={{ maxHeight: '62%' }}>
+      <section className="rm-app__sheet rm-sheet-enter" style={{ maxHeight: '62%' }}>
         <div className="rm-app__handle" />
         <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rm-accent)]">
           <span className="rm-live" />

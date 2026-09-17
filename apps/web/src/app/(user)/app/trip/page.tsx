@@ -35,7 +35,7 @@ export default function TripTrackingPage() {
         <span className="rm-live-pill">En camino</span>
       </header>
 
-      <section className="rm-app__sheet rm-enter">
+      <section className="rm-app__sheet rm-sheet-enter">
         <div className="rm-app__handle" />
         <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rm-accent)]">Tu RideMe</p>
         <h1 className="mb-4 text-[22px] font-bold tracking-tight">Llega en 3 min</h1>

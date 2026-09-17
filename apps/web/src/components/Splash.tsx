@@ -54,7 +54,7 @@ export function Splash() {
       </div>
       <div className="rm-splash__scrim" />
       <div className="rm-splash__mark">
-        <div className="rm-splash__glow">
+        <div className="rm-splash__glow rm-glow-pulse">
           <IconLightning size={28} />
         </div>
         <span className="text-2xl font-bold tracking-tight">RideMe</span>

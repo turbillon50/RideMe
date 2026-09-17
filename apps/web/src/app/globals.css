@@ -11,12 +11,12 @@
   --surface: #111118;
   --surface-2: #1A1A24;
   --surface-3: #22222F;
-  --brand-primary: #6C63FF;
-  --brand-accent: #00D4AA;
-  --accent: #6C63FF;
-  --accent-hover: #5A52E8;
-  --secondary: #00D4AA;
-  --secondary-hover: #00B896;
+  --brand-primary: #00E5A8;
+  --brand-accent: #00E5A8;
+  --accent: #00E5A8;
+  --accent-hover: #00C992;
+  --secondary: #00E5A8;
+  --secondary-hover: #00C992;
   --border: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.16);
   --text-primary: #FFFFFF;
@@ -30,7 +30,7 @@
   --radius-xl: 1.5rem;
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-modal: 0 25px 80px rgba(0, 0, 0, 0.8);
-  --gradient-cta: linear-gradient(135deg, #6C63FF, #00D4AA);
+  --gradient-cta: var(--rm-accent);
 }
 
 html.light {
@@ -444,7 +444,7 @@ input[type='range']::-moz-range-thumb {
   inset: 0;
   border-radius: inherit;
   padding: 2px;
-  background: linear-gradient(135deg, #6C63FF 0%, #00D4AA 100%);
+  background: var(--rm-accent);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -455,7 +455,7 @@ input[type='range']::-moz-range-thumb {
 
 /* ─── v0 Gradient Button ──────────────────────────────────────────────────────── */
 .gradient-bg {
-  background: linear-gradient(135deg, #6C63FF 0%, #00D4AA 100%);
+  background: var(--rm-accent);
 }
 
 /* ─── v0 CTA Glow ─────────────────────────────────────────────────────────────── */

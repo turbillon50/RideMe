@@ -1,6 +1,8 @@
-/* RideMe Design System — tokens v0
+/* RideMe Design System — tokens v0.1
    Firmado Luis 2026-09-17: obsidiana + mint único. Cero purple. Cero Lucide.
-   Scope v0: landing + CTAs + chrome mapa. Interno /app|/driver hereda cuando haya sesión.
+   Ley visual: /workspace/rideme-ley-visual.png (igualito splash + app).
+   Icons: icons-v1.tsx craft stroke 1.25.
+   Scope: landing+auth PR1; interno PR2 hereda. Motion craft en cada acción.
 */
 
 :root {
@@ -68,14 +70,60 @@
   --rm-space-16: 64px;
   --rm-hit: 44px; /* tap mínimo móvil */
 
-  /* Elevation */
+  /* Elevation + glow (collage) */
   --rm-shadow-card: 0 8px 28px rgba(0, 0, 0, 0.45);
   --rm-shadow-sheet: 0 -12px 40px rgba(0, 0, 0, 0.55);
   --rm-glow-accent: 0 0 24px rgba(0, 229, 168, 0.28);
+  --rm-glow-accent-strong: 0 0 40px rgba(0, 229, 168, 0.45);
+  --rm-glow-text: 0 0 18px rgba(0, 229, 168, 0.55);
 
-  /* Motion */
+  /* Cards collage: 16–20r */
+  --rm-radius-card: 18px;
+  --rm-radius-card-sm: 16px;
+  --rm-radius-card-lg: 20px;
+
+  /* Splash (ley visual) */
+  --rm-splash-bg: #0A0A0C;
+  --rm-splash-wordmark: #00E5A8;
+  --rm-splash-glow: radial-gradient(
+    ellipse 60% 45% at 50% 42%,
+    rgba(0, 229, 168, 0.35) 0%,
+    rgba(0, 229, 168, 0.08) 45%,
+    transparent 70%
+  );
+  --rm-splash-mark-size: 72px;
+  --rm-splash-title-size: 2rem; /* 32 — wordmark */
+  --rm-splash-title-weight: 700;
+  --rm-splash-tracking: -0.03em;
+
+  /* Motion craft — cada acción (press / spring / glow / sheet) */
   --rm-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rm-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --rm-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --rm-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --rm-dur-instant: 80ms;
   --rm-dur: 180ms;
+  --rm-dur-enter: 280ms;
+  --rm-dur-sheet: 360ms;
+  --rm-dur-splash: 900ms;
+  --rm-press-scale: 0.97;
+  --rm-press-scale-cta: 0.985;
+  --rm-spring-stiffness: 420;
+  --rm-spring-damping: 28;
+  --rm-sheet-y: 24px; /* enter from */
+  --rm-focus-ring: 0 0 0 2px var(--rm-bg), 0 0 0 4px var(--rm-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rm-dur-instant: 1ms;
+    --rm-dur: 1ms;
+    --rm-dur-enter: 1ms;
+    --rm-dur-sheet: 1ms;
+    --rm-dur-splash: 1ms;
+    --rm-press-scale: 1;
+    --rm-press-scale-cta: 1;
+  }
 }
 
 /* ── Botones ───────────────────────────────────────── */
@@ -95,10 +143,11 @@
   cursor: pointer;
   transition: background var(--rm-dur) var(--rm-ease),
     border-color var(--rm-dur) var(--rm-ease),
-    transform var(--rm-dur) var(--rm-ease),
+    transform var(--rm-dur) var(--rm-ease-spring),
+    box-shadow var(--rm-dur) var(--rm-ease),
     opacity var(--rm-dur) var(--rm-ease);
 }
-.rm-btn:active { transform: scale(0.98); }
+.rm-btn:active { transform: scale(var(--rm-press-scale-cta)); }
 .rm-btn:disabled { opacity: 0.4; pointer-events: none; }
 
 .rm-btn--primary {
@@ -130,7 +179,7 @@
 .rm-card {
   background: var(--rm-surface);
   border: 1px solid var(--rm-border);
-  border-radius: var(--rm-radius-lg);
+  border-radius: var(--rm-radius-card);
   box-shadow: var(--rm-shadow-card);
   padding: var(--rm-space-5);
 }

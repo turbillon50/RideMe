@@ -67,7 +67,7 @@ export default function PassengerHome() {
         </div>
       </header>
 
-      <form className="rm-app__sheet rm-enter" onSubmit={ask}>
+      <form className="rm-app__sheet rm-sheet-enter" onSubmit={ask}>
         <div className="rm-app__handle" />
         <h1 className="mb-3 text-[22px] font-bold tracking-tight">¿A dónde vas?</h1>
 

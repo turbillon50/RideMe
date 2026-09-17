@@ -19,7 +19,8 @@
 ## Archivos
 - `icons-v1.tsx` — drop-in para Front/Obra
 - `icons-v1-preview.png` — hoja visual
-- `tokens.css` — sin cambio (v0 firmado)
+- `tokens.css` — v0.1 (press / spring / splash / focus-ring)
+- `MOTION-v0.1.md` — clases `.rm-pressable` · `.rm-enter` · `.rm-sheet-enter` · `.rm-glow-pulse` · `.rm-splash`
 
 ## Consumo
 Reemplazar `apps/web/src/components/icons.tsx` Lucide-DNA / v0 por `icons-v1.tsx`.  

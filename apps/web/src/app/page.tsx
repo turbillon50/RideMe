@@ -326,12 +326,12 @@ export default function LandingPage() {
             <p className="mb-6 hidden text-xs text-[var(--rm-text-3)] sm:mb-8 sm:block sm:text-sm">{t.cities}</p>
 
             <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 lg:mx-0">
-              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
-                <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
+              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.985 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
+                <Link href="/sign-in?redirect_url=/app" className="rm-btn rm-btn--primary rm-btn--lg">
                   {t.cta_ride}
                 </Link>
               </motion.div>
-              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
+              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.985 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
                 <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
                   {t.cta_driver}
                 </Link>

@@ -73,7 +73,7 @@ export function RideMeSignIn() {
     <main className="rm-auth">
       <form className="rm-auth__card rm-enter" onSubmit={onSubmit} noValidate>
         <div className="mb-6 flex flex-col items-center text-center">
-          <div className="rm-splash__glow mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--rm-accent)] text-[var(--rm-cta-fg)]">
+          <div className="rm-splash__glow rm-glow-pulse mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--rm-accent)] text-[var(--rm-cta-fg)]">
             <IconLightning size={22} />
           </div>
           <h1 className="text-xl font-bold tracking-tight">Entra a RideMe</h1>
