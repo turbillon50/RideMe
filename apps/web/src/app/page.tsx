@@ -6,12 +6,12 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import {
   IconCar,
   IconLightning,
-  IconPin,
   IconShield,
   IconStar,
   IconTrips,
 } from "@/components/rm-icons";
 import { Splash } from "@/components/Splash";
+import { CollagePhones } from "@/components/layout/CollagePhones";
 import { useI18n } from "@/lib/i18n";
 
 const T = {
@@ -294,95 +294,48 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* HERO — collage phones, cero foto AURUM */}
       <section
         ref={heroRef}
-        className="relative flex min-h-[92svh] items-end justify-center overflow-hidden sm:items-center"
+        className="relative overflow-hidden bg-[var(--rm-bg)]"
       >
-        <img
-          src="/brand/hero.jpg"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-[center_32%] sm:object-[62%_40%]"
-        />
-        <div className="absolute inset-0" style={{ background: "var(--rm-scrim-hero)" }} />
-        {/* Overlay puerta — stock AURUM MOBILITY no debe leerse. Marca = RideMe. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(10,10,12,0.55) 0%, rgba(10,10,12,0.18) 28%, transparent 48%)",
-          }}
-        />
         <motion.div
           style={{ opacity: heroOpacity, y: heroY }}
-          className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-10 pt-20 text-center sm:px-6 sm:pb-20 rm-enter"
+          className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 px-4 pb-10 pt-10 sm:px-6 sm:pb-20 sm:pt-16 lg:grid-cols-2 rm-enter"
         >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rm-accent)]/35 bg-[var(--rm-accent-muted)] px-4 py-1.5 text-sm font-medium text-[var(--rm-accent)]">
-            <IconLightning size={14} />
-            {t.badge}
-          </div>
+          <div className="text-center lg:text-left">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rm-accent)]/35 bg-[var(--rm-accent-muted)] px-4 py-1.5 text-sm font-medium text-[var(--rm-accent)]">
+              <IconLightning size={14} />
+              {t.badge}
+            </div>
 
-          <h1 className="mb-3 text-[length:var(--rm-text-3xl)] font-bold leading-[var(--rm-leading-tight)] tracking-[var(--rm-tracking-tight)] text-[var(--rm-text)] sm:text-7xl lg:text-8xl">
-            RideMe
-          </h1>
+            <h1 className="mb-3 text-[length:var(--rm-text-3xl)] font-bold leading-[var(--rm-leading-tight)] tracking-[var(--rm-tracking-tight)] text-[var(--rm-text)] sm:text-7xl">
+              RideMe
+            </h1>
 
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--rm-accent)]">
-            {t.coverage}
-          </p>
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--rm-accent)]">
+              {t.coverage}
+            </p>
 
-          <p className="mx-auto mb-3 max-w-2xl text-[length:var(--rm-text-md)] leading-[var(--rm-leading)] text-[var(--rm-text-2)] sm:text-2xl">
-            {t.hero_sub}
-          </p>
-          <p className="mb-8 text-xs text-[var(--rm-text-3)] sm:text-sm">{t.cities}</p>
+            <p className="mx-auto mb-3 max-w-2xl text-[length:var(--rm-text-md)] leading-[var(--rm-leading)] text-[var(--rm-text-2)] sm:text-xl lg:mx-0">
+              {t.hero_sub}
+            </p>
+            <p className="mb-8 text-xs text-[var(--rm-text-3)] sm:text-sm">{t.cities}</p>
 
-          {/* CTAs 390: stack ≥48px · Comenzar → Solicitar viaje → Chofer · login en thumb */}
-          <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3">
-            <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
-              {t.cta_ride}
-            </Link>
-            <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
-              {t.cta_driver}
-            </Link>
-            <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
-              {t.signin}
-            </Link>
-          </div>
-
-          <div className="mx-auto mt-12 max-w-sm sm:mt-16">
-            <div className="rm-card rm-card--glass p-5 text-left">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--rm-accent-muted)] text-sm font-bold text-[var(--rm-accent)]">
-                  JD
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">Juan D.</div>
-                  <div className="flex items-center gap-1 text-xs text-[var(--rm-text-3)]">
-                    <IconStar size={12} className="text-[var(--rm-accent)]" />
-                    <span className="text-[var(--rm-accent)]">4.97</span>
-                    <span>· Toyota Corolla</span>
-                  </div>
-                </div>
-                <div className="rm-price ml-auto">$95</div>
-              </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-start gap-2">
-                  <IconPin size={14} className="rm-map__pin mt-0.5 shrink-0" />
-                  <span className="text-[var(--rm-text-2)]">{t.origin}</span>
-                </div>
-                <div className="ml-[7px] h-4 w-px border-l border-dashed border-[var(--rm-border-strong)]" />
-                <div className="flex items-start gap-2">
-                  <IconPin size={14} className="mt-0.5 shrink-0 text-[var(--rm-text-3)]" />
-                  <span className="text-[var(--rm-text-2)]">{t.dest}</span>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-xs text-[var(--rm-text-3)]">
-                <IconTrips size={12} />
-                <span>{t.arriving}</span>
-                <span className="ml-auto font-medium text-[var(--rm-success)]">● {t.accepted}</span>
-              </div>
+            <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 lg:mx-0">
+              <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
+                {t.cta_ride}
+              </Link>
+              <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
+                {t.cta_driver}
+              </Link>
+              <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
+                {t.signin}
+              </Link>
             </div>
           </div>
+
+          <CollagePhones />
         </motion.div>
       </section>
 

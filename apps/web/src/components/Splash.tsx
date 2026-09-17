@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { IconCar } from '@/components/rm-icons';
+import { IconLightning } from '@/components/rm-icons';
 
 export function Splash() {
   const reduce = useReducedMotion();
@@ -48,15 +48,10 @@ export function Splash() {
 
   return (
     <div className={`rm-splash${exiting ? ' is-exit' : ''}`} role="status" aria-label="RideMe">
-      <div className="rm-splash__collage" aria-hidden>
-        <img src="/brand/hero.jpg" alt="" className="rm-splash__tile rm-splash__tile--a" />
-        <img src="/brand/app.jpg" alt="" className="rm-splash__tile rm-splash__tile--b" />
-        <img src="/brand/driver.jpg" alt="" className="rm-splash__tile rm-splash__tile--c" />
-      </div>
       <div className="rm-splash__scrim" />
       <div className="rm-splash__mark">
         <div className="rm-splash__glow">
-          <IconCar size={28} />
+          <IconLightning size={28} />
         </div>
         <span className="text-2xl font-bold tracking-tight">RideMe</span>
       </div>

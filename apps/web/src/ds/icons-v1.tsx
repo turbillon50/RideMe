@@ -1,7 +1,7 @@
 /**
- * RideMe icon set v1 — craft premium (Forma).
+ * RideMe icon set v1 — craft premium
+ * Ref: /workspace/rideme-mock-*.png (Luis OK cromática; v0 rechazado)
  * stroke 1.25 · geometry dura · currentColor · NO Lucide-DNA
- * Core 10 from uploads/icons-v1.tsx; extras in the same stroke language.
  */
 import type { ReactNode, SVGProps } from "react";
 
@@ -50,15 +50,7 @@ export function IconPin(props: RmIconProps) {
   );
 }
 
-export function IconDot(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12" r="3.1" />
-      <circle cx="12" cy="12" r="7.1" opacity={0.45} />
-    </RmIcon>
-  );
-}
-
+/** Buscar */
 export function IconSearch(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -68,6 +60,7 @@ export function IconSearch(props: RmIconProps) {
   );
 }
 
+/** Llamar — auricular geométrico */
 export function IconCall(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -76,6 +69,7 @@ export function IconCall(props: RmIconProps) {
   );
 }
 
+/** Chat — burbuja cápsula + cola */
 export function IconChat(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -85,6 +79,7 @@ export function IconChat(props: RmIconProps) {
   );
 }
 
+/** Home — techo pico + cuerpo abierto abajo (mock) */
 export function IconHome(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -95,6 +90,7 @@ export function IconHome(props: RmIconProps) {
   );
 }
 
+/** Viajes / historial — reloj + arco */
 export function IconTrips(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -105,6 +101,7 @@ export function IconTrips(props: RmIconProps) {
   );
 }
 
+/** Wallet — tarjeta + solapa */
 export function IconWallet(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -116,6 +113,7 @@ export function IconWallet(props: RmIconProps) {
   );
 }
 
+/** Perfil — cabeza + hombros desconectados */
 export function IconProfile(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -125,6 +123,7 @@ export function IconProfile(props: RmIconProps) {
   );
 }
 
+/** Auto — silueta lateral craft */
 export function IconCar(props: RmIconProps) {
   return (
     <RmIcon {...props}>
@@ -138,120 +137,11 @@ export function IconCar(props: RmIconProps) {
   );
 }
 
+/** Lightning — rayo angular outline (name-your-price) */
 export function IconLightning(props: RmIconProps) {
   return (
     <RmIcon {...props}>
       <path d="M12.85 2.75 6.4 13.1h5.05L10.6 21.25l6.95-11.1h-5.05L12.85 2.75Z" />
-    </RmIcon>
-  );
-}
-
-export function IconCalendar(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <rect x="3.75" y="5.5" width="16.5" height="14.75" rx="2.2" />
-      <path d="M8 3.5v3.4M16 3.5v3.4M3.75 10.25h16.5" />
-      <path d="M8.25 14.1h.01M12 14.1h.01M15.75 14.1h.01" />
-    </RmIcon>
-  );
-}
-
-export function IconAlert(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12" r="8.25" />
-      <path d="M12 7.75v5" />
-      <circle cx="12" cy="16.15" r="0.7" fill="currentColor" stroke="none" />
-    </RmIcon>
-  );
-}
-
-export function IconStar(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M12 3.6 13.9 8.4l5.2.5-3.9 3.3.9 5.15L12 15.2 7.9 17.35l.9-5.15-3.9-3.3 5.2-.5L12 3.6Z" />
-    </RmIcon>
-  );
-}
-
-export function IconShield(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M12 3.4 5.4 5.7v6.1c0 3.7 2.55 6.35 6.6 7.85 4.05-1.5 6.6-4.15 6.6-7.85V5.7L12 3.4Z" />
-      <path d="m9.1 12.05 1.9 1.9 3.9-4" />
-    </RmIcon>
-  );
-}
-
-export function IconEye(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M3.5 12s3.35-6.25 8.5-6.25S20.5 12 20.5 12s-3.35 6.25-8.5 6.25S3.5 12 3.5 12Z" />
-      <circle cx="12" cy="12" r="2.35" />
-    </RmIcon>
-  );
-}
-
-export function IconEyeOff(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M3.5 12s3.35-6.25 8.5-6.25c1.35 0 2.55.4 3.6.95" />
-      <path d="M20.5 12s-1.15 2.15-3.15 3.85" />
-      <path d="M9.15 9.2a3 3 0 0 0 5.35 3.45" />
-      <path d="m4 4 16 16" />
-    </RmIcon>
-  );
-}
-
-export function IconUpload(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M5 16.6v2.15A1.5 1.5 0 0 0 6.5 20.25h11A1.5 1.5 0 0 0 19 18.75V16.6" />
-      <path d="M12 15.5V6.4" />
-      <path d="m8.4 9.35 3.6-3.6 3.6 3.6" />
-    </RmIcon>
-  );
-}
-
-export function IconChevronLeft(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="m14.6 5.25-6.1 6.75 6.1 6.75" />
-    </RmIcon>
-  );
-}
-
-export function IconChevronRight(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="m9.4 5.25 6.1 6.75-6.1 6.75" />
-    </RmIcon>
-  );
-}
-
-export function IconSun(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12" r="3.35" />
-      <path d="M12 3.4v1.7M12 18.9v1.7M4.7 4.7l1.2 1.2M18.1 18.1l1.2 1.2M3.4 12H5.1M18.9 12h1.7M4.7 19.3l1.2-1.2M18.1 5.9l1.2-1.2" />
-    </RmIcon>
-  );
-}
-
-export function IconMoon(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M16.7 14.55A6.55 6.55 0 0 1 9.15 5.5 6.75 6.75 0 1 0 16.7 14.55Z" />
-    </RmIcon>
-  );
-}
-
-export function IconCash(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <rect x="3.5" y="6.5" width="17" height="11" rx="2" />
-      <circle cx="12" cy="12" r="2.35" />
-      <path d="M6.25 9.1h.01M17.75 14.9h.01" />
     </RmIcon>
   );
 }
@@ -269,21 +159,7 @@ export const RideMeIconsV1 = {
   lightning: IconLightning,
 } as const;
 
-export const RideMeIcons = {
-  ...RideMeIconsV1,
-  dot: IconDot,
-  calendar: IconCalendar,
-  alert: IconAlert,
-  star: IconStar,
-  shield: IconShield,
-  eye: IconEye,
-  eyeOff: IconEyeOff,
-  upload: IconUpload,
-  chevronLeft: IconChevronLeft,
-  chevronRight: IconChevronRight,
-  sun: IconSun,
-  moon: IconMoon,
-  cash: IconCash,
-} as const;
+export type RideMeIconNameV1 = keyof typeof RideMeIconsV1;
 
-export type RideMeIconName = keyof typeof RideMeIcons;
+/** Alias de migración: sustituye icons.tsx v0 */
+export const RideMeIcons = RideMeIconsV1;
