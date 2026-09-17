@@ -4,7 +4,7 @@ import { FormEvent, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSignUp } from '@clerk/nextjs';
-import { IconCar, IconEye, IconEyeOff } from '@/components/rm-icons';
+import { IconLightning, IconEye, IconEyeOff } from '@/components/rm-icons';
 
 function clerkMessage(err: unknown): string {
   const e = err as { errors?: { longMessage?: string; message?: string; code?: string }[] };
@@ -78,7 +78,7 @@ export function RideMeSignUp() {
       <form className="rm-auth__card rm-enter" onSubmit={onSubmit} noValidate>
         <div className="mb-6 flex flex-col items-center text-center">
           <div className="rm-splash__glow mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--rm-accent)] text-[var(--rm-cta-fg)]">
-            <IconCar size={22} />
+            <IconLightning size={22} />
           </div>
           <h1 className="text-xl font-bold tracking-tight">Crea tu cuenta RideMe</h1>
           <p className="mt-1 text-sm text-[var(--rm-text-3)]">

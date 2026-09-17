@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { IconLightning } from '@/components/rm-icons';
+import { CollagePhones } from '@/components/layout/CollagePhones';
 
 export function Splash() {
   const reduce = useReducedMotion();
@@ -48,6 +49,9 @@ export function Splash() {
 
   return (
     <div className={`rm-splash${exiting ? ' is-exit' : ''}`} role="status" aria-label="RideMe">
+      <div className="rm-splash__phones" aria-hidden>
+        <CollagePhones />
+      </div>
       <div className="rm-splash__scrim" />
       <div className="rm-splash__mark">
         <div className="rm-splash__glow">

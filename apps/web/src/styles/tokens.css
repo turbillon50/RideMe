@@ -276,10 +276,14 @@
 @keyframes rm-splash-out {
   to { opacity: 0; visibility: hidden; }
 }
-.rm-splash__collage {
+.rm-splash__phones {
   position: absolute;
-  inset: -8%;
-  opacity: 0.62;
+  inset: 8% 0 auto;
+  display: grid;
+  place-items: center;
+  opacity: 0.5;
+  pointer-events: none;
+  transform: scale(1.08);
 }
 .rm-splash__tile {
   position: absolute;

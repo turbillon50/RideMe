@@ -301,15 +301,18 @@ export default function LandingPage() {
       >
         <motion.div
           style={{ opacity: heroOpacity, y: heroY }}
-          className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 px-4 pb-10 pt-10 sm:px-6 sm:pb-20 sm:pt-16 lg:grid-cols-2 rm-enter"
+          className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-6 px-4 pb-10 pt-6 sm:px-6 sm:pb-20 sm:pt-16 lg:grid-cols-2 rm-enter"
         >
-          <div className="text-center lg:text-left">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rm-accent)]/35 bg-[var(--rm-accent-muted)] px-4 py-1.5 text-sm font-medium text-[var(--rm-accent)]">
+          <div className="order-1 lg:order-2">
+            <CollagePhones />
+          </div>
+          <div className="order-2 text-center lg:order-1 lg:text-left">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--rm-accent)]/35 bg-[var(--rm-accent-muted)] px-4 py-1.5 text-sm font-medium text-[var(--rm-accent)]">
               <IconLightning size={14} />
               {t.badge}
             </div>
 
-            <h1 className="mb-3 text-[length:var(--rm-text-3xl)] font-bold leading-[var(--rm-leading-tight)] tracking-[var(--rm-tracking-tight)] text-[var(--rm-text)] sm:text-7xl">
+            <h1 className="mb-2 text-[length:var(--rm-text-3xl)] font-bold leading-[var(--rm-leading-tight)] tracking-[var(--rm-tracking-tight)] text-[var(--rm-text)] sm:mb-3 sm:text-7xl">
               RideMe
             </h1>
 
@@ -317,31 +320,29 @@ export default function LandingPage() {
               {t.coverage}
             </p>
 
-            <p className="mx-auto mb-3 max-w-2xl text-[length:var(--rm-text-md)] leading-[var(--rm-leading)] text-[var(--rm-text-2)] sm:text-xl lg:mx-0">
+            <p className="mx-auto mb-3 hidden max-w-2xl text-[length:var(--rm-text-md)] leading-[var(--rm-leading)] text-[var(--rm-text-2)] sm:block sm:text-xl lg:mx-0">
               {t.hero_sub}
             </p>
-            <p className="mb-8 text-xs text-[var(--rm-text-3)] sm:text-sm">{t.cities}</p>
+            <p className="mb-6 hidden text-xs text-[var(--rm-text-3)] sm:mb-8 sm:block sm:text-sm">{t.cities}</p>
 
             <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 lg:mx-0">
-              <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
+              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
                 <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
                   {t.cta_ride}
                 </Link>
               </motion.div>
-              <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
+              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
                 <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
                   {t.cta_driver}
                 </Link>
               </motion.div>
-              <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }}>
+              <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.97 }}>
                 <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
                   {t.signin}
                 </Link>
               </motion.div>
             </div>
           </div>
-
-          <CollagePhones />
         </motion.div>
       </section>
 
