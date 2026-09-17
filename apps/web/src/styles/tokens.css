@@ -743,15 +743,15 @@
 /* Collage phones — ley visual */
 .rm-collage {
   position: relative;
-  height: 420px;
+  height: 360px;
   margin: 0 auto;
-  max-width: 420px;
+  max-width: 390px;
 }
 .rm-phone {
   position: absolute;
-  width: 168px;
-  height: 340px;
-  border-radius: 28px;
+  width: 132px;
+  height: 268px;
+  border-radius: 24px;
   overflow: hidden;
   background: var(--rm-bg);
   border: 2px solid var(--rm-border-strong);
@@ -851,13 +851,15 @@
   font-size: 8px;
   font-weight: 700;
 }
-.rm-phone--a { left: 8px; top: 36px; transform: rotate(-8deg); z-index: 2; }
-.rm-phone--b { right: 18px; top: 8px; transform: rotate(7deg); z-index: 1; }
-.rm-phone--c { left: 50%; top: 70px; transform: translateX(-40%) rotate(-2deg); z-index: 3; width: 176px; }
+.rm-phone--a { left: 0; top: 28px; transform: rotate(-8deg); z-index: 2; }
+.rm-phone--b { right: 0; top: 8px; transform: rotate(7deg); z-index: 1; }
+.rm-phone--c { left: 50%; top: 48px; transform: translateX(-40%) rotate(-2deg); z-index: 3; width: 140px; }
 @media (min-width: 640px) {
   .rm-collage { height: 460px; max-width: 520px; }
-  .rm-phone { width: 190px; height: 380px; }
-  .rm-phone--c { width: 200px; }
+  .rm-phone { width: 190px; height: 380px; border-radius: 28px; }
+  .rm-phone--a { left: 8px; top: 36px; }
+  .rm-phone--b { right: 18px; top: 8px; }
+  .rm-phone--c { width: 200px; top: 70px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
