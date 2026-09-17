@@ -805,6 +805,7 @@
   pointer-events: none;
   transform: translate(-50%, -80%);
 }
+.rm-map__car {
   position: absolute;
   z-index: 3;
   width: 36px;
