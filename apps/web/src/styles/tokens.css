@@ -591,18 +591,7 @@
   font-size: 10px;
   font-weight: 600;
 }
-.rm-nav a.is-on { color: var(--rm-accent); position: relative; }
-.rm-nav a.is-on::after {
-  content: "";
-  width: 14px;
-  height: 3px;
-  border-radius: 99px;
-  background: var(--rm-accent);
-  box-shadow: var(--rm-glow-accent);
-  position: absolute;
-  top: 6px;
-  bottom: auto;
-}
+.rm-nav a.is-on { color: var(--rm-accent); }
 
 .rm-chip {
   flex-shrink: 0;

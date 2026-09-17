@@ -18,7 +18,7 @@ export function RideMap({
     <div className="rm-app__map" aria-hidden>
       <div className="rm-app__streets" />
       <svg className="rm-app__route" viewBox="0 0 390 640" preserveAspectRatio="xMidYMid slice">
-        <g opacity="0.28" fill="#1c1c26">
+        <g opacity="0.55" fill="#252532">
           <rect x="28" y="48" width="92" height="70" rx="10" />
           <rect x="140" y="36" width="118" height="86" rx="10" />
           <rect x="278" y="58" width="80" height="64" rx="10" />
@@ -50,12 +50,6 @@ export function RideMap({
         <circle cx="72" cy="548" r="5" fill="var(--rm-cta-fg)" />
         <circle className="rm-map__pulse" cx="308" cy="86" r="18" fill="var(--rm-accent)" opacity="0.22" />
         <circle cx="308" cy="86" r="12" fill="var(--rm-text)" stroke="var(--rm-accent)" strokeWidth="3" />
-        <text x="22" y="236" fill="rgba(255,255,255,0.28)" fontSize="11" fontFamily="Inter,system-ui">
-          Centro
-        </text>
-        <text x="248" y="76" fill="rgba(255,255,255,0.28)" fontSize="11" fontFamily="Inter,system-ui">
-          Aeropuerto
-        </text>
       </svg>
 
       {mode === 'trip' && (
