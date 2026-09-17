@@ -57,10 +57,10 @@ export default function EarningsPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-gradient-to-br from-[rgba(108,99,255,0.15)] to-[rgba(0,212,170,0.08)] border border-[rgba(108,99,255,0.2)] rounded-3xl p-6 text-center"
+          className="bg-gradient-to-br from-[rgba(0,229,168,0.15)] to-[rgba(0,212,170,0.08)] border border-[rgba(0,229,168,0.2)] rounded-3xl p-6 text-center"
         >
           <p className="text-sm text-[#8B8B9E] mb-2">Este mes</p>
-          <div className="text-5xl font-black font-mono bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] bg-clip-text text-transparent">
+          <div className="text-5xl font-black font-mono bg-gradient-to-r from-[#00E5A8] to-[#00D4AA] bg-clip-text text-transparent">
             {earnings ? <CountUp value={earnings.month_gross} /> : '...'}
           </div>
           <div className="flex items-center justify-center gap-1 mt-2 text-[#2ED573] text-sm">

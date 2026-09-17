@@ -61,7 +61,7 @@ async function notifyAdmin(ticket: SupportTicket) {
     subject: 'RideMe soporte - nuevo reporte',
     html: `
       <div style="font-family:Arial,sans-serif;background:#0A0A0F;color:#fff;padding:24px">
-        <h1 style="color:#6C63FF">Nuevo ticket RideMe</h1>
+        <h1 style="color:#00E5A8">Nuevo ticket RideMe</h1>
         <p><strong>Usuario:</strong> ${escapeHtml(ticket.user_ref || 'anonimo')}</p>
         <p><strong>Mensaje:</strong></p>
         <p style="white-space:pre-wrap">${escapeHtml(ticket.message)}</p>
@@ -81,7 +81,7 @@ async function notifyUser(ticket: SupportTicket, reply: string, resolved: boolea
     subject: resolved ? 'RideMe soporte - ticket resuelto' : 'RideMe soporte - respuesta',
     html: `
       <div style="font-family:Arial,sans-serif;background:#0A0A0F;color:#fff;padding:24px">
-        <h1 style="color:#6C63FF">Soporte RideMe</h1>
+        <h1 style="color:#00E5A8">Soporte RideMe</h1>
         <p>Tenemos una actualizacion sobre tu reporte.</p>
         ${reply ? `<p style="white-space:pre-wrap">${escapeHtml(reply)}</p>` : ''}
         <p style="color:rgba(255,255,255,.55)">Estado: ${escapeHtml(ticket.status)}</p>
