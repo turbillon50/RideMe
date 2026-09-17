@@ -7,7 +7,8 @@ import {
   IconCar,
   IconLightning,
   IconPin,
-  IconProfile,
+  IconShield,
+  IconStar,
   IconTrips,
 } from "@/components/rm-icons";
 import { Splash } from "@/components/Splash";
@@ -214,7 +215,7 @@ const T = {
   },
 } as const;
 
-const featureIcons = [IconLightning, IconProfile, IconCar, IconTrips];
+const featureIcons = [IconLightning, IconShield, IconCar, IconTrips];
 
 const cV = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const iV = {
@@ -282,7 +283,7 @@ export default function LandingPage() {
             </div>
             <Link
               href="/sign-in"
-              className="rm-pressable min-h-11 min-w-[44px] whitespace-nowrap px-2 text-sm font-semibold text-[var(--rm-text-2)] sm:px-4"
+              className="rm-pressable min-h-11 min-w-[44px] shrink-0 whitespace-nowrap px-2 text-sm font-semibold text-[var(--rm-accent)] sm:px-4"
             >
               {t.signin}
             </Link>
@@ -298,8 +299,21 @@ export default function LandingPage() {
         ref={heroRef}
         className="relative flex min-h-[92svh] items-end justify-center overflow-hidden sm:items-center"
       >
-        <img src="/brand/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          src="/brand/hero.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover object-[center_32%] sm:object-[62%_40%]"
+        />
         <div className="absolute inset-0" style={{ background: "var(--rm-scrim-hero)" }} />
+        {/* Overlay puerta — stock AURUM MOBILITY no debe leerse. Marca = RideMe. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(10,10,12,0.55) 0%, rgba(10,10,12,0.18) 28%, transparent 48%)",
+          }}
+        />
         <motion.div
           style={{ opacity: heroOpacity, y: heroY }}
           className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-10 pt-20 text-center sm:px-6 sm:pb-20 rm-enter"
@@ -350,7 +364,8 @@ export default function LandingPage() {
                 <div>
                   <div className="text-sm font-semibold">Juan D.</div>
                   <div className="flex items-center gap-1 text-xs text-[var(--rm-text-3)]">
-                    <span className="text-[var(--rm-accent)]">★ 4.97</span>
+                    <IconStar size={12} className="text-[var(--rm-accent)]" />
+                    <span className="text-[var(--rm-accent)]">4.97</span>
                     <span>· Toyota Corolla</span>
                   </div>
                 </div>
@@ -538,7 +553,11 @@ export default function LandingPage() {
         >
           {t.testimonials.map((t2) => (
             <motion.div key={t2.name} variants={iV} whileHover={{ y: -4 }} className="rm-card">
-              <div className="mb-4 text-[var(--rm-accent)]">★★★★★</div>
+              <div className="mb-4 flex gap-1 text-[var(--rm-accent)]" aria-label="5 de 5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <IconStar key={i} size={14} />
+                ))}
+              </div>
               <p className="mb-6 text-sm leading-relaxed text-[var(--rm-text-2)]">“{t2.text}”</p>
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--rm-accent-muted)] text-xs font-bold text-[var(--rm-accent)]">

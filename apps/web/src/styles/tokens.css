@@ -351,5 +351,108 @@
   .rm-splash { display: none; }
 }
 
+/* Auth 390 — email + password visibles, sin footer Clerk */
+.rm-auth {
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: var(--rm-bg);
+  color: var(--rm-text);
+  padding: 28px 16px 24px;
+}
+@media (min-width: 640px) {
+  .rm-auth { align-items: center; padding: 40px 16px; }
+}
+.rm-auth__card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--rm-surface);
+  border: 1px solid var(--rm-border);
+  border-radius: var(--rm-radius-card);
+  box-shadow: var(--rm-shadow-card);
+  padding: 28px 22px 24px;
+}
+.rm-auth__label {
+  display: block;
+  font-size: var(--rm-text-sm);
+  font-weight: var(--rm-weight-semibold);
+  color: var(--rm-text-2);
+  margin-bottom: 6px;
+}
+.rm-auth__input {
+  width: 100%;
+  min-height: 48px;
+  background: var(--rm-surface-2);
+  border: 1px solid var(--rm-border);
+  border-radius: var(--rm-radius);
+  color: var(--rm-text);
+  font-size: var(--rm-text-md);
+  padding: 0 14px;
+  outline: none;
+}
+.rm-auth__input:focus {
+  border-color: var(--rm-accent);
+  box-shadow: var(--rm-focus-ring);
+}
+.rm-auth__pw { position: relative; }
+.rm-auth__eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--rm-text-3);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.rm-auth__eye:focus-visible { box-shadow: var(--rm-focus-ring); border-radius: 8px; }
+
+/* Date field — oculta calendar Lucide/nativo y el chip «!» */
+.rm-date-wrap { position: relative; }
+.rm-date {
+  width: 100%;
+  min-height: 48px;
+  background: var(--rm-surface-2);
+  border: 1px solid var(--rm-border);
+  border-radius: 10px;
+  padding: 11px 42px 11px 14px;
+  color: var(--rm-text);
+  font-size: 14px;
+  outline: none;
+  color-scheme: dark;
+  box-sizing: border-box;
+}
+.rm-date:focus {
+  border-color: var(--rm-accent);
+  box-shadow: var(--rm-focus-ring);
+}
+.rm-date:invalid,
+.rm-date:required:invalid {
+  box-shadow: none;
+  outline: none;
+}
+.rm-date::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.rm-date::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+.rm-date__icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rm-accent);
+  pointer-events: none;
+}
+
 /* OUT (no usar) */
 /* #6C63FF #00D4AA dual-gradient Lucide stroke-2 glow-rainbow */

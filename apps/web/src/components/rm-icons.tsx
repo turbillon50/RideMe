@@ -143,6 +143,115 @@ export function IconLightning(props: RmIconProps) {
   );
 }
 
+/** Fecha / vencimiento — no Lucide calendar */
+export function IconCalendar(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <rect x="3.5" y="6" width="17" height="14.5" rx="3" />
+      <path d="M8 3.5v4M16 3.5v4M3.5 11h17" />
+      <circle cx="8.5" cy="15.2" r="1" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="15.2" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15.5" cy="15.2" r="1" fill="currentColor" stroke="none" />
+    </RmIcon>
+  );
+}
+
+export function IconAlert(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 8v4.5" />
+      <circle cx="12" cy="16.25" r="0.85" fill="currentColor" stroke="none" />
+    </RmIcon>
+  );
+}
+
+/** Calificación — estrella llena, no Lucide */
+export function IconStar(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path
+        d="M12 3.4 14.2 8l5 .7-3.6 3.6.9 5.2L12 15.2 7.5 17.5l.9-5.2L4.8 8.7l5-.7L12 3.4Z"
+        fill="currentColor"
+        stroke="none"
+      />
+    </RmIcon>
+  );
+}
+
+/** Seguridad / verificado */
+export function IconShield(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="M12 3.2 5.5 5.6v6.2c0 3.8 2.6 6.4 6.5 8 3.9-1.6 6.5-4.2 6.5-8V5.6L12 3.2Z" />
+      <path d="m9.2 12 1.9 1.9 3.7-3.8" />
+    </RmIcon>
+  );
+}
+
+export function IconEye(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="M3.5 12s3.2-6 8.5-6 8.5 6 8.5 6-3.2 6-8.5 6-8.5-6-8.5-6Z" />
+      <circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" />
+    </RmIcon>
+  );
+}
+
+export function IconEyeOff(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="M3.5 12s3.2-6 8.5-6c1.4 0 2.7.4 3.8 1" />
+      <path d="M20.5 12s-1.2 2.2-3.2 3.8" />
+      <path d="M9.2 9.3a3 3 0 0 0 5.4 3.5" />
+      <path d="m4 4 16 16" />
+    </RmIcon>
+  );
+}
+
+export function IconUpload(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="M5 16.5v2a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 18.5v-2" />
+      <path d="M12 15.5V6.5" />
+      <path d="m8.5 9.5 3.5-3.5 3.5 3.5" />
+    </RmIcon>
+  );
+}
+
+export function IconChevronLeft(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="m14.5 5.5-6 6.5 6 6.5" />
+    </RmIcon>
+  );
+}
+
+export function IconChevronRight(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="m9.5 5.5 6 6.5-6 6.5" />
+    </RmIcon>
+  );
+}
+
+export function IconSun(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <circle cx="12" cy="12" r="3.4" />
+      <path d="M12 3.5v1.8M12 18.7v1.8M4.8 4.8l1.3 1.3M17.9 17.9l1.3 1.3M3.5 12H5.3M18.7 12h1.8M4.8 19.2l1.3-1.3M17.9 6.1l1.3-1.3" />
+    </RmIcon>
+  );
+}
+
+export function IconMoon(props: RmIconProps) {
+  return (
+    <RmIcon {...props}>
+      <path d="M16.8 14.6A6.6 6.6 0 0 1 9.2 5.4 6.8 6.8 0 1 0 16.8 14.6Z" />
+    </RmIcon>
+  );
+}
+
 export const RideMeIcons = {
   pin: IconPin,
   search: IconSearch,
@@ -154,6 +263,17 @@ export const RideMeIcons = {
   profile: IconProfile,
   car: IconCar,
   lightning: IconLightning,
+  calendar: IconCalendar,
+  alert: IconAlert,
+  star: IconStar,
+  shield: IconShield,
+  eye: IconEye,
+  eyeOff: IconEyeOff,
+  upload: IconUpload,
+  chevronLeft: IconChevronLeft,
+  chevronRight: IconChevronRight,
+  sun: IconSun,
+  moon: IconMoon,
 } as const;
 
 export type RideMeIconName = keyof typeof RideMeIcons;

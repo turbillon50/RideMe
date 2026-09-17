@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
-import { AlertCircle, Send, X } from '@/components/icons';
+import { Send, X } from '@/components/icons';
+import { IconAlert } from '@/components/rm-icons';
 import { useAuthStore } from '@/store/authStore';
 
 export function SupportButton() {
@@ -51,7 +52,7 @@ export function SupportButton() {
         title="Reportar"
         className="fixed bottom-24 right-4 z-[60] inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface/90 text-muted-foreground shadow-card backdrop-blur transition hover:text-primary hover:border-primary/40 md:bottom-6"
       >
-        <AlertCircle size={18} />
+        <IconAlert size={18} />
       </button>
 
       {open && (

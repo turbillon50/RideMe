@@ -1,9 +1,8 @@
 import './globals.css';
 import { ReactNode } from 'react';
 import { ClerkProvider } from '@clerk/nextjs';
-import { esMX } from '@clerk/localizations';
 import { Providers } from './providers';
-import { clerkAppearance } from '@/lib/clerk-ui';
+import { clerkAppearance, clerkLocalization } from '@/lib/clerk-ui';
 
 export const metadata = {
   title: 'RideMe – Tú propones el precio',
@@ -54,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   );
   return (
-    <ClerkProvider publishableKey={clerkPublishableKey} localization={esMX} appearance={clerkAppearance}>
+    <ClerkProvider publishableKey={clerkPublishableKey} localization={clerkLocalization} appearance={clerkAppearance}>
       {tree}
     </ClerkProvider>
   );

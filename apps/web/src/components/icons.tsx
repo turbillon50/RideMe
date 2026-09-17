@@ -11,6 +11,17 @@ export {
   IconProfile,
   IconCar,
   IconLightning,
+  IconCalendar,
+  IconAlert,
+  IconStar,
+  IconShield,
+  IconEye,
+  IconEyeOff,
+  IconUpload,
+  IconChevronLeft,
+  IconChevronRight,
+  IconSun,
+  IconMoon,
   RideMeIcons,
 } from './rm-icons';
 export type { RmIconProps, RideMeIconName } from './rm-icons';

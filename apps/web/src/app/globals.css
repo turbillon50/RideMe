@@ -527,3 +527,12 @@ input[type='range']::-moz-range-thumb {
 .rm-landing a.rm-btn--ghost {
   color: var(--rm-accent);
 }
+
+/* Clerk hosted remnants — hide «Secured by Clerk» / clerk.com */
+.cl-internal-b3fm6y,
+.cl-footer,
+.cl-footerPages,
+a[href*="clerk.com"],
+.cl-internal-1dauvpw {
+  display: none !important;
+}

@@ -7,7 +7,7 @@ const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^p
 
 const isPublicRoute = createRouteMatcher([
   '/', '/login(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
-  '/driver/onboarding', '/user-onboarding',
+  '/driver/onboarding', '/onboarding', '/user-onboarding',
   '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)',
   '/api/invitations/validate',
   '/api/drivers/(.*)', '/api/driver/(.*)',
