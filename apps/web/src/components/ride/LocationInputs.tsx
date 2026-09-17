@@ -23,7 +23,7 @@ export function LocationInputs({
       {/* Pickup input */}
       <div className="flex items-center gap-3 rounded-xl bg-muted px-4 py-3 transition-shadow focus-within:ring-1 focus-within:ring-primary/50">
         <div
-          className="h-3 w-3 rounded-full bg-primary shadow-[0_0_10px_rgba(108,99,255,0.6)]"
+          className="h-3 w-3 rounded-full bg-[var(--rm-accent)]"
           aria-hidden="true"
         />
         <label htmlFor="pickup-input" className="sr-only">
@@ -53,7 +53,7 @@ export function LocationInputs({
       {/* Destination input */}
       <div className="flex items-center gap-3 rounded-xl bg-muted px-4 py-3 transition-shadow focus-within:ring-1 focus-within:ring-primary/50">
         <div
-          className="h-3 w-3 rounded-full bg-secondary shadow-[0_0_10px_rgba(0,212,170,0.6)]"
+          className="h-3 w-3 rounded-full bg-[var(--rm-fg)]"
           aria-hidden="true"
         />
         <label htmlFor="destination-input" className="sr-only">
@@ -71,7 +71,7 @@ export function LocationInputs({
 
       {/* Vertical line connecting dots */}
       <div
-        className="absolute left-[1.625rem] top-[2.25rem] h-[calc(100%-3rem)] w-px bg-gradient-to-b from-primary to-secondary"
+        className="absolute left-[1.625rem] top-[2.25rem] h-[calc(100%-3rem)] w-px bg-[var(--rm-line)]"
         aria-hidden="true"
       />
     </div>

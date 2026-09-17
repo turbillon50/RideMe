@@ -9,8 +9,8 @@ import { useDriverStore } from "@/store/driverStore";
 import { useI18n } from "@/lib/i18n";
 import { useUser } from "@clerk/nextjs";
 
-const C = { bg:'#0a0814',surface:'#0d0b1a',surface2:'#12102a',border:'rgba(124,58,237,0.18)',
-  violet:'#7c3aed',cyan:'#22d3ee',gold:'#fbbf24',green:'#10b981',red:'#ef4444',text:'#f8f7ff',muted:'#9891c4' };
+const C = { bg:'var(--rm-bg)',surface:'var(--rm-sheet)',surface2:'var(--rm-raised)',border:'var(--rm-line)',
+  violet:'var(--rm-accent)',cyan:'var(--rm-accent)',gold:'var(--rm-warn)',green:'var(--rm-accent)',red:'var(--rm-danger)',text:'var(--rm-fg)',muted:'var(--rm-muted)' };
 
 interface PendingRide {
   id: string; origin_address: string; destination_address: string;
@@ -92,9 +92,9 @@ export default function DriverDashboard() {
   const mxn = (v: number) => `$${Number(v).toLocaleString('es-MX', { maximumFractionDigits: 0 })}`;
 
   return (
-    <div style={{ minHeight:'100vh', background:C.bg, display:'flex', flexDirection:'column' }}>
+    <div style={{ minHeight:'100dvh', height:'100dvh', background:C.bg, display:'flex', flexDirection:'column' }}>
       {/* Map */}
-      <div style={{ height:'42vh', position:'relative' }}>
+      <div style={{ height:'100%', minHeight:'42vh', position:'relative', flex:1 }}>
         <MapView center={center} userLocation={center} className="w-full h-full" />
         {/* Online toggle overlay */}
         <div style={{ position:'absolute', top:14, left:0, right:0, padding:'0 16px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
