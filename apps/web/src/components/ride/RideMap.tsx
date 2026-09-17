@@ -30,7 +30,7 @@ export function RideMap({
           <rect x="20" y="430" width="124" height="80" rx="10" />
           <rect x="210" y="428" width="150" height="74" rx="10" />
         </g>
-        <g stroke="rgba(255,255,255,0.07)" strokeWidth="10" fill="none">
+        <g stroke="rgba(255,255,255,0.09)" strokeWidth="11" fill="none">
           <path d="M0 220 H390" />
           <path d="M0 360 H390" />
           <path d="M0 500 H390" />
