@@ -12,7 +12,7 @@ export default function PassengerHome() {
   const router = useRouter();
   const setActiveRide = useTripStore((s) => s.setActiveRide);
   const [pickup, setPickup] = useState('Mi ubicación');
-  const [destination, setDestination] = useState('');
+  const [destination, setDestination] = useState('Aeropuerto GDL');
   const [price, setPrice] = useState(95);
   const [busy, setBusy] = useState(false);
 
@@ -83,7 +83,7 @@ export default function PassengerHome() {
           <input
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
-            placeholder="Aeropuerto GDL, Centro MTY…"
+            placeholder="Destino en México"
             aria-label="Destino"
             autoComplete="off"
           />
