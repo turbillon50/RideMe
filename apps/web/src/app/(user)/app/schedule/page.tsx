@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, MapPin, Calendar, Clock, DollarSign, Banknote, CreditCard } from '@/components/icons';
-import { BottomNav } from '@/components/layout/BottomNav';
+import { AppNav } from '@/components/layout/AppNav';
 import { useTripStore } from '@/store/tripStore';
 import { api } from '@/lib/api';
 import Link from 'next/link';
@@ -239,7 +239,7 @@ export default function SchedulePage() {
         </motion.div>
       </div>
 
-      <BottomNav role="passenger" />
+      <AppNav />
     </div>
   );
 }

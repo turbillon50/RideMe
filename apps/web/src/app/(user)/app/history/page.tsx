@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { BottomNav } from '@/components/layout/BottomNav';
+import { AppNav } from '@/components/layout/AppNav';
 
 const C = { bg:'#0a0814',surface:'#0d0b1a',border:'rgba(124,58,237,0.18)',violet:'#7c3aed',cyan:'#22d3ee',green:'#10b981',red:'#ef4444',text:'#f8f7ff',muted:'#9891c4' };
 
@@ -71,7 +71,7 @@ export default function HistoryPage() {
           })}
         </div>
       </div>
-      <BottomNav role="passenger" />
+      <AppNav />
     </div>
   );
 }

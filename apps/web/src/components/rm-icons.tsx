@@ -77,13 +77,11 @@ export function IconChat(props: RmIconProps) {
   );
 }
 
-/** Tab home — casa con techo limpio */
+/** Tab home — techo geométrico filled */
 export function IconHome(props: RmIconProps) {
   return (
     <RmIcon {...props}>
-      <path d="M4 10.5 12 4l8 6.5" />
-      <path d="M6.5 9.5V19h11V9.5" />
-      <path d="M10 19v-5h4v5" />
+      <path d="M3.8 11.2 12 4.2l8.2 7V20a1.6 1.6 0 0 1-1.6 1.6h-4.4v-6.4H9.8V21.6H5.4A1.6 1.6 0 0 1 3.8 20v-8.8Z" fill="currentColor" stroke="none" />
     </RmIcon>
   );
 }
@@ -110,12 +108,12 @@ export function IconWallet(props: RmIconProps) {
   );
 }
 
-/** Perfil */
+/** Perfil — filled */
 export function IconProfile(props: RmIconProps) {
   return (
     <RmIcon {...props}>
-      <circle cx="12" cy="8" r="3.25" />
-      <path d="M5 19.5c1.4-3.2 3.8-4.8 7-4.8s5.6 1.6 7 4.8" />
+      <circle cx="12" cy="8" r="3.4" fill="currentColor" stroke="none" />
+      <path d="M4.2 20.2c1.5-3.6 4.1-5.4 7.8-5.4s6.3 1.8 7.8 5.4" strokeWidth={2.2} />
     </RmIcon>
   );
 }

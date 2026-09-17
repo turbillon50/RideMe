@@ -12,6 +12,7 @@ const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^p
 
 const isPublicRoute = createRouteMatcher([
   '/', '/login(.*)', '/sign-in(.*)', '/sign-up(.*)', '/invite(.*)',
+  '/app(.*)', '/demo(.*)',
   '/driver/onboarding', '/onboarding', '/user-onboarding',
   '/api/webhooks(.*)', '/api/health', '/api/branding(.*)', '/api/support(.*)',
   '/api/invitations/validate',
@@ -22,10 +23,8 @@ const isPublicRoute = createRouteMatcher([
   '/api/user/(.*)',
 ]);
 
-/** /app, /driver (salvo onboarding), /demo — las tres que en prod dan 404. */
+/** Chofer app sigue muro. Producto pasajero /app es visitable (preview + Pedir RideMe). */
 export function isAuthWallPath(pathname: string) {
-  if (pathname === '/demo' || pathname.startsWith('/demo/')) return true;
-  if (pathname === '/app' || pathname.startsWith('/app/')) return true;
   if (pathname === '/driver' || pathname.startsWith('/driver/')) {
     if (pathname === '/driver/onboarding' || pathname.startsWith('/driver/onboarding/')) return false;
     return true;

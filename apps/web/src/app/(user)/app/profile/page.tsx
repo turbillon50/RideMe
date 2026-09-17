@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUser, useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { BottomNav } from '@/components/layout/BottomNav';
+import { AppNav } from '@/components/layout/AppNav';
 import { useI18n } from '@/lib/i18n';
 
 const C = {
@@ -256,7 +256,7 @@ export default function ProfilePage() {
         </Section>
       </div>
 
-      <BottomNav role="passenger" />
+      <AppNav />
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );

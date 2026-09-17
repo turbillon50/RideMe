@@ -338,13 +338,10 @@ export default function LandingPage() {
 
           {/* CTAs 390: stack ≥48px · Comenzar → Solicitar viaje → Chofer · login en thumb */}
           <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3">
-            <Link href="/sign-up" className="rm-btn rm-btn--primary rm-btn--lg">
-              {t.get_started}
-            </Link>
-            <Link href="/sign-up" className="rm-btn rm-btn--secondary rm-btn--lg">
+            <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
               {t.cta_ride}
             </Link>
-            <Link href="/driver/onboarding" className="rm-btn rm-btn--secondary rm-btn--lg">
+            <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
               {t.cta_driver}
             </Link>
             <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
