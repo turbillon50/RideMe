@@ -79,10 +79,10 @@
   --rm-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --rm-ease-spring: cubic-bezier(0.22, 1.2, 0.36, 1);
   --rm-dur: 180ms;
-  --rm-dur-enter: 420ms;
+  --rm-dur-enter: 240ms;
   --rm-dur-splash: 1100ms;
   --rm-press: 0.97;
-  --rm-press-cta: 0.985;
+  --rm-press-cta: 0.97;
   --rm-focus-ring: 0 0 0 3px rgba(0, 229, 168, 0.45);
 }
 
@@ -121,6 +121,12 @@
   box-shadow: var(--rm-glow-accent);
 }
 .rm-btn--primary:hover { background: var(--rm-accent-hover); }
+@media (min-width: 640px) {
+  .rm-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(0, 229, 168, 0.38);
+  }
+}
 .rm-btn--primary:active {
   background: var(--rm-accent-pressed);
   transform: scale(var(--rm-press-cta));
@@ -244,7 +250,8 @@
   box-shadow: var(--rm-focus-ring);
 }
 
-.rm-enter {
+.rm-enter,
+.rm-sheet-enter {
   animation: rm-enter var(--rm-dur-enter) var(--rm-ease-spring) both;
 }
 @keyframes rm-enter {
@@ -343,11 +350,18 @@
     transform: none;
   }
   .rm-enter,
+  .rm-sheet-enter,
   .rm-splash,
   .rm-splash.is-exit,
-  .rm-splash__glow {
+  .rm-splash__glow,
+  .rm-nav a.is-on::after,
+  .rm-phone--a,
+  .rm-phone--b,
+  .rm-phone--c {
     animation: none;
   }
+  .rm-btn--primary:hover { transform: none; }
+  .rm-nav a:active { transform: none; }
   .rm-splash { display: none; }
 }
 
@@ -580,6 +594,7 @@
   justify-content: space-around;
 }
 .rm-nav a {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -590,8 +605,23 @@
   text-decoration: none;
   font-size: 10px;
   font-weight: 600;
+  transition: color var(--rm-dur) var(--rm-ease);
 }
+.rm-nav a:active { transform: scale(var(--rm-press)); }
 .rm-nav a.is-on { color: var(--rm-accent); }
+.rm-nav a.is-on::after {
+  content: "";
+  width: 12px;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--rm-accent);
+  box-shadow: 0 0 10px rgba(0, 229, 168, 0.45);
+  animation: rm-nav-in var(--rm-dur) var(--rm-ease) both;
+}
+@keyframes rm-nav-in {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
+}
 
 .rm-chip {
   flex-shrink: 0;
@@ -851,9 +881,30 @@
   font-size: 8px;
   font-weight: 700;
 }
-.rm-phone--a { left: 0; top: 28px; transform: rotate(-8deg); z-index: 2; }
-.rm-phone--b { right: 0; top: 8px; transform: rotate(7deg); z-index: 1; }
-.rm-phone--c { left: 50%; top: 48px; transform: translateX(-40%) rotate(-2deg); z-index: 3; width: 140px; }
+.rm-phone--a {
+  left: 0; top: 28px; z-index: 2;
+  animation: rm-phone-a var(--rm-dur-enter) var(--rm-ease-spring) 80ms both;
+}
+.rm-phone--b {
+  right: 0; top: 8px; z-index: 1;
+  animation: rm-phone-b var(--rm-dur-enter) var(--rm-ease-spring) 140ms both;
+}
+.rm-phone--c {
+  left: 50%; top: 48px; z-index: 3; width: 140px;
+  animation: rm-phone-c var(--rm-dur-enter) var(--rm-ease-spring) 200ms both;
+}
+@keyframes rm-phone-a {
+  from { opacity: 0; transform: translateY(14px) rotate(-8deg); }
+  to { opacity: 1; transform: rotate(-8deg); }
+}
+@keyframes rm-phone-b {
+  from { opacity: 0; transform: translateY(14px) rotate(7deg); }
+  to { opacity: 1; transform: rotate(7deg); }
+}
+@keyframes rm-phone-c {
+  from { opacity: 0; transform: translateX(-40%) translateY(14px) rotate(-2deg); }
+  to { opacity: 1; transform: translateX(-40%) rotate(-2deg); }
+}
 @media (min-width: 640px) {
   .rm-collage { height: 460px; max-width: 520px; }
   .rm-phone { width: 190px; height: 380px; border-radius: 28px; }

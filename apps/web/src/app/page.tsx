@@ -219,8 +219,8 @@ const featureIcons = [IconLightning, IconShield, IconCar, IconTrips];
 
 const cV = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const iV = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] } },
 };
 
 function BrandMark({ size = 16, box = 32 }: { size?: number; box?: number }) {
@@ -323,15 +323,21 @@ export default function LandingPage() {
             <p className="mb-8 text-xs text-[var(--rm-text-3)] sm:text-sm">{t.cities}</p>
 
             <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 lg:mx-0">
-              <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
-                {t.cta_ride}
-              </Link>
-              <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
-                {t.cta_driver}
-              </Link>
-              <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
-                {t.signin}
-              </Link>
+              <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
+                <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
+                  {t.cta_ride}
+                </Link>
+              </motion.div>
+              <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
+                <Link href="/driver/onboarding" className="rm-btn rm-btn--primary rm-btn--lg">
+                  {t.cta_driver}
+                </Link>
+              </motion.div>
+              <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }}>
+                <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
+                  {t.signin}
+                </Link>
+              </motion.div>
             </div>
           </div>
 
@@ -390,7 +396,7 @@ export default function LandingPage() {
           {t.features.map((f, i) => {
             const Icon = featureIcons[i];
             return (
-              <motion.div key={f.title} variants={iV} whileHover={{ y: -4, scale: 1.01 }} className="rm-card rm-card--interactive">
+              <motion.div key={f.title} variants={iV} whileHover={reduceMotion ? undefined : { y: -2 }} whileTap={reduceMotion ? undefined : { scale: 0.97 }} className="rm-card rm-card--interactive">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--rm-accent-muted)]">
                   <Icon size={24} className="text-[var(--rm-accent)]" />
                 </div>
@@ -499,7 +505,7 @@ export default function LandingPage() {
           className="grid gap-6 md:grid-cols-3"
         >
           {t.testimonials.map((t2) => (
-            <motion.div key={t2.name} variants={iV} whileHover={{ y: -4 }} className="rm-card">
+            <motion.div key={t2.name} variants={iV} whileHover={reduceMotion ? undefined : { y: -2 }} whileTap={reduceMotion ? undefined : { scale: 0.97 }} className="rm-card">
               <div className="mb-4 flex gap-1 text-[var(--rm-accent)]" aria-label="5 de 5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <IconStar key={i} size={14} />
