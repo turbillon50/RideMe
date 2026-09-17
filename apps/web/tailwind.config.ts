@@ -32,6 +32,16 @@ const config: Config = {
         warning: '#F59E0B',
         error: '#EF4444',
         info: '#3B82F6',
+        rm: {
+          bg: 'var(--rm-bg)',
+          surface: 'var(--rm-surface)',
+          accent: 'var(--rm-accent)',
+          'accent-hover': 'var(--rm-accent-hover)',
+          'cta-fg': 'var(--rm-cta-fg)',
+          text: 'var(--rm-text)',
+          'text-2': 'var(--rm-text-2)',
+          'text-3': 'var(--rm-text-3)',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -47,8 +57,8 @@ const config: Config = {
         'gradient-hero': 'radial-gradient(ellipse at top, color-mix(in srgb, var(--brand-primary) 18%, transparent) 0%, transparent 60%)',
       },
       boxShadow: {
-        'glow-accent': '0 0 20px rgba(108,99,255,0.4)',
-        'glow-secondary': '0 0 20px rgba(0,212,170,0.4)',
+        'glow-accent': '0 0 20px rgba(0,229,168,0.4)',
+        'glow-secondary': '0 0 20px rgba(0,229,168,0.4)',
         'glow-success': '0 0 20px rgba(34,197,94,0.4)',
         'card': '0 4px 24px rgba(0,0,0,0.4)',
         'card-hover': '0 8px 40px rgba(0,0,0,0.6)',

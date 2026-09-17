@@ -3,11 +3,18 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { IconCalendar, IconUpload } from '@/components/rm-icons';
 
 const C = {
-  bg: '#0a0814', surface: '#0d0b1a', surface2: '#12102a',
-  border: 'rgba(124,58,237,0.2)', violet: '#7c3aed', cyan: '#22d3ee',
-  text: '#f8f7ff', muted: '#9891c4', green: '#10b981', red: '#ef4444',
+  bg: 'var(--rm-bg)',
+  surface: 'var(--rm-surface)',
+  surface2: 'var(--rm-surface-2)',
+  border: 'var(--rm-border)',
+  accent: 'var(--rm-accent)',
+  text: 'var(--rm-text)',
+  muted: 'var(--rm-text-3)',
+  green: 'var(--rm-success)',
+  red: 'var(--rm-error)',
 };
 
 const STEPS = [
@@ -21,7 +28,35 @@ function Field({ label, id, ...props }: any) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       <label htmlFor={id} style={{ fontSize: 12, fontWeight: 600, color: C.muted, letterSpacing: '0.08em' }}>{label}</label>
-      <input id={id} {...props} style={{ background: C.surface2, border: `1px solid ${C.border}`, borderRadius: 10, padding: '11px 14px', color: C.text, fontSize: 14, outline: 'none', transition: 'border 0.2s', width: '100%', boxSizing: 'border-box' as const }} />
+      <input id={id} {...props} style={{ background: C.surface2, border: `1px solid ${C.border}`, borderRadius: 10, padding: '11px 14px', color: C.text, fontSize: 14, outline: 'none', minHeight: 48, width: '100%', boxSizing: 'border-box' as const }} />
+    </div>
+  );
+}
+
+function DateField({
+  label,
+  id,
+  value,
+  onChange,
+}: {
+  label: string;
+  id: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <label htmlFor={id} style={{ fontSize: 12, fontWeight: 600, color: C.muted, letterSpacing: '0.08em' }}>{label}</label>
+      <div className="rm-date-wrap">
+        <input
+          id={id}
+          type="date"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="rm-date"
+        />
+        <IconCalendar size={18} className="rm-date__icon" />
+      </div>
     </div>
   );
 }
@@ -44,19 +79,19 @@ function UploadBox({ label, docType, onChange }: { label: string; docType: strin
   };
 
   return (
-    <div onClick={() => ref.current?.click()} style={{ cursor: 'pointer', border: `1.5px dashed ${preview ? C.cyan : C.border}`, borderRadius: 12, padding: '20px 16px', textAlign: 'center', transition: 'all 0.2s', background: preview ? C.cyan + '08' : 'transparent' }}>
+    <div onClick={() => ref.current?.click()} style={{ cursor: 'pointer', border: `1.5px dashed ${preview ? C.accent : C.border}`, borderRadius: 12, padding: '20px 16px', textAlign: 'center', transition: 'all 0.2s', background: preview ? 'var(--rm-accent-muted)' : 'transparent' }}>
       <input ref={ref} type="file" accept="image/*,application/pdf" onChange={handle} style={{ display: 'none' }} />
       {preview ? (
         preview.startsWith('data:image') ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="" style={{ maxHeight: 100, borderRadius: 8, margin: '0 auto' }} />
         ) : (
-          <p style={{ color: C.cyan, fontSize: 13 }}>✓ Archivo cargado</p>
+          <p style={{ color: C.accent, fontSize: 13 }}>✓ Archivo cargado</p>
         )
       ) : (
         <>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.muted} strokeWidth="1.5" style={{ margin: '0 auto 8px' }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <p style={{ fontSize: 13, color: uploading ? C.cyan : C.muted, margin: 0 }}>{uploading ? 'Subiendo…' : label}</p>
+          <IconUpload size={28} className="mx-auto mb-2" style={{ color: C.muted, margin: '0 auto 8px' }} />
+          <p style={{ fontSize: 13, color: uploading ? C.accent : C.muted, margin: 0 }}>{uploading ? 'Subiendo…' : label}</p>
           <p style={{ fontSize: 11, color: C.muted, margin: '4px 0 0' }}>JPG, PNG o PDF · max 2MB</p>
         </>
       )}
@@ -93,7 +128,6 @@ export default function DriverOnboarding() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
-  // Form state
   const [personal, setPersonal] = useState({ full_name: user?.fullName || '', phone: user?.primaryPhoneNumber?.phoneNumber || '', license_number: '', license_expiry: '' });
   const [vehicle, setVehicle] = useState({ make: '', model: '', year: '', color: '', plate_number: '', vehicle_type: 'sedan' });
   const [docs, setDocs] = useState<Record<string, string>>({});
@@ -129,8 +163,8 @@ export default function DriverOnboarding() {
   if (done) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.bg }}>
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: 40 }}>
-        <div style={{ width: 64, height: 64, borderRadius: '50%', background: C.green + '22', border: `2px solid ${C.green}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--rm-accent-muted)', border: `2px solid ${C.green}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5 9-10"/></svg>
         </div>
         <h2 style={{ color: C.text, fontSize: 22, fontWeight: 700, margin: '0 0 8px' }}>¡Solicitud enviada!</h2>
         <p style={{ color: C.muted, fontSize: 14 }}>Tu onboarding está en revisión. Te notificaremos por correo cuando seas aprobado.</p>
@@ -140,34 +174,30 @@ export default function DriverOnboarding() {
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg, padding: '20px 16px 60px', maxWidth: 520, margin: '0 auto' }}>
-      {/* Header */}
       <div style={{ marginBottom: 32, textAlign: 'center' }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: '0 0 6px' }}>Únete como chofer</h1>
-        <p style={{ color: C.muted, fontSize: 14 }}>Completa los 4 pasos para activar tu cuenta</p>
+        <p style={{ color: C.muted, fontSize: 14 }}>Completa los 4 pasos para activar tu cuenta · Toda la República Mexicana</p>
       </div>
 
-      {/* Steps indicator */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
-        {STEPS.map((s, i) => (
-          <div key={s.id} style={{ flex: 1, height: 3, borderRadius: 99, background: step > s.id ? C.cyan : step === s.id ? C.violet : C.border, transition: 'background 0.3s' }} />
+        {STEPS.map((s) => (
+          <div key={s.id} style={{ flex: 1, height: 3, borderRadius: 99, background: step > s.id ? C.accent : step === s.id ? C.accent : C.border, opacity: step >= s.id ? 1 : 0.5, transition: 'background 0.3s' }} />
         ))}
       </div>
       <p style={{ fontSize: 11, color: C.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>Paso {step} de 4 — {STEPS[step - 1].label}</p>
 
       <AnimatePresence mode="wait">
-        <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
+        <motion.div key={step} initial={false} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
 
-          {/* STEP 1 */}
           {step === 1 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <Field label="Nombre completo" id="name" value={personal.full_name} onChange={(e: any) => setPersonal(p => ({ ...p, full_name: e.target.value }))} placeholder="Juan García López" />
               <Field label="Teléfono" id="phone" type="tel" value={personal.phone} onChange={(e: any) => setPersonal(p => ({ ...p, phone: e.target.value }))} placeholder="+52 55 1234 5678" />
-              <Field label="Número de licencia" id="lic" value={personal.license_number} onChange={(e: any) => setPersonal(p => ({ ...p, license_number: e.target.value }))} placeholder="CDMX-2024-001" />
-              <Field label="Vencimiento de licencia" id="exp" type="date" value={personal.license_expiry} onChange={(e: any) => setPersonal(p => ({ ...p, license_expiry: e.target.value }))} />
+              <Field label="Número de licencia" id="lic" value={personal.license_number} onChange={(e: any) => setPersonal(p => ({ ...p, license_number: e.target.value }))} placeholder="Nacional · vigente" />
+              <DateField label="Vencimiento de licencia" id="exp" value={personal.license_expiry} onChange={(v) => setPersonal(p => ({ ...p, license_expiry: v }))} />
             </div>
           )}
 
-          {/* STEP 2 */}
           {step === 2 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -181,14 +211,13 @@ export default function DriverOnboarding() {
                 <label style={{ fontSize: 12, fontWeight: 600, color: C.muted, letterSpacing: '0.08em' }}>Tipo de vehículo</label>
                 <div style={{ display: 'flex', gap: 8 }}>
                   {[['sedan','Sedán'],['suv','SUV'],['van','Van']].map(([val, lbl]) => (
-                    <button key={val} onClick={() => setVehicle(v => ({ ...v, vehicle_type: val }))} style={{ flex: 1, padding: '9px 0', borderRadius: 10, border: `1.5px solid ${vehicle.vehicle_type === val ? C.violet : C.border}`, background: vehicle.vehicle_type === val ? C.violet + '22' : 'transparent', color: vehicle.vehicle_type === val ? C.violet : C.muted, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>{lbl}</button>
+                    <button key={val} type="button" onClick={() => setVehicle(v => ({ ...v, vehicle_type: val }))} style={{ flex: 1, padding: '9px 0', borderRadius: 10, border: `1.5px solid ${vehicle.vehicle_type === val ? C.accent : C.border}`, background: vehicle.vehicle_type === val ? 'var(--rm-accent-muted)' : 'transparent', color: vehicle.vehicle_type === val ? C.accent : C.muted, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>{lbl}</button>
                   ))}
                 </div>
               </div>
             </div>
           )}
 
-          {/* STEP 3 */}
           {step === 3 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <p style={{ fontSize: 13, color: C.muted }}>Sube los documentos requeridos. Los campos marcados con * son obligatorios.</p>
@@ -201,7 +230,6 @@ export default function DriverOnboarding() {
             </div>
           )}
 
-          {/* STEP 4 */}
           {step === 4 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ background: C.surface2, borderRadius: 10, padding: 16, maxHeight: 180, overflowY: 'auto', border: `1px solid ${C.border}` }}>
@@ -209,30 +237,30 @@ export default function DriverOnboarding() {
               </div>
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer' }}>
                 <input type="checkbox" checked={agreed.privacy} onChange={e => setAgreed(a => ({ ...a, privacy: e.target.checked }))} style={{ marginTop: 2 }} />
-                <span style={{ fontSize: 13, color: C.text }}>He leído y acepto el <span style={{ color: C.cyan }}>Aviso de Privacidad</span></span>
+                <span style={{ fontSize: 13, color: C.text }}>He leído y acepto el <span style={{ color: C.accent }}>Aviso de Privacidad</span></span>
               </label>
               <div style={{ background: C.surface2, borderRadius: 10, padding: 16, maxHeight: 180, overflowY: 'auto', border: `1px solid ${C.border}` }}>
                 <p style={{ fontSize: 11, color: C.muted, whiteSpace: 'pre-line', lineHeight: 1.7 }}>{TERMS}</p>
               </div>
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer' }}>
                 <input type="checkbox" checked={agreed.terms} onChange={e => setAgreed(a => ({ ...a, terms: e.target.checked }))} style={{ marginTop: 2 }} />
-                <span style={{ fontSize: 13, color: C.text }}>He leído y acepto los <span style={{ color: C.cyan }}>Términos y Condiciones</span></span>
+                <span style={{ fontSize: 13, color: C.text }}>He leído y acepto los <span style={{ color: C.accent }}>Términos y Condiciones</span></span>
               </label>
             </div>
           )}
         </motion.div>
       </AnimatePresence>
 
-      {/* Nav */}
       <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
         {step > 1 && (
-          <button onClick={() => setStep(s => s - 1)} style={{ flex: 1, padding: '13px 0', borderRadius: 12, border: `1px solid ${C.border}`, background: 'transparent', color: C.muted, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>← Atrás</button>
+          <button type="button" onClick={() => setStep(s => s - 1)} style={{ flex: 1, padding: '13px 0', minHeight: 48, borderRadius: 12, border: `1px solid ${C.border}`, background: 'transparent', color: C.muted, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Atrás</button>
         )}
         <button
+          type="button"
           onClick={step < 4 ? () => setStep(s => s + 1) : submit}
           disabled={!canNext || submitting}
-          style={{ flex: 2, padding: '13px 0', borderRadius: 12, border: 'none', background: canNext ? `linear-gradient(135deg, ${C.violet}, ${C.cyan})` : C.border, color: '#fff', fontSize: 14, fontWeight: 700, cursor: canNext ? 'pointer' : 'not-allowed', opacity: submitting ? 0.7 : 1, transition: 'all 0.2s' }}>
-          {submitting ? 'Enviando…' : step < 4 ? 'Continuar →' : '¡Enviar solicitud!'}
+          style={{ flex: 2, padding: '13px 0', minHeight: 48, borderRadius: 12, border: 'none', background: canNext ? C.accent : C.border, color: canNext ? 'var(--rm-cta-fg)' : C.muted, fontSize: 14, fontWeight: 700, cursor: canNext ? 'pointer' : 'not-allowed', opacity: submitting ? 0.7 : 1, transition: 'all 0.2s' }}>
+          {submitting ? 'Enviando…' : step < 4 ? 'Continuar' : '¡Enviar solicitud!'}
         </button>
       </div>
     </div>

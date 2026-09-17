@@ -6,9 +6,9 @@ import { inputCls } from '@/components/admin/ui';
 
 const DEFAULT_BRANDING: BrandingConfig = {
   app_name: 'RideMe',
-  primary_color: '#6C63FF',
-  accent_color: '#00D4AA',
-  logo_url: '/brand/hero.jpg',
+  primary_color: '#00E5A8',
+  accent_color: '#00E5A8',
+  logo_url: '/brand/icon-192.png',
   icon_url: '/brand/icon-192.png',
   theme: 'dark',
 };
@@ -100,7 +100,7 @@ export default function AdminBrandingPage() {
 
           <label className="block md:col-span-2">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Logo URL</span>
-            <input className={`${inputCls} w-full`} value={form.logo_url} onChange={(event) => update('logo_url', event.target.value)} placeholder="/brand/hero.jpg" />
+            <input className={`${inputCls} w-full`} value={form.logo_url} onChange={(event) => update('logo_url', event.target.value)} placeholder="/brand/icon-192.png" />
           </label>
 
           <label className="block md:col-span-2">

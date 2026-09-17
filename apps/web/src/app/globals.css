@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import '../styles/tokens.css';
 
 @tailwind base;
 @tailwind components;
@@ -10,12 +11,12 @@
   --surface: #111118;
   --surface-2: #1A1A24;
   --surface-3: #22222F;
-  --brand-primary: #6C63FF;
-  --brand-accent: #00D4AA;
-  --accent: #6C63FF;
-  --accent-hover: #5A52E8;
-  --secondary: #00D4AA;
-  --secondary-hover: #00B896;
+  --brand-primary: #00E5A8;
+  --brand-accent: #00E5A8;
+  --accent: #00E5A8;
+  --accent-hover: #00C992;
+  --secondary: #00E5A8;
+  --secondary-hover: #00C992;
   --border: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.16);
   --text-primary: #FFFFFF;
@@ -29,7 +30,7 @@
   --radius-xl: 1.5rem;
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-modal: 0 25px 80px rgba(0, 0, 0, 0.8);
-  --gradient-cta: linear-gradient(135deg, #6C63FF, #00D4AA);
+  --gradient-cta: var(--rm-accent);
 }
 
 html.light {
@@ -97,23 +98,23 @@ body::selection {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(108, 99, 255, 0.4);
+  background: rgba(0, 229, 168, 0.4);
   border-radius: 3px;
   transition: background 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(108, 99, 255, 0.7);
+  background: rgba(0, 229, 168, 0.7);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(108, 99, 255, 0.4) var(--surface);
+  scrollbar-color: rgba(0, 229, 168, 0.4) var(--surface);
 }
 
 /* ─── Selection ──────────────────────────────────────────────────────────────── */
 ::selection {
-  background: rgba(108, 99, 255, 0.3);
+  background: rgba(0, 229, 168, 0.3);
   color: #fff;
 }
 
@@ -208,7 +209,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Glow Effects ───────────────────────────────────────────────────────────── */
 .glow-accent {
-  box-shadow: 0 0 20px rgba(108, 99, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 229, 168, 0.4);
 }
 
 .glow-secondary {
@@ -269,7 +270,7 @@ h1, h2, h3, h4, h5, h6 {
 .input-dark:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 229, 168, 0.15);
 }
 
 /* ─── Bottom Sheet ───────────────────────────────────────────────────────────── */
@@ -443,7 +444,7 @@ input[type='range']::-moz-range-thumb {
   inset: 0;
   border-radius: inherit;
   padding: 2px;
-  background: linear-gradient(135deg, #6C63FF 0%, #00D4AA 100%);
+  background: var(--rm-accent);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -454,7 +455,7 @@ input[type='range']::-moz-range-thumb {
 
 /* ─── v0 Gradient Button ──────────────────────────────────────────────────────── */
 .gradient-bg {
-  background: linear-gradient(135deg, #6C63FF 0%, #00D4AA 100%);
+  background: var(--rm-accent);
 }
 
 /* ─── v0 CTA Glow ─────────────────────────────────────────────────────────────── */
@@ -466,7 +467,7 @@ input[type='range']::-moz-range-thumb {
   content: '';
   position: absolute;
   inset: -8px;
-  background: radial-gradient(ellipse at center, rgba(108, 99, 255, 0.4) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(0, 229, 168, 0.4) 0%, transparent 70%);
   border-radius: 20px;
   z-index: -1;
   filter: blur(12px);
@@ -475,10 +476,10 @@ input[type='range']::-moz-range-thumb {
 /* ─── v0 Pulse Glow CTA ───────────────────────────────────────────────────────── */
 @keyframes pulse-glow-cta {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(108, 99, 255, 0.5), 0 0 40px rgba(108, 99, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 229, 168, 0.5), 0 0 40px rgba(0, 229, 168, 0.3);
   }
   50% {
-    box-shadow: 0 0 35px rgba(108, 99, 255, 0.7), 0 0 60px rgba(108, 99, 255, 0.4);
+    box-shadow: 0 0 35px rgba(0, 229, 168, 0.7), 0 0 60px rgba(0, 229, 168, 0.4);
   }
 }
 
@@ -505,4 +506,55 @@ input[type='range']::-moz-range-thumb {
 
 .surface-glass {
   background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+/* Landing — ley visual mint, no puede heredar purple de branding */
+.rm-landing {
+  --brand-primary: var(--rm-accent);
+  --brand-accent: var(--rm-accent);
+  --accent: var(--rm-accent);
+  --secondary: var(--rm-accent);
+  --gradient-cta: var(--rm-accent);
+  background: var(--rm-bg);
+  color: var(--rm-text);
+  font-family: var(--rm-font);
+}
+.rm-landing a.rm-btn {
+  color: inherit;
+}
+.rm-landing a.rm-btn--primary {
+  color: var(--rm-cta-fg);
+}
+.rm-landing a.rm-btn--secondary,
+.rm-landing a.rm-btn--ghost {
+  color: var(--rm-text);
+}
+.rm-landing a.rm-btn--ghost {
+  color: var(--rm-accent);
+}
+
+/* Hero CTAs: stack 390, row desktop — unlayered so gana a Tailwind layers */
+.rm-hero-ctas .rm-btn { width: 100%; }
+@media (min-width: 640px) {
+  .rm-hero-ctas {
+    max-width: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .rm-hero-ctas .rm-btn {
+    width: auto;
+    min-width: 220px;
+  }
+  .rm-only-390 { display: none !important; }
+}
+
+/* Clerk hosted remnants — hide «Secured by Clerk» / clerk.com */
+.cl-internal-b3fm6y,
+.cl-footer,
+.cl-footerPages,
+a[href*="clerk.com"],
+.cl-internal-1dauvpw {
+  display: none !important;
 }

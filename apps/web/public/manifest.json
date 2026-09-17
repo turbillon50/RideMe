@@ -1,11 +1,11 @@
 {
   "name": "RideMe",
   "short_name": "RideMe",
-  "description": "Premium rideshare app - name your price",
+  "description": "Viajes en toda la República Mexicana. Tú propones el precio.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A0F",
-  "theme_color": "#6C63FF",
+  "background_color": "#0A0A0C",
+  "theme_color": "#0A0A0C",
   "orientation": "portrait",
   "icons": [
     {
@@ -25,14 +25,14 @@
   "screenshots": [],
   "shortcuts": [
     {
-      "name": "Request a Ride",
+      "name": "Solicitar viaje",
       "url": "/app",
-      "description": "Quickly request a new ride"
+      "description": "Pide un viaje RideMe"
     },
     {
-      "name": "Driver Dashboard",
+      "name": "Panel de chofer",
       "url": "/driver",
-      "description": "Open driver dashboard"
+      "description": "Abrir panel de chofer"
     }
   ]
 }
