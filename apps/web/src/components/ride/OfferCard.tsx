@@ -19,68 +19,57 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, type: 'spring', stiffness: 400, damping: 30 }}
-      className="bg-[#111118] border border-[rgba(255,255,255,0.08)] rounded-2xl p-4 hover:border-[rgba(108,99,255,0.3)] transition-colors"
+      className="rounded-2xl bg-[var(--rm-elevated)] p-4 ring-1 ring-[var(--rm-line)]"
     >
-      <div className="flex items-center gap-3 mb-4">
-        {/* Avatar */}
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6C63FF] to-[#00D4AA] flex items-center justify-center font-bold text-white flex-shrink-0">
+      <div className="mb-3 flex items-center gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--rm-sheet)] text-sm font-semibold text-[var(--rm-accent)]">
           {d?.avatarUrl ? (
-            <img src={d.avatarUrl} alt="" className="w-full h-full rounded-2xl object-cover" />
-          ) : initials}
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={d.avatarUrl} alt="" className="h-full w-full rounded-xl object-cover" />
+          ) : (
+            initials
+          )}
         </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="font-semibold text-sm truncate">
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm font-semibold">
             {d ? `${d.firstName} ${d.lastName}` : 'Chofer'}
           </div>
-          <div className="flex items-center gap-2 mt-0.5">
-            <span className="flex items-center gap-1 text-xs text-[#8B8B9E]">
-              <Star size={11} className="text-[#FFD700] fill-[#FFD700]" />
-              {d?.ratingAverage?.toFixed(1) ?? '5.0'}
-            </span>
-            <span className="text-[#4A4A5A]">·</span>
-            <span className="text-xs text-[#8B8B9E]">{d?.totalTrips ?? 0} viajes</span>
+          <div className="mt-0.5 flex items-center gap-2 text-xs text-[var(--rm-muted)]">
+            <Star size={11} className="text-[var(--rm-warn)]" />
+            {d?.ratingAverage?.toFixed(1) ?? '5.0'}
+            <span>· {d?.totalTrips ?? 0} viajes</span>
           </div>
         </div>
-
-        {/* Price */}
         <div className="text-right">
-          <div className="text-xl font-black font-mono bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] bg-clip-text text-transparent">
-            ${offer.offeredPrice.toFixed(2)}
-          </div>
+          <div className="text-xl font-semibold tabular-nums">${offer.offeredPrice.toFixed(0)}</div>
           {offer.offerType === 'counter' && (
-            <span className="text-xs text-[#FFD700] font-medium">Contra-oferta</span>
+            <span className="text-[11px] font-medium text-[var(--rm-warn)]">Contraoferta</span>
           )}
         </div>
       </div>
 
-      {/* Vehicle info */}
       {d?.vehicle && (
-        <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-[#1A1A24] rounded-xl">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getColorDot(d.vehicle.color) }} />
-          <span className="text-xs text-[#8B8B9E]">
-            {d.vehicle.make} {d.vehicle.model} · {d.vehicle.color} · {d.vehicle.plateNumber}
-          </span>
+        <div className="mb-3 flex items-center gap-2 rounded-xl bg-[var(--rm-raised)] px-3 py-2 text-xs text-[var(--rm-muted)]">
+          <span className="h-2 w-2 rounded-full bg-[var(--rm-accent)]" />
+          {d.vehicle.make} {d.vehicle.model} · {d.vehicle.color} · {d.vehicle.plateNumber}
         </div>
       )}
 
-      {/* ETA + Actions */}
       <div className="flex items-center gap-3">
         {etaMin && (
-          <div className="flex items-center gap-1.5 text-xs text-[#8B8B9E]">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--rm-muted)]">
             <Clock size={13} />
-            <span>{etaMin} min</span>
+            {etaMin} min
           </div>
         )}
-        <div className="flex gap-2 ml-auto">
+        <div className="ml-auto flex gap-2">
           <button
             onClick={() => onReject(offer.id)}
             disabled={loading}
-            className="p-2.5 rounded-xl border border-[rgba(255,71,87,0.3)] text-[#FF4757] hover:bg-[rgba(255,71,87,0.1)] transition-colors disabled:opacity-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl ring-1 ring-[var(--rm-danger)]/30 text-[var(--rm-danger)] disabled:opacity-50"
             aria-label="Rechazar oferta"
           >
             <X size={16} />
@@ -88,7 +77,7 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
           <button
             onClick={() => onAccept(offer.id)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="flex h-11 items-center gap-2 rounded-xl bg-[var(--rm-accent)] px-4 text-sm font-semibold text-[var(--rm-accent-fg)] disabled:opacity-50"
           >
             <Check size={16} /> Aceptar
           </button>
@@ -96,12 +85,4 @@ export function OfferCard({ offer, index, onAccept, onReject, loading }: OfferCa
       </div>
     </motion.div>
   );
-}
-
-function getColorDot(color: string): string {
-  const map: Record<string, string> = {
-    blanco: '#FFFFFF', negro: '#1A1A1A', gris: '#888', rojo: '#FF4757',
-    azul: '#6C63FF', verde: '#2ED573', amarillo: '#FFD700', naranja: '#FFA502',
-  };
-  return map[color.toLowerCase()] ?? '#8B8B9E';
 }

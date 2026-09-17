@@ -2,33 +2,26 @@ import { SignUp } from '@clerk/nextjs';
 
 const appearance = {
   variables: {
-    colorBackground: '#0d0b1a',
-    colorPrimary: '#6C63FF',
-    colorText: '#ffffff',
-    colorTextSecondary: '#9ca3af',
-    colorInputBackground: '#15131f',
-    colorInputText: '#ffffff',
-    colorNeutral: '#ffffff',
-    borderRadius: '1rem',
+    colorBackground: '#16161b',
+    colorPrimary: '#00E5A8',
+    colorText: '#f3f4f6',
+    colorTextSecondary: '#8b8e96',
+    colorInputBackground: '#1c1c22',
+    colorInputText: '#f3f4f6',
+    colorNeutral: '#f3f4f6',
+    borderRadius: '0.9rem',
   },
   elements: {
     rootBox: 'w-full flex justify-center',
-    card: 'bg-[#0d0b1a] border border-white/10 shadow-2xl',
-    headerTitle: 'text-white',
-    headerSubtitle: 'text-white/50',
-    socialButtonsBlockButton: 'border-white/10 text-white',
-    dividerLine: 'bg-white/10',
-    dividerText: 'text-white/40',
-    formFieldLabel: 'text-white/70',
-    formButtonPrimary: 'bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] text-white normal-case',
-    footerActionText: 'text-white/50',
-    footerActionLink: 'text-[#6C63FF] hover:text-[#00D4AA]',
+    card: 'bg-[#16161b] border border-[#2a2b32] shadow-2xl',
+    formButtonPrimary: 'bg-[#00E5A8] text-[#04110c] normal-case font-semibold',
+    footerActionLink: 'text-[#00E5A8]',
   },
 };
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0A0A0F] px-4 py-10">
+    <div className="flex min-h-screen items-center justify-center bg-[#0A0A0C] px-4 py-10">
       <SignUp appearance={appearance} signInUrl="/sign-in" fallbackRedirectUrl="/app" />
     </div>
   );

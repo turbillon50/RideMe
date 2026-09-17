@@ -35,7 +35,7 @@ export function BottomNav({ role = 'passenger' }: BottomNavProps) {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-40 safe-bottom md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-40 safe-bottom xl:hidden">
         <div className="border-t border-[rgba(255,255,255,0.06)] bg-surface/95 px-2 pb-1 pt-2 backdrop-blur-xl">
           <div className="mx-auto flex max-w-md items-center justify-around">
             {items.map((item) => {
@@ -64,8 +64,8 @@ export function BottomNav({ role = 'passenger' }: BottomNavProps) {
         </div>
       </div>
 
-      <aside className="fixed bottom-0 left-0 top-0 z-40 hidden w-20 flex-col items-center gap-3 border-r border-white/5 bg-surface/95 px-2 py-5 backdrop-blur-xl md:flex">
-        <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-cta text-white">
+      <aside className="fixed bottom-0 left-0 top-0 z-40 hidden w-20 flex-col items-center gap-3 border-r border-[var(--rm-line)] bg-[var(--rm-elevated)] px-2 py-5 xl:flex">
+        <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--rm-accent)] text-[var(--rm-accent-fg)]">
           {role === 'driver' ? <LayoutDashboard size={21} /> : <Map size={21} />}
         </div>
         <nav className="flex w-full flex-1 flex-col items-center gap-2">

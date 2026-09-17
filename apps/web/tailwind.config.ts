@@ -17,8 +17,8 @@ const config: Config = {
         'surface-3': 'var(--surface-3)',
         card: { DEFAULT: 'var(--surface)', foreground: 'var(--text-primary)' },
         muted: { DEFAULT: 'var(--surface-2)', foreground: 'var(--text-secondary)' },
-        primary: { DEFAULT: 'var(--brand-primary)', foreground: '#FFFFFF' },
-        accent: 'var(--brand-primary)',
+        primary: { DEFAULT: 'var(--rm-accent)', foreground: 'var(--rm-accent-fg)' },
+        accent: 'var(--rm-accent)',
         'accent-hover': 'var(--accent-hover)',
         secondary: { DEFAULT: 'var(--brand-accent)', foreground: '#0A0A0F', hover: 'var(--secondary-hover)' },
         'secondary-hover': 'var(--secondary-hover)',
@@ -34,7 +34,7 @@ const config: Config = {
         info: '#3B82F6',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {

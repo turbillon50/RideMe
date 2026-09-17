@@ -8,9 +8,9 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useI18n } from "@/lib/i18n";
 
-const C = { bg: '#0a0814', surface: '#0d0b1a', surface2: '#12102a',
-  border: 'rgba(124,58,237,0.18)', violet: '#7c3aed', cyan: '#22d3ee',
-  gold: '#fbbf24', green: '#10b981', text: '#f8f7ff', muted: '#9891c4' };
+const C = { bg: 'var(--rm-bg)', surface: 'var(--rm-sheet)', surface2: 'var(--rm-raised)',
+  border: 'var(--rm-line)', violet: 'var(--rm-accent)', cyan: 'var(--rm-accent)',
+  gold: 'var(--rm-warn)', green: 'var(--rm-accent)', text: 'var(--rm-fg)', muted: 'var(--rm-muted)' };
 
 const STATUS_LABEL: Record<string, string> = {
   accepted: '✓ Chofer confirmado – en camino a ti',
@@ -82,9 +82,9 @@ export default function TripTrackingPage() {
   const driverLoc = ride.driver_lat ? { lat: Number(ride.driver_lat), lng: Number(ride.driver_lng) } : undefined;
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', background: C.bg, display: 'flex', flexDirection: 'column' }}>
       {/* Map */}
-      <div style={{ height: '45vh', position: 'relative' }}>
+      <div style={{ height: '100%', minHeight: '42vh', position: 'relative', flex: 1 }}>
         <MapView center={center} userLocation={center} driverLocation={driverLoc}
           origin={center} destination={ride.destination_latitude ? { lat: Number(ride.destination_latitude), lng: Number(ride.destination_longitude) } : undefined}
           className="w-full h-full" />

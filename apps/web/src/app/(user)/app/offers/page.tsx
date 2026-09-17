@@ -1,27 +1,27 @@
-"use client";
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTripStore } from "@/store/tripStore";
-import { useI18n } from "@/lib/i18n";
-import { BottomNav } from "@/components/layout/BottomNav";
+'use client';
 
-const C = { bg: '#0a0814', surface: '#0d0b1a', border: 'rgba(124,58,237,0.18)',
-  violet: '#7c3aed', cyan: '#22d3ee', text: '#f8f7ff', muted: '#9891c4' };
-
-const STEPS = [
-  "Publicando tu solicitud...",
-  "Notificando choferes cercanos...",
-  "Esperando confirmación...",
-  "Conectando con el mejor chofer...",
-];
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTripStore } from '@/store/tripStore';
+import { BottomNav } from '@/components/layout/BottomNav';
+import { RideShell, BrandChip } from '@/components/shell/RideShell';
+import { MapView } from '@/components/maps/MapView';
+import { OfferCard } from '@/components/ride/OfferCard';
+import { useRideNegotiation } from '@/hooks/useRideNegotiation';
+import { useGeolocation } from '@/hooks/useGeolocation';
 
 export default function OffersPage() {
   const router = useRouter();
-  const { activeRide, setActiveRide } = useTripStore();
-  const { t } = useI18n();
-  const [stepIdx, setStepIdx] = useState(0);
+  const { activeRide, setActiveRide, offers, selectedOffer, setSelectedOffer } = useTripStore();
+  const { acceptOffer, cancelRide } = useRideNegotiation();
+  const { location } = useGeolocation({ watch: true });
   const [elapsed, setElapsed] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const center = location
+    ? { lat: location.latitude, lng: location.longitude }
+    : { lat: 19.4326, lng: -99.1332 };
 
   const poll = useCallback(async () => {
     if (!activeRide?.id) return;
@@ -35,73 +35,103 @@ export default function OffersPage() {
         router.push('/app/trip');
       }
     } catch {}
-  }, [activeRide?.id]);
+  }, [activeRide?.id, router, setActiveRide]);
 
   useEffect(() => {
-    if (!activeRide?.id) { router.push('/app'); return; }
+    if (!activeRide?.id) {
+      router.push('/app');
+      return;
+    }
     const pollId = setInterval(poll, 6000);
-    const stepId = setInterval(() => setStepIdx(i => Math.min(i + 1, STEPS.length - 1)), 4000);
-    const elId   = setInterval(() => setElapsed(e => e + 1), 1000);
-    return () => { clearInterval(pollId); clearInterval(stepId); clearInterval(elId); };
-  }, [activeRide?.id, poll]);
+    const elId = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => {
+      clearInterval(pollId);
+      clearInterval(elId);
+    };
+  }, [activeRide?.id, poll, router]);
 
-  const handleCancel = async () => {
-    if (!activeRide?.id) return;
-    await fetch(`/api/rides/${activeRide.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'cancel', cancelReason: 'Cancelado por pasajero' }),
-    });
-    setActiveRide(null);
-    router.push('/app');
+  const confirm = async () => {
+    if (!selectedOffer) return;
+    setLoading(true);
+    try {
+      await acceptOffer(selectedOffer);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
+  const live = offers.filter((o) => o.status !== 'rejected' && o.status !== 'expired');
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      {/* Radar animation */}
-      <div style={{ position: 'relative', width: 140, height: 140, marginBottom: 32 }}>
-        {[1,2,3].map(i => (
-          <motion.div key={i} style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1px solid ${C.violet}` }}
-            animate={{ scale: [1, 2.5], opacity: [0.5, 0] }}
-            transition={{ duration: 2.5, delay: i * 0.8, repeat: Infinity, ease: 'easeOut' }} />
-        ))}
-        <div style={{ position: 'absolute', inset: 20, borderRadius: '50%', background: C.violet + '22', border: `2px solid ${C.violet}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={C.violet} strokeWidth="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/></svg>
-        </div>
-      </div>
+    <RideShell
+      map={<MapView center={center} userLocation={center} className="h-full w-full" />}
+      topLeft={<BrandChip />}
+      nav={<BottomNav role="passenger" />}
+      panel={
+        <div className="flex flex-col gap-4 pb-4">
+          <header>
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--rm-subtle)]">
+              {live.length ? `${live.length} ofertas` : 'Buscando'} · {String(Math.floor(elapsed / 60)).padStart(2, '0')}:
+              {String(elapsed % 60).padStart(2, '0')}
+            </p>
+            <h1 className="text-xl font-semibold tracking-tight">
+              {live.length ? 'Elige chofer' : 'Esperando ofertas'}
+            </h1>
+          </header>
 
-      <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: '0 0 8px', textAlign: 'center' }}>
-        {t('searching')}
-      </h2>
+          {activeRide && (
+            <p className="text-sm text-[var(--rm-muted)]">
+              {activeRide.origin_address || 'Tu ubicación'} → {activeRide.destination_address || 'Destino'}
+            </p>
+          )}
 
-      {activeRide && (
-        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px 20px', marginBottom: 20, width: '100%', maxWidth: 340 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.muted, marginBottom: 8 }}>
-            <span>Solicitud enviada</span>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', color: C.cyan }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</span>
+          <ul className="flex flex-col gap-2">
+            <AnimatePresence>
+              {live.map((offer, i) => (
+                <li key={offer.id}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedOffer(offer)}
+                    className="w-full text-left"
+                  >
+                    <OfferCard
+                      offer={offer}
+                      index={i}
+                      onAccept={() => setSelectedOffer(offer)}
+                      onReject={() => {}}
+                      loading={loading}
+                    />
+                  </button>
+                </li>
+              ))}
+            </AnimatePresence>
+          </ul>
+
+          {live.length === 0 && (
+            <p className="py-8 text-center text-sm text-[var(--rm-muted)]">
+              Publicando tu tarifa a choferes cercanos…
+            </p>
+          )}
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={cancelRide}
+              className="h-12 flex-1 rounded-2xl ring-1 ring-[var(--rm-danger)]/40 text-sm font-semibold text-[var(--rm-danger)]"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              disabled={!selectedOffer || loading}
+              onClick={confirm}
+              className="h-12 flex-[2] rounded-2xl bg-[var(--rm-accent)] text-sm font-semibold text-[var(--rm-accent-fg)] disabled:opacity-40"
+            >
+              Confirmar
+            </button>
           </div>
-          <p style={{ fontSize: 13, color: C.text, margin: '0 0 4px' }}>📍 {activeRide.origin_address || 'Tu ubicación'}</p>
-          <p style={{ fontSize: 13, color: C.muted, margin: 0 }}>🏁 {activeRide.destination_address || 'Destino'}</p>
-          <p style={{ fontSize: 20, fontWeight: 800, color: C.violet, margin: '10px 0 0', fontFamily: 'JetBrains Mono, monospace' }}>
-            ${activeRide.proposed_price} MXN
-          </p>
         </div>
-      )}
-
-      <AnimatePresence mode="wait">
-        <motion.p key={stepIdx} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-          style={{ fontSize: 13, color: C.muted, marginBottom: 32, textAlign: 'center' }}>
-          {STEPS[stepIdx]}
-        </motion.p>
-      </AnimatePresence>
-
-      <button onClick={handleCancel} style={{ background: 'transparent', border: `1px solid rgba(239,68,68,0.3)`, color: '#ef4444', padding: '10px 28px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-        {t('cancel_ride')}
-      </button>
-
-      <BottomNav role="passenger" />
-    </div>
+      }
+    />
   );
 }

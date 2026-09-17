@@ -2,19 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, Clock } from '@/components/icons';
 import { MapView } from '@/components/maps/MapView';
 import { BottomSheet } from '@/components/ride/BottomSheet';
 import { BottomNav } from '@/components/layout/BottomNav';
+import { RideShell, BrandChip } from '@/components/shell/RideShell';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useAuthStore } from '@/store/authStore';
 import { useTripStore } from '@/store/tripStore';
 
 export default function PassengerMapPage() {
   const router = useRouter();
-  const { user } = useAuthStore();
   const { activeRide } = useTripStore();
-  const { location, requestPermission } = useGeolocation({ watch: true, enableHighAccuracy: true });
+  const { location } = useGeolocation({ watch: true, enableHighAccuracy: true });
 
   const [nearbyDrivers, setNearbyDrivers] = useState<Array<{ id: string; latitude: number; longitude: number }>>([]);
   const [mounted, setMounted] = useState(false);
@@ -31,7 +29,7 @@ export default function PassengerMapPage() {
     if (activeRide?.status === 'searching' || activeRide?.status === 'negotiating') {
       router.push('/app/offers');
     }
-  }, [activeRide?.status]);
+  }, [activeRide?.status, router]);
 
   useEffect(() => {
     if (!location) return;
@@ -41,44 +39,21 @@ export default function PassengerMapPage() {
       .catch(() => {});
   }, [location?.latitude, location?.longitude]);
 
-  if (!mounted) return <div className='flex min-h-screen items-center justify-center bg-background' />;
+  if (!mounted) return <div className="min-h-dvh bg-[var(--rm-bg)]" />;
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col overflow-x-hidden bg-background md:max-w-none md:pl-20">
-      {/* Map area */}
-      <div className="relative w-full" style={{ height: '42vh' }}>
+    <RideShell
+      map={
         <MapView
           center={center}
           userLocation={location ? { lat: location.latitude, lng: location.longitude } : undefined}
           drivers={nearbyDrivers}
-          className="w-full h-full"
+          className="h-full w-full"
         />
-
-        {/* Top bar */}
-        <div className="absolute top-0 left-0 right-0 px-4 pt-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 surface-glass backdrop-blur-xl rounded-2xl px-3 py-2 border border-[rgba(255,255,255,0.08)]">
-              <img src="/brand/app.jpg" alt="" className="h-7 w-7 rounded-lg object-cover" />
-              <span className="font-bold text-sm">RideMe</span>
-            </div>
-            <button
-              onClick={() => router.push('/app/schedule')}
-              className="flex items-center gap-1.5 surface-glass backdrop-blur-xl rounded-2xl px-3 py-2 border border-[rgba(255,255,255,0.08)] text-sm text-[#8B8B9E] hover:text-white transition-colors"
-            >
-              <Clock size={14} />
-              Programar
-            </button>
-          </div>
-        </div>
-
-        {/* Bottom gradient overlay */}
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
-      </div>
-
-      {/* Bottom sheet — always visible */}
-      <BottomSheet nearbyDriversCount={nearbyDrivers.length} />
-
-      <BottomNav role="passenger" />
-    </div>
+      }
+      topLeft={<BrandChip />}
+      panel={<BottomSheet nearbyDriversCount={nearbyDrivers.length} />}
+      nav={<BottomNav role="passenger" />}
+    />
   );
 }

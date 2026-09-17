@@ -20,6 +20,27 @@ const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
 const STYLE = 'mapbox/dark-v11';
 const f = (n: number) => n.toFixed(5);
 
+function DarkMap({ hasRoute }: { hasRoute?: boolean }) {
+  return (
+    <svg viewBox="0 0 1000 1100" className="h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <rect width="1000" height="1100" fill="#0a0a0c" />
+      {Array.from({ length: 16 }).map((_, i) => (
+        <rect key={`h${i}`} x="0" y={50 + i * 64} width="1000" height={i % 5 === 0 ? 10 : 5} fill={i % 5 === 0 ? '#24252e' : '#1a1b22'} />
+      ))}
+      {Array.from({ length: 12 }).map((_, i) => (
+        <rect key={`v${i}`} x={40 + i * 80} y="0" width={i % 4 === 0 ? 10 : 5} height="1100" fill={i % 4 === 0 ? '#24252e' : '#1a1b22'} />
+      ))}
+      <rect x="120" y="200" width="200" height="150" rx="16" fill="#0d1814" />
+      <rect x="620" y="540" width="240" height="170" rx="16" fill="#0d1814" />
+      {hasRoute ? (
+        <path d="M 420 720 Q 540 480 720 280" fill="none" stroke="#00e5a8" strokeWidth="8" strokeLinecap="round" />
+      ) : null}
+      <circle cx="420" cy="720" r="10" fill="#00e5a8" />
+      {hasRoute ? <circle cx="720" cy="280" r="8" fill="#f3f4f6" /> : null}
+    </svg>
+  );
+}
+
 export function MapView({
   center = { lat: 19.4326, lng: -99.1332 },
   zoom = 14,
@@ -34,16 +55,15 @@ export function MapView({
   const { location, requestPermission, isLoading, error, hasPermission } = useGeolocation({ watch: true });
   const [imgError, setImgError] = useState(false);
 
-  // Prioridad: GPS real > userLocation prop > center default
   const gpsLoc = location ? { lat: location.latitude, lng: location.longitude } : null;
   const focus = gpsLoc || userLocation || origin || center;
 
   const pins: string[] = [];
-  drivers.slice(0, 10).forEach(d => pins.push(`pin-s+22d3ee(${f(d.longitude)},${f(d.latitude)})`));
-  if (driverLocation) pins.push(`pin-l+22d3ee(${f(driverLocation.lng)},${f(driverLocation.lat)})`);
-  if (origin) pins.push(`pin-l+7c3aed(${f(origin.lng)},${f(origin.lat)})`);
-  if (destination) pins.push(`pin-l+22d3ee(${f(destination.lng)},${f(destination.lat)})`);
-  pins.push(`pin-l+7c3aed(${f(focus.lng)},${f(focus.lat)})`);
+  drivers.slice(0, 10).forEach(d => pins.push(`pin-s+00e5a8(${f(d.longitude)},${f(d.latitude)})`));
+  if (driverLocation) pins.push(`pin-l+00e5a8(${f(driverLocation.lng)},${f(driverLocation.lat)})`);
+  if (origin) pins.push(`pin-l+f3f4f6(${f(origin.lng)},${f(origin.lat)})`);
+  if (destination) pins.push(`pin-l+00e5a8(${f(destination.lng)},${f(destination.lat)})`);
+  pins.push(`pin-l+00e5a8(${f(focus.lng)},${f(focus.lat)})`);
 
   const overlay = pins.join(',');
   const centerStr = origin && destination ? 'auto' : `${f(focus.lng)},${f(focus.lat)},${zoom},0`;
@@ -52,53 +72,29 @@ export function MapView({
     : null;
 
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ background: '#0a0814' }}>
+    <div className={`relative overflow-hidden ${className}`} style={{ background: '#0a0a0c' }}>
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={src} alt="Mapa" onError={() => setImgError(true)}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       ) : (
-        <div style={{ width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'rgba(255,255,255,0.3)',fontSize:13 }}>
-          Mapa no disponible
-        </div>
+        <DarkMap hasRoute={!!(origin && destination)} />
       )}
 
-      {/* Botón GPS */}
       {showGpsButton && (
-        <button onClick={requestPermission}
-          style={{ position:'absolute',bottom:80,right:14,width:40,height:40,borderRadius:10,
-            background: gpsLoc ? 'rgba(34,211,238,0.9)' : 'rgba(10,8,20,0.85)',
-            border:`1.5px solid ${gpsLoc ? '#22d3ee' : 'rgba(255,255,255,0.2)'}`,
-            backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',
-            cursor:'pointer',transition:'all 0.2s',boxShadow:'0 2px 12px rgba(0,0,0,0.4)' }}>
-          {isLoading ? (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={gpsLoc ? '#0a0814' : 'white'} strokeWidth="2"
-              style={{ animation:'spin 1s linear infinite' }}>
-              <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/>
-              <path d="M12 2 a10 10 0 0 1 10 10"/>
-            </svg>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={gpsLoc ? '#0a0814' : 'white'} strokeWidth="2">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>
-            </svg>
-          )}
+        <button onClick={requestPermission} aria-label="Centrar mapa"
+          className="absolute right-3 top-24 z-20 flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--rm-sheet)]/90 ring-1 ring-[var(--rm-line)] backdrop-blur-md">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.6 3.1 20.4 20a.8.8 0 0 1-1.1 1L12 17.4 4.7 21a.8.8 0 0 1-1.1-1L11.4 3.1a.7.7 0 0 1 1.2 0Z" />
+          </svg>
         </button>
       )}
 
-      {/* Error de GPS */}
       {error && hasPermission === false && (
-        <div style={{ position:'absolute',top:10,left:10,right:10,background:'rgba(239,68,68,0.9)',
-          backdropFilter:'blur(8px)',borderRadius:10,padding:'8px 12px',fontSize:12,color:'white',fontWeight:600 }}>
-          📍 {error}
+        <div className="absolute left-3 right-3 top-3 rounded-xl bg-[var(--rm-danger)] px-3 py-2 text-xs font-semibold text-white">
+          {error}
         </div>
       )}
-
-      {/* Fade inferior */}
-      <div style={{ position:'absolute',bottom:0,left:0,right:0,height:60,
-        background:'linear-gradient(to top, #0a0814, transparent)',pointerEvents:'none' }} />
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
