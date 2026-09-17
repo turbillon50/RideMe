@@ -1,6 +1,6 @@
 'use client';
 
-import { IconCar } from '@/components/rm-icons';
+import { IconCar, IconPin } from '@/components/rm-icons';
 
 /** Dark city chrome + mint route — collage language, no Mapbox required. */
 export function RideMap({
@@ -49,8 +49,10 @@ export function RideMap({
         <circle cx="72" cy="548" r="11" fill="var(--rm-accent)" />
         <circle cx="72" cy="548" r="5" fill="var(--rm-cta-fg)" />
         <circle className="rm-map__pulse" cx="308" cy="86" r="18" fill="var(--rm-accent)" opacity="0.22" />
-        <circle cx="308" cy="86" r="12" fill="var(--rm-text)" stroke="var(--rm-accent)" strokeWidth="3" />
       </svg>
+      <span className="rm-map__end-pin" aria-hidden>
+        <IconPin size={28} />
+      </span>
 
       {mode === 'trip' && (
         <div className="rm-map__car" style={{ left: '42%', top: '46%' }}>

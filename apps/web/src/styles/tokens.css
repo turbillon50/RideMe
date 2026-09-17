@@ -1,6 +1,6 @@
 /* RideMe Design System — tokens v0.1 + chrome producto
    Firmado Luis 2026-09-17: obsidiana + mint único. Cero purple. Cero Lucide.
-   Motion: MOTION-v0.1.md · Icons: icons-v1.tsx
+   Motion: MOTION-v0.1.md · Icons: icons-v2.tsx
 */
 
 :root {
@@ -795,7 +795,16 @@
   font-weight: 700;
   box-shadow: var(--rm-glow-accent);
 }
-.rm-map__car {
+.rm-map__end-pin {
+  position: absolute;
+  left: 71%;
+  top: 8%;
+  z-index: 3;
+  color: var(--rm-accent);
+  filter: drop-shadow(0 4px 12px rgba(0, 229, 168, 0.45));
+  pointer-events: none;
+  transform: translate(-50%, -80%);
+}
   position: absolute;
   z-index: 3;
   width: 36px;

@@ -22,7 +22,7 @@ export function AppNav() {
         const Icon = item.icon;
         return (
           <Link key={item.href} href={item.href} className={on ? 'is-on' : undefined}>
-            <Icon size={22} />
+            <Icon size={22} variant={on ? 'filled' : 'outline'} />
             <span>{item.label}</span>
           </Link>
         );

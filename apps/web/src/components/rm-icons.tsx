@@ -1,22 +1,31 @@
 /**
- * RideMe icon set v1 — craft premium (Forma).
- * stroke 1.25 · geometry dura · currentColor · NO Lucide-DNA
- * Core 10 from uploads/icons-v1.tsx; extras in the same stroke language.
+ * RideMe icons — v2 filled/geometric (Forma) + extras in the same language.
+ * Core 10: apps/web/src/ds/icons-v2.tsx
  */
-import type { ReactNode, SVGProps } from "react";
+export {
+  IconPin,
+  IconSearch,
+  IconCall,
+  IconChat,
+  IconHome,
+  IconTrips,
+  IconWallet,
+  IconProfile,
+  IconCar,
+  IconLightning,
+  RideMeIconsV2,
+} from '@/ds/icons-v2';
+export type { RmIconProps, RideMeIconNameV2 } from '@/ds/icons-v2';
 
-export type RmIconProps = SVGProps<SVGSVGElement> & {
-  size?: number;
-  title?: string;
-};
+import type { ReactNode } from 'react';
+import { RideMeIconsV2, type RmIconProps } from '@/ds/icons-v2';
 
-const SW = 1.25;
-
-function RmIcon({
+function ExtraIcon({
   size = 24,
   title,
   children,
   className,
+  variant: _variant,
   ...props
 }: RmIconProps & { children: ReactNode }) {
   return (
@@ -24,13 +33,9 @@ function RmIcon({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={SW}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
       className={className}
-      role={title ? "img" : "presentation"}
+      role={title ? 'img' : 'presentation'}
       aria-hidden={title ? undefined : true}
       aria-label={title}
       {...props}
@@ -40,237 +45,113 @@ function RmIcon({
   );
 }
 
-/** Pin destino — gota afilada + núcleo (marca RideMe) */
-export function IconPin(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M12 21.25C12 21.25 4.75 15.1 4.75 9.6a7.25 7.25 0 1 1 14.5 0c0 5.5-7.25 11.65-7.25 11.65Z" />
-      <circle cx="12" cy="9.5" r="2" />
-    </RmIcon>
-  );
-}
-
 export function IconDot(props: RmIconProps) {
   return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12" r="3.1" />
-      <circle cx="12" cy="12" r="7.1" opacity={0.45} />
-    </RmIcon>
-  );
-}
-
-export function IconSearch(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="10.75" cy="10.75" r="6.5" />
-      <path d="M15.6 15.6 20.25 20.25" />
-    </RmIcon>
-  );
-}
-
-export function IconCall(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M7.2 3.85h2.1c.55 0 1 .4 1.1.94l.35 1.9a1.1 1.1 0 0 1-.55 1.15l-1.15.6a11.2 11.2 0 0 0 5.35 5.35l.6-1.15a1.1 1.1 0 0 1 1.15-.55l1.9.35c.54.1.94.55.94 1.1v2.1c0 .66-.54 1.18-1.2 1.1A15.4 15.4 0 0 1 3.75 5.05c-.08-.66.44-1.2 1.1-1.2Z" />
-    </RmIcon>
-  );
-}
-
-export function IconChat(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M6.5 18.4 4.25 20.5V7.75A3.5 3.5 0 0 1 7.75 4.25h8.5a3.5 3.5 0 0 1 3.5 3.5v6.4a3.5 3.5 0 0 1-3.5 3.5H8.1Z" />
-      <path d="M8.75 9.75h6.5M8.75 13h4" />
-    </RmIcon>
-  );
-}
-
-export function IconHome(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M4.5 11 12 4.25 19.5 11" />
-      <path d="M6.75 9.85V19.5h10.5V9.85" />
-      <path d="M10.25 19.5v-5h3.5v5" />
-    </RmIcon>
-  );
-}
-
-export function IconTrips(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12.25" r="7.5" />
-      <path d="M12 8.25v4.2l2.85 1.65" />
-      <path d="M5.35 6.4A9.4 9.4 0 0 1 12 3.6" opacity={0.55} />
-    </RmIcon>
-  );
-}
-
-export function IconWallet(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <rect x="3.5" y="7.25" width="17" height="12" rx="2" />
-      <path d="M3.5 10.5h17" />
-      <path d="M5.25 7.25 6.6 4.9a1.4 1.4 0 0 1 1.2-.65h8.4" />
-      <circle cx="16.25" cy="14.25" r="1" fill="currentColor" stroke="none" />
-    </RmIcon>
-  );
-}
-
-export function IconProfile(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="8" r="3.15" />
-      <path d="M5.25 19.5c1.25-3.35 3.55-5 6.75-5s5.5 1.65 6.75 5" />
-    </RmIcon>
-  );
-}
-
-export function IconCar(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M3.75 14.35h16.5l-.7-2.85a1.75 1.75 0 0 0-1.35-1.25L15.2 9.4H8.8L6.3 10.25a1.75 1.75 0 0 0-1.35 1.25l-.7 2.85Z" />
-      <path d="M5.1 14.35v2.4h1.85" />
-      <path d="M17.05 16.75h1.85v-2.4" />
-      <circle cx="7.35" cy="17" r="1.45" />
-      <circle cx="16.65" cy="17" r="1.45" />
-      <path d="M8.85 9.55 9.85 7.4h4.3l1 2.15" />
-    </RmIcon>
-  );
-}
-
-export function IconLightning(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M12.85 2.75 6.4 13.1h5.05L10.6 21.25l6.95-11.1h-5.05L12.85 2.75Z" />
-    </RmIcon>
-  );
-}
-
-export function IconCalendar(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <rect x="3.75" y="5.5" width="16.5" height="14.75" rx="2.2" />
-      <path d="M8 3.5v3.4M16 3.5v3.4M3.75 10.25h16.5" />
-      <path d="M8.25 14.1h.01M12 14.1h.01M15.75 14.1h.01" />
-    </RmIcon>
-  );
-}
-
-export function IconAlert(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12" r="8.25" />
-      <path d="M12 7.75v5" />
-      <circle cx="12" cy="16.15" r="0.7" fill="currentColor" stroke="none" />
-    </RmIcon>
+    <ExtraIcon {...props}>
+      <circle cx="12" cy="12" r="3.4" />
+      <circle cx="12" cy="12" r="7.2" opacity={0.28} />
+    </ExtraIcon>
   );
 }
 
 export function IconStar(props: RmIconProps) {
   return (
-    <RmIcon {...props}>
-      <path d="M12 3.6 13.9 8.4l5.2.5-3.9 3.3.9 5.15L12 15.2 7.9 17.35l.9-5.15-3.9-3.3 5.2-.5L12 3.6Z" />
-    </RmIcon>
-  );
-}
-
-export function IconShield(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M12 3.4 5.4 5.7v6.1c0 3.7 2.55 6.35 6.6 7.85 4.05-1.5 6.6-4.15 6.6-7.85V5.7L12 3.4Z" />
-      <path d="m9.1 12.05 1.9 1.9 3.9-4" />
-    </RmIcon>
-  );
-}
-
-export function IconEye(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M3.5 12s3.35-6.25 8.5-6.25S20.5 12 20.5 12s-3.35 6.25-8.5 6.25S3.5 12 3.5 12Z" />
-      <circle cx="12" cy="12" r="2.35" />
-    </RmIcon>
-  );
-}
-
-export function IconEyeOff(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M3.5 12s3.35-6.25 8.5-6.25c1.35 0 2.55.4 3.6.95" />
-      <path d="M20.5 12s-1.15 2.15-3.15 3.85" />
-      <path d="M9.15 9.2a3 3 0 0 0 5.35 3.45" />
-      <path d="m4 4 16 16" />
-    </RmIcon>
-  );
-}
-
-export function IconUpload(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M5 16.6v2.15A1.5 1.5 0 0 0 6.5 20.25h11A1.5 1.5 0 0 0 19 18.75V16.6" />
-      <path d="M12 15.5V6.4" />
-      <path d="m8.4 9.35 3.6-3.6 3.6 3.6" />
-    </RmIcon>
-  );
-}
-
-export function IconChevronLeft(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="m14.6 5.25-6.1 6.75 6.1 6.75" />
-    </RmIcon>
-  );
-}
-
-export function IconChevronRight(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="m9.4 5.25 6.1 6.75-6.1 6.75" />
-    </RmIcon>
-  );
-}
-
-export function IconSun(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <circle cx="12" cy="12" r="3.35" />
-      <path d="M12 3.4v1.7M12 18.9v1.7M4.7 4.7l1.2 1.2M18.1 18.1l1.2 1.2M3.4 12H5.1M18.9 12h1.7M4.7 19.3l1.2-1.2M18.1 5.9l1.2-1.2" />
-    </RmIcon>
-  );
-}
-
-export function IconMoon(props: RmIconProps) {
-  return (
-    <RmIcon {...props}>
-      <path d="M16.7 14.55A6.55 6.55 0 0 1 9.15 5.5 6.75 6.75 0 1 0 16.7 14.55Z" />
-    </RmIcon>
+    <ExtraIcon {...props}>
+      <path d="M12 2.4 14.4 8.5l6.6.7-5 4.3 1.4 6.5L12 16.8 6.6 20l1.4-6.5-5-4.3 6.6-.7L12 2.4Z" />
+    </ExtraIcon>
   );
 }
 
 export function IconCash(props: RmIconProps) {
   return (
-    <RmIcon {...props}>
-      <rect x="3.5" y="6.5" width="17" height="11" rx="2" />
-      <circle cx="12" cy="12" r="2.35" />
-      <path d="M6.25 9.1h.01M17.75 14.9h.01" />
-    </RmIcon>
+    <ExtraIcon {...props}>
+      <path d="M3.2 6.4A1.6 1.6 0 0 1 4.8 4.8h14.4A1.6 1.6 0 0 1 20.8 6.4v11.2a1.6 1.6 0 0 1-1.6 1.6H4.8A1.6 1.6 0 0 1 3.2 17.6V6.4Zm8.8 3.1a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4Z" />
+    </ExtraIcon>
   );
 }
 
-export const RideMeIconsV1 = {
-  pin: IconPin,
-  search: IconSearch,
-  call: IconCall,
-  chat: IconChat,
-  home: IconHome,
-  trips: IconTrips,
-  wallet: IconWallet,
-  profile: IconProfile,
-  car: IconCar,
-  lightning: IconLightning,
-} as const;
+export function IconShield(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M12 2.4 4.4 5.1v6.4c0 4.2 2.9 7.2 7.6 8.9 4.7-1.7 7.6-4.7 7.6-8.9V5.1L12 2.4Zm-1.1 11.3-2.4-2.4 1.3-1.3 1.1 1.1 3.3-3.3 1.3 1.3-4.6 4.6Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconCalendar(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M7.2 2.6h1.8v2.2h6V2.6h1.8v2.2h2.4A1.8 1.8 0 0 1 21 6.6V19a1.8 1.8 0 0 1-1.8 1.8H4.8A1.8 1.8 0 0 1 3 19V6.6A1.8 1.8 0 0 1 4.8 4.8h2.4V2.6ZM4.8 10.2v8.8h14.4v-8.8H4.8Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconAlert(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M12 2.4a9.6 9.6 0 1 0 9.6 9.6A9.6 9.6 0 0 0 12 2.4Zm-.9 5.1h1.8v6.2H11.1V7.5Zm.9 9.5a1.15 1.15 0 1 1 0-2.3 1.15 1.15 0 0 1 0 2.3Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconEye(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M12 5c5.4 0 9.5 5.4 9.8 7-.3 1.6-4.4 7-9.8 7S2.5 13.6 2.2 12C2.5 10.4 6.6 5 12 5Zm0 3.4A3.6 3.6 0 1 0 15.6 12 3.6 3.6 0 0 0 12 8.4Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconEyeOff(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M3.2 4.4 4.5 3.1 20.9 19.5 19.6 20.8l-2.5-2.5A12.6 12.6 0 0 1 12 19c-5.4 0-9.5-5.4-9.8-7a13.4 13.4 0 0 1 4.4-5.5L3.2 4.4Zm8 5.3 3.1 3.1A3.2 3.2 0 0 1 12 16.2 3.2 3.2 0 0 1 8.8 13a3.2 3.2 0 0 1 2.4-3.3ZM12 5c1.1 0 2.1.2 3.1.6l-1.5 1.5A5.5 5.5 0 0 0 12 7c-5.4 0-9.5 5.4-9.8 7 .1.4.6 1.4 1.5 2.5L2.2 16 3.5 17.3l1.7-1.7C7 17.8 9.4 19 12 19c.5 0 1-.05 1.5-.12l1.5 1.5c-.9.2-1.9.32-3 .32-5.4 0-9.5-5.4-9.8-7C2.5 10.4 6.6 5 12 5Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconUpload(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M11.1 14.8V7.4L8.2 10.3 6.9 9l5.1-5.1L17.1 9l-1.3 1.3-2.9-2.9v7.4h-1.8ZM4.6 16.4h14.8v3.2H4.6v-3.2Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconChevronLeft(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M14.8 4.4 7.2 12l7.6 7.6 1.5-1.5L10.2 12l6.1-6.1-1.5-1.5Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconChevronRight(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M9.2 4.4 7.7 5.9 13.8 12l-6.1 6.1 1.5 1.5L16.8 12 9.2 4.4Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconSun(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M11.1 2.4h1.8v2.6h-1.8V2.4ZM11.1 19h1.8v2.6h-1.8V19ZM2.4 11.1h2.6v1.8H2.4v-1.8Zm16.6 0h2.6v1.8h-2.6v-1.8ZM5.3 4.1l1.3-1.3 1.8 1.8-1.3 1.3-1.8-1.8Zm10.3 10.3 1.8 1.8-1.3 1.3-1.8-1.8 1.3-1.3ZM4 18.7 5.3 20l1.8-1.8-1.3-1.3L4 18.7Zm12.7-12.7 1.8-1.8 1.3 1.3-1.8 1.8-1.3-1.3ZM12 7.2A4.8 4.8 0 1 1 7.2 12 4.8 4.8 0 0 1 12 7.2Z" />
+    </ExtraIcon>
+  );
+}
+
+export function IconMoon(props: RmIconProps) {
+  return (
+    <ExtraIcon {...props}>
+      <path d="M13.2 2.6a8.6 8.6 0 1 0 8.2 11.4 7.2 7.2 0 0 1-8.2-11.4Z" />
+    </ExtraIcon>
+  );
+}
 
 export const RideMeIcons = {
-  ...RideMeIconsV1,
+  ...RideMeIconsV2,
   dot: IconDot,
   calendar: IconCalendar,
   alert: IconAlert,

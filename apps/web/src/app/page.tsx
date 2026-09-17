@@ -327,7 +327,7 @@ export default function LandingPage() {
 
             <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 lg:mx-0">
               <motion.div className="w-full" whileTap={reduceMotion ? undefined : { scale: 0.985 }} whileHover={reduceMotion ? undefined : { y: -2 }}>
-                <Link href="/sign-in?redirect_url=/app" className="rm-btn rm-btn--primary rm-btn--lg">
+                <Link href="/app" className="rm-btn rm-btn--primary rm-btn--lg">
                   {t.cta_ride}
                 </Link>
               </motion.div>

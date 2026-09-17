@@ -28,6 +28,19 @@ export {
 } from './rm-icons';
 export type { RmIconProps, RideMeIconName } from './rm-icons';
 
+import {
+  IconHome as RmHome,
+  IconPin as RmPin,
+  IconTrips as RmTrips,
+  IconProfile as RmProfile,
+  IconCar as RmCar,
+  IconLightning as RmLightning,
+  IconCall as RmCall,
+  IconChat as RmChat,
+  IconStar as RmStar,
+  IconWallet as RmWallet,
+} from './rm-icons';
+
 export type IconProps = SVGProps<SVGSVGElement> & {
   size?: number;
   color?: string;
@@ -131,14 +144,7 @@ export function Calendar(props: IconProps) {
 }
 
 export function Car(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M19 17h2l-2-6-2.4-4.8A2 2 0 0 0 14.8 5H9.2a2 2 0 0 0-1.8 1.2L5 11l-2 6h2" />
-      <path d="M5 11h14" />
-      <circle cx="7.5" cy="17" r="2" />
-      <circle cx="16.5" cy="17" r="2" />
-    </Icon>
-  );
+  return <RmCar size={props.size} className={props.className} />;
 }
 
 export function Check(props: IconProps) {
@@ -280,23 +286,11 @@ export function Flag(props: IconProps) {
 }
 
 export function History(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M3 12a9 9 0 1 0 3-6.7" />
-      <path d="M3 3v6h6" />
-      <path d="M12 7v5l3 2" />
-    </Icon>
-  );
+  return <RmTrips size={props.size} className={props.className} />;
 }
 
 export function Home(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="m3 10 9-7 9 7" />
-      <path d="M5 10v10h14V10" />
-      <path d="M9 20v-6h6v6" />
-    </Icon>
-  );
+  return <RmHome size={props.size} className={props.className} />;
 }
 
 export function LayoutDashboard(props: IconProps) {
@@ -347,22 +341,11 @@ export function Mail(props: IconProps) {
 }
 
 export function Map(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="m9 18-6 3V6l6-3 6 3 6-3v15l-6 3Z" />
-      <path d="M9 3v15" />
-      <path d="M15 6v15" />
-    </Icon>
-  );
+  return <RmHome size={props.size} className={props.className} />;
 }
 
 export function MapPin(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </Icon>
-  );
+  return <RmPin size={props.size} className={props.className} />;
 }
 
 export function Menu(props: IconProps) {
@@ -376,11 +359,7 @@ export function Menu(props: IconProps) {
 }
 
 export function MessageCircle(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-4-.9L3 21l1.8-4.7a8.5 8.5 0 1 1 16.2-4.8Z" />
-    </Icon>
-  );
+  return <RmChat size={props.size} className={props.className} />;
 }
 
 export function Minus(props: IconProps) {
@@ -409,11 +388,7 @@ export function Navigation(props: IconProps) {
 }
 
 export function Phone(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7A2 2 0 0 1 22 16.9Z" />
-    </Icon>
-  );
+  return <RmCall size={props.size} className={props.className} />;
 }
 
 export function Plus(props: IconProps) {
@@ -472,11 +447,7 @@ export function Shield(props: IconProps) {
 }
 
 export function Star(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="m12 2 3.1 6.3 6.9 1-5 4.8 1.2 6.9-6.2-3.3L5.8 21 7 14.1 2 9.3l6.9-1Z" />
-    </Icon>
-  );
+  return <RmStar size={props.size} className={props.className} />;
 }
 
 export function Sun(props: IconProps) {
@@ -529,12 +500,7 @@ export function Upload(props: IconProps) {
 }
 
 export function User(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M19 21a7 7 0 0 0-14 0" />
-      <circle cx="12" cy="7" r="4" />
-    </Icon>
-  );
+  return <RmProfile size={props.size} className={props.className} />;
 }
 
 export function Users(props: IconProps) {
@@ -549,12 +515,7 @@ export function Users(props: IconProps) {
 }
 
 export function Wallet(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M20 7V6a2 2 0 0 0-2-2H5a3 3 0 0 0 0 6h15a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a3 3 0 0 1-3-3V7" />
-      <path d="M16 14h.01" />
-    </Icon>
-  );
+  return <RmWallet size={props.size} className={props.className} />;
 }
 
 export function X(props: IconProps) {
@@ -567,9 +528,5 @@ export function X(props: IconProps) {
 }
 
 export function Zap(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <path d="M13 2 3 14h8l-1 8 11-14h-8Z" />
-    </Icon>
-  );
+  return <RmLightning size={props.size} className={props.className} />;
 }
