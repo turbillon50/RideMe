@@ -40,7 +40,10 @@ export function RideMeSignIn() {
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!isLoaded || !signIn) return;
+    if (!isLoaded || !signIn) {
+      setError('Cargando… intenta de nuevo en un segundo.');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -120,7 +123,7 @@ export function RideMeSignIn() {
 
         {error ? <p className="mt-3 text-sm text-[var(--rm-error)]">{error}</p> : null}
 
-        <button type="submit" className="rm-btn rm-btn--primary rm-btn--block rm-btn--lg mt-5" disabled={loading || !isLoaded}>
+        <button type="submit" className="rm-btn rm-btn--primary rm-btn--block rm-btn--lg mt-5" disabled={loading}>
           {loading ? 'Entrando…' : 'Continuar'}
         </button>
 

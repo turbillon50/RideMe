@@ -337,20 +337,17 @@ export default function LandingPage() {
           <p className="mb-8 text-xs text-[var(--rm-text-3)] sm:text-sm">{t.cities}</p>
 
           {/* CTAs 390: stack ≥48px · Comenzar → Solicitar viaje → Chofer · login en thumb */}
-          <div className="mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
-            <Link href="/sign-up" className="rm-btn rm-btn--primary rm-btn--block rm-btn--lg sm:w-auto sm:min-w-[220px]">
+          <div className="rm-hero-ctas mx-auto flex w-full max-w-sm flex-col items-stretch gap-3">
+            <Link href="/sign-up" className="rm-btn rm-btn--primary rm-btn--lg">
               {t.get_started}
             </Link>
-            <Link href="/sign-up" className="rm-btn rm-btn--secondary rm-btn--block rm-btn--lg sm:w-auto sm:min-w-[220px]">
+            <Link href="/sign-up" className="rm-btn rm-btn--secondary rm-btn--lg">
               {t.cta_ride}
             </Link>
-            <Link
-              href="/driver/onboarding"
-              className="rm-btn rm-btn--secondary rm-btn--block rm-btn--lg sm:w-auto sm:min-w-[220px]"
-            >
+            <Link href="/driver/onboarding" className="rm-btn rm-btn--secondary rm-btn--lg">
               {t.cta_driver}
             </Link>
-            <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--block rm-btn--lg sm:hidden">
+            <Link href="/sign-in" className="rm-btn rm-btn--ghost rm-btn--lg rm-only-390">
               {t.signin}
             </Link>
           </div>

@@ -187,7 +187,7 @@ export default function DriverOnboarding() {
       <p style={{ fontSize: 11, color: C.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>Paso {step} de 4 — {STEPS[step - 1].label}</p>
 
       <AnimatePresence mode="wait">
-        <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
+        <motion.div key={step} initial={false} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
 
           {step === 1 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

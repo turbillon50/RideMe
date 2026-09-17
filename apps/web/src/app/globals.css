@@ -528,6 +528,23 @@ input[type='range']::-moz-range-thumb {
   color: var(--rm-accent);
 }
 
+/* Hero CTAs: stack 390, row desktop — unlayered so gana a Tailwind layers */
+.rm-hero-ctas .rm-btn { width: 100%; }
+@media (min-width: 640px) {
+  .rm-hero-ctas {
+    max-width: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .rm-hero-ctas .rm-btn {
+    width: auto;
+    min-width: 220px;
+  }
+  .rm-only-390 { display: none !important; }
+}
+
 /* Clerk hosted remnants — hide «Secured by Clerk» / clerk.com */
 .cl-internal-b3fm6y,
 .cl-footer,
