@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { IconStar, IconCar, IconLightning } from '@/components/rm-icons';
+import { IconCar, IconLightning, IconStar } from '@/components/rm-icons';
 import { RideMap } from '@/components/ride/RideMap';
 import { AppNav } from '@/components/layout/AppNav';
 import { useTripStore } from '@/store/tripStore';
@@ -32,7 +32,12 @@ export default function OffersPage() {
 
   return (
     <main className="rm-app">
-      <RideMap pickup={ride.origin_address} dropoff={ride.destination_address} eta="buscando" />
+      <RideMap
+        pickup={ride.origin_address}
+        dropoff={ride.destination_address}
+        eta={`${offers.length} ofertas`}
+        mode="offers"
+      />
       <header className="rm-app__top">
         <div className="flex items-center gap-2 rounded-2xl border border-[var(--rm-border)] bg-[color-mix(in_srgb,var(--rm-bg)_70%,transparent)] px-2 py-1.5 backdrop-blur-md">
           <span className="rm-mark">
@@ -43,15 +48,16 @@ export default function OffersPage() {
         <div className="rm-price rounded-2xl bg-[var(--rm-bg)]/80 px-3 py-2 text-lg">${ride.proposed_price}</div>
       </header>
 
-      <section className="rm-app__sheet" style={{ maxHeight: '58%' }}>
+      <section className="rm-app__sheet rm-enter" style={{ maxHeight: '62%' }}>
         <div className="rm-app__handle" />
-        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rm-accent)]">
+        <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rm-accent)]">
+          <span className="rm-live" />
           Choferes compitiendo
         </p>
         <h1 className="mb-3 text-[20px] font-bold tracking-tight">Elige tu RideMe</h1>
-        <div className="flex max-h-[38vh] flex-col gap-2 overflow-y-auto pb-2">
-          {offers.map((o) => (
-            <article key={o.id} className="rm-offer">
+        <div className="flex max-h-[40vh] flex-col gap-2 overflow-y-auto pb-2">
+          {offers.map((o, i) => (
+            <article key={o.id} className={`rm-offer ${i === 0 ? 'rm-offer--best' : ''}`}>
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--rm-accent-muted)] text-sm font-bold text-[var(--rm-accent)]">
                 {o.initials}
               </div>
@@ -60,17 +66,18 @@ export default function OffersPage() {
                   {o.name}
                   <IconStar size={12} className="text-[var(--rm-accent)]" />
                   <span className="text-xs text-[var(--rm-accent)]">{o.rating}</span>
+                  {i === 0 && <span className="ml-1 rounded-full bg-[var(--rm-accent-muted)] px-2 py-0.5 text-[10px] font-bold text-[var(--rm-accent)]">Match</span>}
                 </div>
                 <div className="flex items-center gap-1 text-xs text-[var(--rm-text-3)]">
-                  <IconCar size={12} />
+                  <IconCar size={13} />
                   {o.car} · {o.etaMin} min
                 </div>
               </div>
-              <div className="text-right">
+              <div className="flex shrink-0 flex-col items-end gap-1">
                 <div className="rm-price text-base">${o.price}</div>
                 <button
                   type="button"
-                  className="rm-pressable mt-1 text-xs font-bold text-[var(--rm-accent)]"
+                  className="rm-btn rm-btn--primary rm-offer__go"
                   onClick={() => accept(o.price, o.name)}
                 >
                   Aceptar

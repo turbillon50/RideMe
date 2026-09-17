@@ -2,6 +2,7 @@ import type { ReactNode, SVGProps } from 'react';
 
 export {
   IconPin,
+  IconDot,
   IconSearch,
   IconCall,
   IconChat,
@@ -22,6 +23,7 @@ export {
   IconChevronRight,
   IconSun,
   IconMoon,
+  IconCash,
   RideMeIcons,
 } from './rm-icons';
 export type { RmIconProps, RideMeIconName } from './rm-icons';
