@@ -1,5 +1,20 @@
 import type { ReactNode, SVGProps } from 'react';
 
+export {
+  IconPin,
+  IconSearch,
+  IconCall,
+  IconChat,
+  IconHome,
+  IconTrips,
+  IconWallet,
+  IconProfile,
+  IconCar,
+  IconLightning,
+  RideMeIcons,
+} from './rm-icons';
+export type { RmIconProps, RideMeIconName } from './rm-icons';
+
 export type IconProps = SVGProps<SVGSVGElement> & {
   size?: number;
   color?: string;

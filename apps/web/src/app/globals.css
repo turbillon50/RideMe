@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import '../styles/tokens.css';
 
 @tailwind base;
 @tailwind components;
@@ -505,4 +506,24 @@ input[type='range']::-moz-range-thumb {
 
 .surface-glass {
   background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+/* Landing v0 — tokens Forma (no pisa /app ni /driver) */
+.rm-landing {
+  background: var(--rm-bg);
+  color: var(--rm-text);
+  font-family: var(--rm-font);
+}
+.rm-landing a.rm-btn {
+  color: inherit;
+}
+.rm-landing a.rm-btn--primary {
+  color: var(--rm-cta-fg);
+}
+.rm-landing a.rm-btn--secondary,
+.rm-landing a.rm-btn--ghost {
+  color: var(--rm-text);
+}
+.rm-landing a.rm-btn--ghost {
+  color: var(--rm-accent);
 }

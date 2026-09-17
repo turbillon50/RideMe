@@ -32,6 +32,16 @@ const config: Config = {
         warning: '#F59E0B',
         error: '#EF4444',
         info: '#3B82F6',
+        rm: {
+          bg: 'var(--rm-bg)',
+          surface: 'var(--rm-surface)',
+          accent: 'var(--rm-accent)',
+          'accent-hover': 'var(--rm-accent-hover)',
+          'cta-fg': 'var(--rm-cta-fg)',
+          text: 'var(--rm-text)',
+          'text-2': 'var(--rm-text-2)',
+          'text-3': 'var(--rm-text-3)',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
