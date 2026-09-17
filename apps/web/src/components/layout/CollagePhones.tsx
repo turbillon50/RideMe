@@ -59,8 +59,8 @@ export function CollagePhones() {
         <MiniMap />
         <div className="rm-phone__sheet">
           <div className="rm-phone__handle" />
-          <p className="rm-phone__kicker">Tienes 3 ofertas</p>
-          <p className="rm-phone__h">Elige tu RideMe</p>
+          <p className="rm-phone__kicker">3 ofertas</p>
+          <p className="rm-phone__h">Elige RideMe</p>
           {[
             ['JD', 'Juan D.', '4.97', '$95'],
             ['MS', 'María S.', '4.99', '$88'],

@@ -448,16 +448,18 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* APP & DRIVER PREVIEW — desktop afiliados, sin booking */}
-      <section id="drivers" className="bg-[var(--rm-bg)] py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2">
+      {/* APP & DRIVER PREVIEW — collage CSS, cero foto AURUM/LUXE */}
+      <section id="drivers" className="bg-[var(--rm-bg)] py-16 sm:py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="overflow-hidden rounded-[var(--rm-radius-xl)] border border-[var(--rm-border)] bg-[var(--rm-surface)]"
           >
-            <img src="/brand/app.jpg" alt="App de pasajero RideMe" className="h-72 w-full object-cover sm:h-96" />
+            <div className="px-4 pt-8 sm:px-6">
+              <CollagePhones />
+            </div>
             <div className="p-6">
               <h2 className="text-2xl font-black">{t.passenger_title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-[var(--rm-text-3)]">{t.passenger_sub}</p>
@@ -470,7 +472,27 @@ export default function LandingPage() {
             transition={{ delay: 0.1 }}
             className="overflow-hidden rounded-[var(--rm-radius-xl)] border border-[var(--rm-border)] bg-[var(--rm-surface)]"
           >
-            <img src="/brand/driver.jpg" alt="App de chofer RideMe" className="h-72 w-full object-cover sm:h-96" />
+            <div className="relative h-72 overflow-hidden bg-[var(--rm-bg)] sm:h-96">
+              <svg viewBox="0 0 200 280" className="absolute inset-0 h-full w-full" aria-hidden>
+                <path
+                  d="M28 250 C 48 200, 40 168, 82 148 S 128 122, 116 88 S 148 52, 172 22"
+                  stroke="var(--rm-accent)"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <circle cx="28" cy="250" r="6" fill="var(--rm-accent)" />
+                <circle cx="172" cy="22" r="7" fill="#fff" stroke="var(--rm-accent)" strokeWidth="2" />
+              </svg>
+              <div className="absolute inset-x-4 bottom-4 rounded-[18px] border border-[var(--rm-border)] bg-[var(--rm-surface)] p-4 shadow-[var(--rm-shadow-sheet)]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--rm-accent)]">Ofertas de viaje</p>
+                <p className="mt-1 text-lg font-bold tracking-tight">$1,240 hoy</p>
+                <p className="mt-1 text-xs text-[var(--rm-text-3)]">Guadalajara · Monterrey · CDMX</p>
+                <div className="mt-3 h-9 rounded-lg bg-[var(--rm-accent)] text-center text-sm font-bold leading-9 text-[var(--rm-cta-fg)]">
+                  {t.cta_driver}
+                </div>
+              </div>
+            </div>
             <div className="p-6">
               <h2 className="text-2xl font-black">{t.driver_title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-[var(--rm-text-3)]">{t.driver_sub}</p>

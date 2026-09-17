@@ -13,9 +13,9 @@ export type BrandingConfig = {
 
 const DEFAULT_BRANDING: BrandingConfig = {
   app_name: 'RideMe',
-  primary_color: '#6C63FF',
-  accent_color: '#00D4AA',
-  logo_url: '/brand/hero.jpg',
+  primary_color: '#00E5A8',
+  accent_color: '#00E5A8',
+  logo_url: '/brand/icon-192.png',
   icon_url: '/brand/icon-192.png',
   theme: 'dark',
 };
@@ -35,15 +35,15 @@ export function applyTheme(theme: 'dark' | 'light') {
   document.cookie = `rideme_theme=${theme}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
-export function applyBranding(branding: BrandingConfig) {
+export function applyBranding(_branding: BrandingConfig) {
   const root = document.documentElement;
-  root.style.setProperty('--brand-primary', branding.primary_color);
-  root.style.setProperty('--brand-accent', branding.accent_color);
-  root.style.setProperty('--accent', branding.primary_color);
-  root.style.setProperty('--secondary', branding.accent_color);
-  root.style.setProperty('--gradient-cta', `linear-gradient(135deg, ${branding.primary_color}, ${branding.accent_color})`);
-
-  
+  const mint = '#00E5A8';
+  // Ley visual Luis: mint único. Nunca purple / dual-gradient.
+  root.style.setProperty('--brand-primary', mint);
+  root.style.setProperty('--brand-accent', mint);
+  root.style.setProperty('--accent', mint);
+  root.style.setProperty('--secondary', mint);
+  root.style.setProperty('--gradient-cta', mint);
 }
 
 export function BrandingProvider({ children }: { children: ReactNode }) {

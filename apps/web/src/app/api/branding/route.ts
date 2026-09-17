@@ -18,9 +18,9 @@ type Branding = {
 const DEFAULT_BRANDING: Branding = {
   project: 'rideme',
   app_name: 'RideMe',
-  primary_color: '#6C63FF',
-  accent_color: '#00D4AA',
-  logo_url: '/brand/hero.jpg',
+  primary_color: '#00E5A8',
+  accent_color: '#00E5A8',
+  logo_url: '/brand/icon-192.png',
   icon_url: '/brand/icon-192.png',
   theme: 'dark',
 };
