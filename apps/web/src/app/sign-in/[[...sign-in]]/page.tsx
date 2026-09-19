@@ -2,33 +2,34 @@ import { SignIn } from '@clerk/nextjs';
 
 const appearance = {
   variables: {
-    colorBackground: '#0d0b1a',
-    colorPrimary: '#6C63FF',
-    colorText: '#ffffff',
-    colorTextSecondary: '#9ca3af',
-    colorInputBackground: '#15131f',
-    colorInputText: '#ffffff',
-    colorNeutral: '#ffffff',
-    borderRadius: '1rem',
+    colorBackground: '#101526',
+    colorPrimary: '#93AECE',
+    colorText: '#E8EDF4',
+    colorTextSecondary: '#8A94A6',
+    colorInputBackground: '#161C2C',
+    colorInputText: '#E8EDF4',
+    colorNeutral: '#E8EDF4',
+    borderRadius: '0.9rem',
   },
   elements: {
     rootBox: 'w-full flex justify-center',
-    card: 'bg-[#0d0b1a] border border-white/10 shadow-2xl',
-    headerTitle: 'text-white',
-    headerSubtitle: 'text-white/50',
-    socialButtonsBlockButton: 'border-white/10 text-white',
+    card: 'bg-[#101526] border border-white/10 shadow-2xl',
+    headerTitle: 'text-[#E8EDF4]',
+    headerSubtitle: 'text-[#8A94A6]',
+    socialButtonsBlockButton: 'border-white/10 text-[#E8EDF4]',
     dividerLine: 'bg-white/10',
-    dividerText: 'text-white/40',
-    formFieldLabel: 'text-white/70',
-    formButtonPrimary: 'bg-gradient-to-r from-[#6C63FF] to-[#00D4AA] text-white normal-case',
-    footerActionText: 'text-white/50',
-    footerActionLink: 'text-[#6C63FF] hover:text-[#00D4AA]',
+    dividerText: 'text-[#8A94A6]',
+    formFieldLabel: 'text-[#8A94A6]',
+    formButtonPrimary: 'bg-[#E8E4DA] text-[#141820] normal-case hover:brightness-105',
+    footerActionText: 'text-[#8A94A6]',
+    footerActionLink: 'text-[#93AECE]',
+    footerAction__usePasskey: 'hidden',
   },
 };
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0A0A0F] px-4 py-10">
+    <div className="flex min-h-screen items-center justify-center bg-[#070A14] px-4 py-10">
       <SignIn appearance={appearance} signUpUrl="/sign-up" fallbackRedirectUrl="/app" />
     </div>
   );
