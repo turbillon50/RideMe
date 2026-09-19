@@ -4,12 +4,16 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { Providers } from './providers';
 
 export const metadata = {
-  title: 'RideMe – Name Your Price',
-  description: 'Premium rideshare app where you set the price. No surge. No guessing.',
+  title: 'RideMe — Tú pones la tarifa',
+  description: 'Plataforma de viajes donde el pasajero propone el precio y el chofer decide. Sin tarifa dinámica.',
 };
 
 export const viewport = {
-  width: 'device-width', initialScale: 1, maximumScale: 1, viewportFit: 'cover', themeColor: '#6C63FF',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#070A14',
 };
 
 const pk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
@@ -17,9 +21,11 @@ const clerkEnabled = /^pk_(test|live)_/.test(pk) && !/placeholder|REPLACE|xxx|^p
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const tree = (
-    <html lang="en" className="dark">
+    <html lang="es" className="dark">
       <head>
-        <script dangerouslySetInnerHTML={{__html:`
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
   (function(){
     try {
       var t = localStorage.getItem('rideme-theme') || 'dark';
@@ -27,11 +33,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       document.documentElement.classList.add(t);
     } catch(e) {}
   })();
-`}} />
+`,
+          }}
+        />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="RideMe" />
-        <meta name="theme-color" content="#6C63FF" />
+        <meta name="theme-color" content="#070A14" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/brand/icon-192.png" />
         <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
